@@ -493,10 +493,10 @@ var TableDatatablesManaged = function () {
             "pagingType": "bootstrap_full_number",
             "columnDefs": [{  // set default column settings
                 'orderable': false,
-                'targets': [3]
+                'targets': [4]
             }, {
                 "searchable": false,
-                "targets": [2, 3]
+                "targets": [3, 4]
             }],
             "order": [
                 [0, "desc"]

@@ -47,7 +47,8 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 10%"> ID </th>
-                                    <th style="width: 55%"> Name </th>
+                                    <th style="width: 35%"> Name </th>
+                                    <th style="width: 20%"> Domain </th>
                                     <th style="width: 15%"> Status </th>
                                     <th style="width: 20%"> Actions </th>
                                 </tr>
@@ -57,6 +58,7 @@
                                     <tr class="odd gradeX">
                                         <td> {{$profile->id}} </td>
                                         <td> {{$profile->name}} </td>
+                                        <td> <a href="{{$profile->domain}}" target="_blank">{{$profile->domain}}</a> </td>
                                         <td>
                                             @if (!$profile->is_deleted)
                                                 <span class="label label-sm label-success"> Active </span>
