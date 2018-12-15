@@ -16,11 +16,7 @@
             <ul class="nav navbar-nav pull-right">
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-user">
-                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <img alt="{{Auth::user()->fullname}}" class="img-circle" src="{{Auth::user()->getUserPhotoPath()}}">
-                        <span class="username username-hide-on-mobile"> {{Auth::user()->firstname}} </span>
-                        <i class="fa fa-angle-down"></i>
-                    </a>
+
                     <ul class="dropdown-menu dropdown-menu-default">
                         <li>
                             <a href="/profile">
