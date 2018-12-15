@@ -13,10 +13,6 @@
 
 Route::group(['middleware' => 'guest'], function () {
     Auth::routes();
-
-    Route::resources([
-        'users' => 'UsersController',
-    ]);
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -66,7 +62,7 @@ Route::group(['middleware' => 'user'], function () {
 });
 
 Route::group(['middleware' => 'admin'], function () {
-//    Route::resources([
-//        'users' => 'UsersController',
-//    ]);
+    Route::resources([
+        'users' => 'UsersController',
+    ]);
 });
