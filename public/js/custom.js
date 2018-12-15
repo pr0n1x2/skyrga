@@ -1446,7 +1446,7 @@ var FormValidation = function () {
         });
     }
 
-    var profileValidation = function() {
+    var userProfileValidation = function() {
 
         var form = $('#profile_form');
         var scrollTo = $('.portlet-title');
@@ -1703,7 +1703,7 @@ var FormValidation = function () {
             }
 
             if ($('#profile_form').length) {
-                profileValidation();
+                userProfileValidation();
             }
 
             if ($('#password_form').length) {
