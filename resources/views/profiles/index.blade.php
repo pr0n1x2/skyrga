@@ -78,7 +78,7 @@
                                                     </li>
                                                     <li>
                                                         <a data-toggle="modal" href="#delete" data-item="{{$profile->id}}">
-                                                            <i class="fa fa-remove"></i> Delete </a>
+                                                            <i class="fa fa-trash-o"></i> Delete </a>
                                                     </li>
                                                 </ul>
                                             </div>
