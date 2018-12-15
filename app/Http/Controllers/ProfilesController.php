@@ -36,7 +36,7 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        $profiles = Profile::select('id', 'name', 'is_deleted')->get();
+        $profiles = Profile::select('id', 'name', 'domain', 'is_deleted')->get();
 
         return view('profiles.index', compact('profiles'));
     }

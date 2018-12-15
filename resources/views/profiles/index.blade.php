@@ -47,8 +47,8 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 10%"> ID </th>
-                                    <th style="width: 35%"> Name </th>
-                                    <th style="width: 20%"> Domain </th>
+                                    <th style="width: 30%"> Name </th>
+                                    <th style="width: 25%"> Domain </th>
                                     <th style="width: 15%"> Status </th>
                                     <th style="width: 20%"> Actions </th>
                                 </tr>
