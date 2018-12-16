@@ -148,6 +148,16 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Post Date After Registration</label>
+                                    <input type="text" name="post_date" id="post_date" value="{{$project->post_date}}" maxlength="2" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
                         <h3 class="form-section">Post Settings</h3>
                         <div class="row">
                             <div class="col-md-6">
@@ -205,7 +215,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label">Paragraph Frame</label>
+                                    <label class="control-label">Image Frame</label>
                                     <input type="text" name="image_frame" id="image_frame" value="{{$project->image_frame}}" maxlength="191" class="form-control" placeholder="Image Frame">
                                 </div>
                             </div>

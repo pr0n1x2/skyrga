@@ -23,7 +23,7 @@ class Project extends Model
         'name', 'domain', 'register_page', 'login_page', 'login_file', 'singin_file', 'post_file',
         'is_generate_address', 'is_easy_password', 'is_generate_phone', 'is_use_main_anchor', 'is_use_post',
         'is_use_images', 'is_use_videos', 'paragraph_frame', 'link_frame', 'image_frame', 'video_frame',
-        'paragraph_link', 'state_associations', 'is_archive'
+        'paragraph_link', 'state_associations', 'post_date', 'is_archive'
     ];
 
     public function accounts()

@@ -14,6 +14,7 @@ class ProjectsController extends Controller
         'domain' => 'required|url|max:70',
         'register_page' => 'required|url|max:191',
         'login_page' => 'required|url|max:191',
+        'post_date' => 'nullable|numeric|digits_between:1,10',
         'paragraph_link' => 'nullable|numeric|digits_between:1,4'
     ];
 

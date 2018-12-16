@@ -1366,6 +1366,11 @@ var FormValidation = function () {
                     url: true,
                     required: true
                 },
+                post_date: {
+                    required: false,
+                    number: true,
+                    range: [1, 10]
+                },
                 paragraph_link: {
                     required: false,
                     number: true,
