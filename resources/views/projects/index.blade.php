@@ -39,6 +39,10 @@
                                 <a href="/projects/zip">
                                     <i class="fa fa-download"></i> Download All Active Files </a>
                             </li>
+                            <li>
+                                <a href="{{route('targets.create')}}">
+                                    <i class="fa fa-anchor"></i> Create New Targets </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

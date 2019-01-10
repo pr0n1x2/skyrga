@@ -53,7 +53,8 @@ Route::group(['middleware' => 'user'], function () {
         'profiles' => 'ProfilesController',
         'projects' => 'ProjectsController',
         'proxies' => 'ProxiesController',
-        'articles' => 'ArticlesController'
+        'articles' => 'ArticlesController',
+        'targets' => 'TargetsController'
     ]);
 
     Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
