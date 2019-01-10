@@ -21,7 +21,7 @@ mix.styles([
     'resources/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css',
     'resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
     'resources/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
-    'resources/assets/global/css/componenNts.min.css',
+    'resources/assets/global/css/components.min.css',
     'resources/assets/global/css/plugins.min.css',
     'resources/assets/layouts/layout/css/layout.min.css',
     'resources/assets/layouts/layout/css/themes/darkblue.min.css',

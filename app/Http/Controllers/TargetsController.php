@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Profile;
 use App\Project;
 use App\Target;
+use function foo\func;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TargetsController extends Controller
 {
@@ -74,17 +76,12 @@ class TargetsController extends Controller
                 $target->register_date = $date->format('Y-m-d');
                 $target->post_date = $post_date->format('Y-m-d');
                 $target->save();
-
-//                print "Group: {$groupId}\tProfile ID: {$profile->id}\tProject ID: {$project->id}\t Date: {$date->toDateTimeString()}\n";
-//                $arr[$date->toDateTimeString()][$groupId][$project->id][] = $profile->id;
-//                $arr[$date->toDateTimeString()][$project->id][] = $profile->id;
             }
 
             $firstDate->addDay(1);
         }
 
-//        dd($arr);
-        exit;
+        return redirect()->route('projects.index')->with('success', 'New targets has been successfully created.');
     }
 
     /**
@@ -130,5 +127,32 @@ class TargetsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function register($date = null)
+    {
+        $date = is_null($date) ? Carbon::now() : Carbon::createFromFormat('Y-m-d', $date);
+
+        $targets = Target::with([
+            'profile' => function ($query) {
+                $query->select('id', 'name', 'domain', 'mail_account_id', 'reserve_mail_account_id');
+            },
+            'profile.email' => function ($query) {
+                $query->select('id', 'email', 'login_page', 'account_name', 'password');
+            },
+            'profile.reserveEmail' => function ($query) {
+                $query->select('id', 'email', 'login_page', 'account_name', 'password');
+            }
+        ])->whereRegisterDate($date->format('Y-m-d'))
+            ->orderBy('project_id', 'asc')
+            ->get()
+            ->groupBy('project_id');
+
+        $projects = Project::select('id', 'name', 'domain', 'register_page', 'login_page')
+            ->whereIn('id', $targets->keys())
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return view('targets.register', compact('targets', 'projects'));
     }
 }

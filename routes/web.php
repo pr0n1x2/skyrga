@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('targets/register/{date?}', 'TargetsController@register');
+
 Route::group(['middleware' => 'guest'], function () {
     Auth::routes();
 });

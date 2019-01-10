@@ -700,3 +700,26 @@ div.dataTables_scrollHead table.table-bordered {
 .todo-comment-head {
     margin:0px;
 }
+
+.ubot-body {
+    background: #eef1f5;
+}
+
+.ubot-row {
+    padding: 10px;
+}
+
+.feeds li .col2 {
+    width: 800px;
+    margin-left: -800px;
+}
+
+.feeds li .col2>.info {
+    padding: 4px 9px 5px 4px;
+    text-align: right;
+    color: #96999a;
+}
+
+.feeds li .col2>.info a.email {
+    color: #96999a;
+}

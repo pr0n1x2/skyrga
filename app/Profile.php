@@ -19,12 +19,12 @@ class Profile extends Model
 
     public function email()
     {
-        return $this->hasOne(MailAccount::class);
+        return $this->belongsTo(MailAccount::class, 'mail_account_id');
     }
 
     public function reserveEmail()
     {
-        return $this->hasOne(MailAccount::class, 'id', 'reserve_mail_account_id');
+        return $this->belongsTo(MailAccount::class, 'reserve_mail_account_id');
     }
 
     public function accounts()

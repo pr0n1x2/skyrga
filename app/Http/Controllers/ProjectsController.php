@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Profile;
 use App\Project;
 use Carbon\Carbon;
 use Chumper\Zipper\Zipper;
