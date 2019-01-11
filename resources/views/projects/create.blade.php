@@ -115,6 +115,32 @@
                             <!--/span-->
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="control-label">Separate Username</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_username" @if (old('is_same_username')) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Separate Password</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_password" @if (old('is_same_password')) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label">Use Easy Password</label>
                                     <div class="checkbox-list">
                                         <input type="checkbox" name="is_easy_password" @if (old('is_easy_password')) checked @endif class="make-switch" id="is_easy_password">

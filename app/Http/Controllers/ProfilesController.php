@@ -132,4 +132,19 @@ class ProfilesController extends Controller
 
         return redirect()->route('profiles.index')->with('success', 'Profile has been deleted.');
     }
+
+    public function setReserveEmail(Request $request)
+    {
+        $profile = Profile::find($request->get('profile_id'));
+        $result['status'] = false;
+
+        if ($profile) {
+            $profile->reserve_mail_account_id = $request->get('id');
+            $profile->save();
+
+            $result['status'] = true;
+        }
+
+        return response()->json($result);
+    }
 }

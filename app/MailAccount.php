@@ -14,4 +14,9 @@ class MailAccount extends Model
     {
         return $this->hasMany(Account::class);
     }
+
+    public function profile()
+    {
+        return $this->hasMany(Profile::class);
+    }
 }

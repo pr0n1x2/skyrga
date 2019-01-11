@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Profile;
 use App\Project;
 use App\Target;
-use function foo\func;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -138,10 +137,16 @@ class TargetsController extends Controller
                 $query->select('id', 'name', 'domain', 'mail_account_id', 'reserve_mail_account_id');
             },
             'profile.email' => function ($query) {
-                $query->select('id', 'email', 'login_page', 'account_name', 'password');
+                $query->select('id', 'email');
             },
             'profile.reserveEmail' => function ($query) {
-                $query->select('id', 'email', 'login_page', 'account_name', 'password');
+                $query->select('id', 'email');
+            },
+            'account' => function ($query) {
+                $query->select('id', 'mail_account_id', 'username', 'password');
+            },
+            'account.email' => function ($query) {
+                $query->select('id', 'email');
             }
         ])->whereRegisterDate($date->format('Y-m-d'))
             ->orderBy('project_id', 'asc')

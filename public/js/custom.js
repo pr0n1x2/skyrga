@@ -1939,6 +1939,51 @@ var ModalsManaged = function () {
         }
     }();
 
+    var reserveEmailChange = function() {
+        var sendRequest = function(){
+            var reserveElement;
+
+            $('.reserve_email_change').click(function () {
+                reserveElement = $(this);
+                getDataFromServerPost('/mail-accounts/get-reserve-emails', null, processData, null);
+            });
+
+            $('#reserve_email button.green').click(function () {
+                var select = $('#reserve_email').find('select');
+
+                if (select.val() == 0) {
+                    return false;
+                }
+
+                getDataFromServerPost('/profile/set-reserve-email', {id: select.val(), profile_id: reserveElement.data('profile')}, null, null);
+
+                var email = $('#reserve_email select option:selected').text();
+                reserveElement.text(email);
+                reserveElement.parent().find('a.account-show').attr('data-item', select.val());
+
+                $('#reserve_email').modal('hide');
+            });
+        }
+
+        var processData = function(emails) {
+            var select = $('#reserve_email').find('select');
+
+            select.empty().append('<option value="0">Select E-mail</option>');
+
+            $.each(emails, function (id, email) {
+                select.append('<option value="' + id + '">' + email + '</option>');
+            })
+
+            $('#reserve_email').modal('show');
+        }
+
+        return {
+            init: function () {
+                sendRequest();
+            }
+        }
+    }();
+
     return {
         //main function to initiate the module
         init: function () {
@@ -1959,7 +2004,7 @@ var ModalsManaged = function () {
                 videoShow.init();
             }
 
-            if ($('#mail_accounts_table').length) {
+            if ($('#mail_accounts_table').length || $('#target').length) {
                 mainAccountShow.init();
             }
 
@@ -1989,6 +2034,10 @@ var ModalsManaged = function () {
 
             if ($('#rewrite').length) {
                 articleRewrite.init();
+            }
+
+            if ($('#target').length) {
+                reserveEmailChange.init();
             }
         }
 

@@ -709,17 +709,49 @@ div.dataTables_scrollHead table.table-bordered {
     padding: 10px;
 }
 
-.feeds li .col2 {
-    width: 800px;
-    margin-left: -800px;
+.targets li .col2 {
+    width: 750px;
+    margin-left: -750px;
 }
 
-.feeds li .col2>.info {
+.targets li .col3 {
+    width: 470px;
+    margin-left: -470px;
+    float: left;
+}
+
+.targets li .col4 {
+    width: 190px;
+    margin-left: -190px;
+    float: left;
+}
+
+.targets li .col5 {
+    width: 35px;
+    margin-left: -35px;
+    float: left;
+}
+
+.targets li .col6 {
+    width: 400px;
+    margin-left: -400px;
+    float: left;
+}
+
+.targets li .col2>.info, .targets li .col3>.info, .targets li .col4>.info, .targets li .col5>.info, .targets li .col6>.info {
     padding: 4px 9px 5px 4px;
-    text-align: right;
+    text-align: left;
     color: #96999a;
 }
 
-.feeds li .col2>.info a.email {
+.targets li .col6>.info {
+    text-align: right;
+}
+
+.targets li .col2>.info a.email, .targets li .col6>.info a.email {
     color: #96999a;
+}
+
+#reserve_email .modal-body {
+    min-height: 64px;
 }

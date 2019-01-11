@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MailAccount;
+use App\Profile;
 use Illuminate\Http\Request;
 
 class MailAccountsController extends Controller
@@ -120,5 +121,14 @@ class MailAccountsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getReserveEmails()
+    {
+        $emails = MailAccount::whereIsDeleted(0)->get();
+        $profileEmails = MailAccount::whereHas('profile')->get();
+        $reserveEmails = $emails->diff($profileEmails)->pluck('email', 'id');
+
+        return response()->json($reserveEmails);
     }
 }
