@@ -128,6 +128,33 @@ class TargetsController extends Controller
         //
     }
 
+    public function remove(Request $request)
+    {
+        $target = Target::find($request->get('id'));
+        $result['status'] = false;
+
+        if ($target) {
+            $target->account()->delete();
+
+            $profile = Profile::find($target->profile_id);
+            $profile->reserve_mail_account_id = null;
+            $profile->save();
+
+            $result['id'] = $profile->email->id;
+            $result['email'] = $profile->email->email;
+            $result['profile_id'] = $profile->id;
+            $result['status'] = true;
+
+            $target->account_id = null;
+            $target->is_register = 0;
+            $target->is_login = 0;
+            $target->is_post = 0;
+            $target->save();
+        }
+
+        return response()->json($result);
+    }
+
     public function register($date = null)
     {
         $date = is_null($date) ? Carbon::now() : Carbon::createFromFormat('Y-m-d', $date);
@@ -153,11 +180,14 @@ class TargetsController extends Controller
             ->get()
             ->groupBy('project_id');
 
+        $counts = Target::getTargetsCounts($targets);
+        $activeTargetID = Target::getNextTargetID($targets);
+
         $projects = Project::select('id', 'name', 'domain', 'register_page', 'login_page')
             ->whereIn('id', $targets->keys())
             ->orderBy('id', 'asc')
             ->get();
 
-        return view('targets.register', compact('targets', 'projects'));
+        return view('targets.register', compact('targets', 'projects', 'counts', 'activeTargetID'));
     }
 }

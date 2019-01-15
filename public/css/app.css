@@ -752,6 +752,30 @@ div.dataTables_scrollHead table.table-bordered {
     color: #96999a;
 }
 
-#reserve_email .modal-body {
+#reserve_email .modal-body, #set_password .modal-body {
     min-height: 64px;
+}
+
+.password-not-set {
+    color: #96999a;
+}
+
+.password-not-set:hover {
+    color: #96999a;
+}
+
+.target-radio .cont-col1 {
+    margin-right: 0 !important;
+}
+
+.target-radio .cont-col2 {
+    float: none !important;
+}
+
+.target-clickable {
+    cursor: pointer;
+}
+
+.target-clickable:hover {
+    background-color: #337ab7;
 }

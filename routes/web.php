@@ -12,8 +12,11 @@
 */
 
 Route::get('targets/register/{date?}', 'TargetsController@register');
+Route::get('mail-accounts/{id}', 'MailAccountsController@show');
 Route::post('profile/set-reserve-email', 'ProfilesController@setReserveEmail');
 Route::post('mail-accounts/get-reserve-emails', 'MailAccountsController@getReserveEmails');
+Route::post('accounts/set-new-password', 'AccountsController@setPassword');
+Route::post('targets/remove', 'TargetsController@remove');
 
 Route::group(['middleware' => 'guest'], function () {
     Auth::routes();

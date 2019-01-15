@@ -42,4 +42,45 @@ class Target extends Model
 
         return $this->profile->email->id;
     }
+
+    public static function getTargetsCounts($targets)
+    {
+        $counts = [];
+
+        foreach ($targets as $key => $collection) {
+            $counts[$key] = $collection->filter(function ($target) {
+                if ($target->is_register == 1) {
+                    return true;
+                }
+            })->count();
+        }
+
+        return $counts;
+    }
+
+    public static function getNextTargetID($targets)
+    {
+        $counts = Target::getTargetsCounts($targets);
+        $index = false;
+        $previous = 100;
+
+        foreach ($counts as $project_id => $count) {
+            if ($count != $targets[$project_id]->count()) {
+                if ($count < $previous) {
+                    $previous = $count;
+                    $index = $project_id;
+                }
+            }
+        }
+
+        if ($index != false) {
+            $first = $targets[$index]->first(function ($target) {
+                return $target->is_register == 0;
+            });
+
+            return $first->id;
+        }
+
+        return 0;
+    }
 }

@@ -1814,7 +1814,7 @@ var ModalsManaged = function () {
                 sendRequest();
             }
         }
-    }();
+    }()
 
     var videoDeleting = function() {
         $('#delete').on('show.bs.modal', function (e) {
@@ -1843,13 +1843,13 @@ var ModalsManaged = function () {
                 sendRequest();
             }
         }
-    }();
+    }()
 
     var mainAccountShow = function() {
         var sendRequest = function(){
-            $('.account-show').click(function () {
+            $(document).on('click', '.account-show', function() {
                 getDataFromServerGet('/mail-accounts/' + this.dataset.item, null, processData, null);
-            })
+            });
         }
 
         var processData = function(account) {
@@ -1867,7 +1867,7 @@ var ModalsManaged = function () {
                 sendRequest();
             }
         }
-    }();
+    }()
 
     var postDeleting = function() {
         $('#delete').on('show.bs.modal', function (e) {
@@ -1919,7 +1919,7 @@ var ModalsManaged = function () {
                 manage();
             }
         }
-    }();
+    }()
 
     var articleRewrite = function() {
         var $modal = $('#rewrite');
@@ -1937,13 +1937,13 @@ var ModalsManaged = function () {
                 manage();
             }
         }
-    }();
+    }()
 
     var reserveEmailChange = function() {
         var sendRequest = function(){
             var reserveElement;
 
-            $('.reserve_email_change').click(function () {
+            $(document).on('click', '.reserve_email_change', function() {
                 reserveElement = $(this);
                 getDataFromServerPost('/mail-accounts/get-reserve-emails', null, processData, null);
             });
@@ -1982,7 +1982,111 @@ var ModalsManaged = function () {
                 sendRequest();
             }
         }
-    }();
+    }()
+
+    var setAccountPassword = function() {
+        var sendRequest = function(){
+            var passElement;
+
+            $('.password-not-set').click(function () {
+                passElement = $(this);
+                $('#set_password').modal('show');
+            });
+
+            $('#set_password button.green').click(function () {
+                var password = $('#set_password input').val();
+
+                if (password.length === 0) {
+                    return false;
+                }
+
+                getDataFromServerPost('/accounts/set-new-password', {id: passElement.data('item'), password: password}, null, null);
+
+                passElement.removeClass('font-red').text(password.trim());
+                $('#set_password input').val('');
+
+                $('#set_password').modal('hide');
+            });
+        }
+
+        return {
+            init: function () {
+                sendRequest();
+            }
+        }
+    }()
+
+    var deleteAccount = function() {
+        var sendRequest = function(){
+            var accountRow;
+            var account;
+
+            $('.target-remove').click(function () {
+                account = $(this);
+                accountRow = $(this).parent().parent().parent();
+
+                $('#remove_target').modal('show');
+            });
+
+            $('#remove_target button.red').click(function () {
+                getDataFromServerPost('/targets/remove', {id: account.data('item')}, processData, null);
+
+                $('#remove_target').modal('hide');
+            });
+
+            var processData = function(tagret) {
+                accountRow.find('.col2').remove();
+                accountRow.find('.col3').remove();
+                accountRow.find('.col4').remove();
+                accountRow.find('.col5').remove();
+
+                html = '<div class="col6">' +
+                    '<div class="info">' +
+                        '<i class="fa fa-envelope font-yellow-mint"></i> ' +
+                        '<a href="javascript:;" class="email reserve_email_change" data-profile="' + tagret.profile_id + '">' + tagret.email + '</a> ' +
+                        '<a href="javascript:;" class="account-show" data-item="' + tagret.id + '"><i class="fa fa-info-circle"></i></a>' +
+                    '</div>' +
+                '</div>';
+
+                accountRow.append(html);
+                accountRow.find('div.col1').find('div.label').removeClass('label-success').addClass('target-clickable');
+            }
+        }
+
+        return {
+            init: function () {
+                sendRequest();
+            }
+        }
+    }()
+
+    var selectAccount = function() {
+        var manager = function() {
+            var previousAccount;
+
+            $('.target-clickable').each(function() {
+                if ($(this).hasClass('label-primary')) {
+                    previousAccount = $(this);
+                }
+            });
+
+            $(document).on('click', '.target-clickable', function() {
+                if (previousAccount !== undefined) {
+                    previousAccount.removeClass('label-primary');
+                }
+
+                previousAccount = $(this);
+                $(this).addClass('label-primary');
+                $('#target_id').val($(this).data('item'));
+            });
+        }
+
+        return {
+            init: function () {
+                manager();
+            }
+        }
+    }()
 
     return {
         //main function to initiate the module
@@ -2038,6 +2142,9 @@ var ModalsManaged = function () {
 
             if ($('#target').length) {
                 reserveEmailChange.init();
+                setAccountPassword.init();
+                deleteAccount.init();
+                selectAccount.init();
             }
         }
 
