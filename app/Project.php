@@ -63,7 +63,8 @@ class Project extends Model
 
     public static function uploadFile($filename, UploadedFile $file)
     {
-        $filename = $filename . '.' . $file->extension();
+//        $filename = $filename . '.' . $file->clientExtension();
+        $filename = $filename . '.ubot';
         $file->storeAs(self::PATH_TO_UBOT_FILES, $filename);
 
         return $filename;
@@ -71,6 +72,7 @@ class Project extends Model
 
     public static function renameFile($filename, $new_filename)
     {
+        dd($new_filename);
         $new_filename = $new_filename . '.ubot';
         Storage::move(self::PATH_TO_UBOT_FILES . $filename, self::PATH_TO_UBOT_FILES . $new_filename);
 

@@ -13,6 +13,7 @@
 
 Route::get('targets/register/{date?}', 'TargetsController@register');
 Route::get('mail-accounts/{id}', 'MailAccountsController@show');
+Route::post('targets/proxy', 'TargetsController@checkProxy')->name('targets.proxy');
 Route::post('profile/set-reserve-email', 'ProfilesController@setReserveEmail');
 Route::post('mail-accounts/get-reserve-emails', 'MailAccountsController@getReserveEmails');
 Route::post('accounts/set-new-password', 'AccountsController@setPassword');

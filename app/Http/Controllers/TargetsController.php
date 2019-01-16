@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Profile;
 use App\Project;
+use App\Proxy;
+use App\Proxy\ProxyChecker;
 use App\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -189,5 +191,36 @@ class TargetsController extends Controller
             ->get();
 
         return view('targets.register', compact('targets', 'projects', 'counts', 'activeTargetID'));
+    }
+
+    public function checkProxy(Request $request)
+    {
+        // https://free-proxy-list.net/
+        $target = Target::find($request->get('target_id'));
+        $activeProxyID = 0;
+
+        if ($target->project->is_use_proxy) {
+            $proxies = Proxy::all()->diff($target->project->proxies);
+            $proxyChecker = new ProxyChecker(Proxy::PING_URL);
+
+            foreach ($proxies as $proxy) {
+                $proxyStr = $proxy->generateProxyString();
+                $results = collect($proxyChecker->checkProxies([$proxyStr]))->first();
+
+                if (!key_exists('error', $results)) {
+                    $allowed = $results['allowed'];
+
+                    if (in_array('get', $allowed)
+                        && in_array('post', $allowed)
+                        && in_array('cookie', $allowed)
+                        && in_array('user_agent', $allowed)) {
+                        $activeProxyID = $proxy->id;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return view('targets.proxy', compact('target', 'activeProxyID'));
     }
 }

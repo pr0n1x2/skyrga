@@ -105,7 +105,7 @@
             </div>
         </div>
     @endforeach
-    {{Form::open(['route' => 'articles.store'])}}
+    {{Form::open(['route' => 'targets.proxy'])}}
         <input type="hidden" name="target_id" id="target_id" value="{{$activeTargetID}}">
     {{Form::close()}}
     <div class="modal fade" id="show" tabindex="-1" role="Show" aria-hidden="true">
