@@ -12,8 +12,10 @@
 */
 
 Route::get('targets/register/{date?}', 'TargetsController@register');
+Route::get('targets/register-complete/', 'TargetsController@registerComplete');
 Route::get('mail-accounts/{id}', 'MailAccountsController@show');
 Route::post('targets/proxy', 'TargetsController@checkProxy')->name('targets.proxy');
+Route::post('targets/generate', 'TargetsController@generate')->name('targets.generate');
 Route::post('profile/set-reserve-email', 'ProfilesController@setReserveEmail');
 Route::post('mail-accounts/get-reserve-emails', 'MailAccountsController@getReserveEmails');
 Route::post('accounts/set-new-password', 'AccountsController@setPassword');

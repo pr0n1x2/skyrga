@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Profile;
 use App\Project;
 use App\Proxy;
 use App\Proxy\ProxyChecker;
+use App\Randomizer\Randomizer;
 use App\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -193,6 +195,11 @@ class TargetsController extends Controller
         return view('targets.register', compact('targets', 'projects', 'counts', 'activeTargetID'));
     }
 
+    public function registerComplete(Request $request)
+    {
+        dd($request->all());
+    }
+
     public function checkProxy(Request $request)
     {
         // https://free-proxy-list.net/
@@ -222,5 +229,26 @@ class TargetsController extends Controller
         }
 
         return view('targets.proxy', compact('target', 'activeProxyID'));
+    }
+
+    public function generate(Request $request)
+    {
+        $target = Target::find($request->get('target_id'));
+
+        if ($request->get('action') == 'register') {
+            $account = new Account();
+            $account->generateRandomAccount($target);
+            $account->save();
+
+//            $target->account_id = $account->id;
+//            $target->is_register = 1;
+//            $target->save();
+        } else {
+            $account = $target->account;
+        }
+
+        $randomizer = new Randomizer($target, $account);
+
+        return view('targets.generate', compact('randomizer'));
     }
 }

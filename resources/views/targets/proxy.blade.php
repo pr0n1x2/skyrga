@@ -15,9 +15,10 @@
         <strong>Error!</strong> <span class="proxy">Could not find a working proxy</span>.
     </div>
     @endif
-    <form action="" method="post">
+    {{Form::open(['route' => 'targets.generate'])}}
         <input type="hidden" name="target_id" value="{{$target->id}}">
         <input type="hidden" name="proxy_id" value="{{$activeProxyID}}">
         <input type="hidden" name="filename" value="{{$target->project->login_file}}">
-    </form>
+        <input type="hidden" name="action" value="register">
+    {{Form::close()}}
 @endsection

@@ -165,6 +165,30 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="control-label">Use Email As Username</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_email_as_username" @if ($project->is_use_email_as_username) checked @endif class="make-switch" id="is_use_email_as_username">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Use Domain Word As Username</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_domainword_as_username" @if ($project->is_use_domainword_as_username) checked @endif class="make-switch" id="is_use_domainword_as_username">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label">Use Only Main Anchor</label>
                                     <div class="checkbox-list">
                                         <input type="checkbox" name="is_use_main_anchor" @if ($project->is_use_main_anchor) checked @endif class="make-switch" id="is_use_main_anchor">

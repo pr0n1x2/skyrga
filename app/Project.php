@@ -22,8 +22,9 @@ class Project extends Model
     protected $fillable = [
         'name', 'domain', 'register_page', 'login_page', 'login_file', 'singin_file', 'post_file',
         'is_generate_address', 'is_same_username', 'is_same_password', 'is_easy_password', 'is_generate_phone',
-        'is_use_main_anchor', 'is_use_post', 'is_use_images', 'is_use_videos', 'paragraph_frame', 'link_frame',
-        'image_frame', 'video_frame', 'paragraph_link', 'state_associations', 'post_date', 'is_archive'
+        'is_use_email_as_username', 'is_use_domainword_as_username', 'is_use_main_anchor', 'is_use_post',
+        'is_use_images', 'is_use_videos', 'paragraph_frame', 'link_frame', 'image_frame', 'video_frame',
+        'paragraph_link', 'state_associations', 'post_date', 'is_archive'
     ];
 
     public function accounts()
@@ -72,7 +73,6 @@ class Project extends Model
 
     public static function renameFile($filename, $new_filename)
     {
-        dd($new_filename);
         $new_filename = $new_filename . '.ubot';
         Storage::move(self::PATH_TO_UBOT_FILES . $filename, self::PATH_TO_UBOT_FILES . $new_filename);
 
@@ -92,6 +92,8 @@ class Project extends Model
         $this->is_same_password = !$request->is_same_password ? 0 : 1;
         $this->is_easy_password = !$request->is_easy_password ? 0 : 1;
         $this->is_generate_phone = !$request->is_generate_phone ? 0 : 1;
+        $this->is_use_email_as_username = !$request->is_use_email_as_username ? 0 : 1;
+        $this->is_use_domainword_as_username = !$request->is_use_domainword_as_username ? 0 : 1;
         $this->is_use_main_anchor = !$request->is_use_main_anchor ? 0 : 1;
         $this->is_use_post = !$request->is_use_post ? 0 : 1;
         $this->is_use_images = !$request->is_use_images ? 0 : 1;
