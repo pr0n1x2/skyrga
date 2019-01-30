@@ -197,7 +197,32 @@ class TargetsController extends Controller
 
     public function registerComplete(Request $request)
     {
-        dd($request->all());
+        $target = Target::find($request->get('target_id'));
+
+        if ($request->has('username')) {
+            $target->account->username = $request->get('username');
+            $target->account->save();
+        }
+
+        return view('targets.regcomplete', compact('target', 'request'));
+        /* here you can put your own css to customize and override the theme */
+//        .auth-has-error span {
+//            background-color: #ffc7c7;
+//            color: #bf1212;
+//            padding: 5px 10px;
+//        }
+//
+//        .form-padding-0 {
+//                padding: 0 20px !important;
+//        }
+//
+//        .todo-comment-head {
+//                margin:0px;
+//        }
+//
+//        .ubot-full-width {
+//                margin-left: 0 !important;
+//        }
     }
 
     public function checkProxy(Request $request)
@@ -240,15 +265,15 @@ class TargetsController extends Controller
             $account->generateRandomAccount($target);
             $account->save();
 
-//            $target->account_id = $account->id;
-//            $target->is_register = 1;
-//            $target->save();
+            $target->account_id = $account->id;
+            $target->is_register = 1;
+            $target->save();
         } else {
             $account = $target->account;
         }
 
         $randomizer = new Randomizer($target, $account);
 
-        return view('targets.generate', compact('randomizer'));
+        return view('targets.generate', compact('target', 'randomizer'));
     }
 }

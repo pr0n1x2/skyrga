@@ -101,7 +101,7 @@ class Account extends Model
             $middlename = substr(mb_strtolower($this->middlename), 0, 1);
             $lastname = substr(mb_strtolower($this->lastname), 0, rand(3, 8));
 
-            $this->username = $firstname . $middlename . $lastname;
+            $this->username = str_replace("'", "", $firstname . $middlename . $lastname);
         }
     }
 
@@ -183,7 +183,7 @@ class Account extends Model
             $firstname = substr(mb_strtolower($this->firstname), 0, rand(3, 6));
             $lastname = substr(mb_strtolower($this->lastname), 0, rand(3, 8));
 
-            $this->domain_word = $firstname . $lastname;
+            $this->domain_word = str_replace("'", "", $firstname . $lastname);
         } else {
             $this->domain_word = $this->username;
         }

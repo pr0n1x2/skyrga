@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('targets/register/{date?}', 'TargetsController@register');
+Route::get('targets/register/{date?}', 'TargetsController@register')->name('targets.register');
 Route::get('targets/register-complete/', 'TargetsController@registerComplete');
 Route::get('mail-accounts/{id}', 'MailAccountsController@show');
 Route::post('targets/proxy', 'TargetsController@checkProxy')->name('targets.proxy');
