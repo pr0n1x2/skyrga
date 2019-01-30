@@ -66,4 +66,23 @@ class Profile extends Model
     {
         $this->attributes['is_deleted'] = $value ? 0 : 1;
     }
+
+    public function getNextPost()
+    {
+        $previous_post_id = $this->previous_post_id;
+
+        do {
+            $post = $this->posts()
+                ->where('posts.id', '>', $previous_post_id)
+                ->orderBy('posts.id', 'asc')
+                ->first();
+
+            $previous_post_id = 0;
+        } while (is_null($post));
+
+        $this->previous_post_id = $post->id;
+        $this->save();
+
+        return $post;
+    }
 }

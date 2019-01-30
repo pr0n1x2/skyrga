@@ -701,6 +701,85 @@ div.dataTables_scrollHead table.table-bordered {
     margin:0px;
 }
 
+.ubot-body {
+    background: #eef1f5;
+}
+
+.ubot-row {
+    padding: 10px;
+}
+
+.targets li .col2 {
+    width: 750px;
+    margin-left: -750px;
+}
+
+.targets li .col3 {
+    width: 470px;
+    margin-left: -470px;
+    float: left;
+}
+
+.targets li .col4 {
+    width: 190px;
+    margin-left: -190px;
+    float: left;
+}
+
+.targets li .col5 {
+    width: 35px;
+    margin-left: -35px;
+    float: left;
+}
+
+.targets li .col6 {
+    width: 400px;
+    margin-left: -400px;
+    float: left;
+}
+
+.targets li .col2>.info, .targets li .col3>.info, .targets li .col4>.info, .targets li .col5>.info, .targets li .col6>.info {
+    padding: 4px 9px 5px 4px;
+    text-align: left;
+    color: #96999a;
+}
+
+.targets li .col6>.info {
+    text-align: right;
+}
+
+.targets li .col2>.info a.email, .targets li .col6>.info a.email {
+    color: #96999a;
+}
+
+#reserve_email .modal-body, #set_password .modal-body {
+    min-height: 64px;
+}
+
+.password-not-set {
+    color: #96999a;
+}
+
+.password-not-set:hover {
+    color: #96999a;
+}
+
+.target-radio .cont-col1 {
+    margin-right: 0 !important;
+}
+
+.target-radio .cont-col2 {
+    float: none !important;
+}
+
+.target-clickable {
+    cursor: pointer;
+}
+
+.target-clickable:hover {
+    background-color: #337ab7;
+}
+
 .ubot-full-width {
     margin-left: 0 !important;
 }

@@ -283,6 +283,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="control-label">Heading Frame</label>
+                                    <input type="text" name="heading_frame" id="heading_frame" value="{{old('heading_frame')}}" maxlength="191" class="form-control" placeholder="Heading frame">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label">Link Location In Paragraph</label>
                                     <input type="text" name="paragraph_link" id="paragraph_link" value="{{old('paragraph_link')}}" maxlength="1" class="form-control" placeholder="">
                                 </div>

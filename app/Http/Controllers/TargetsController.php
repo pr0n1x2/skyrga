@@ -7,6 +7,7 @@ use App\Profile;
 use App\Project;
 use App\Proxy;
 use App\Proxy\ProxyChecker;
+use App\Randomizer\ArticleBuilder;
 use App\Randomizer\Randomizer;
 use App\Target;
 use Illuminate\Http\Request;
@@ -22,7 +23,11 @@ class TargetsController extends Controller
      */
     public function index()
     {
-        //
+        $target = Target::find(1);
+        $post = $target->profile->getNextPost();
+
+        $articleBuilder = new ArticleBuilder($post, 'Los Angeles', $target->project);
+        $articleBuilder->getArticle();
     }
 
     /**
@@ -205,29 +210,12 @@ class TargetsController extends Controller
         }
 
         return view('targets.regcomplete', compact('target', 'request'));
-        /* here you can put your own css to customize and override the theme */
-//        .auth-has-error span {
-//            background-color: #ffc7c7;
-//            color: #bf1212;
-//            padding: 5px 10px;
-//        }
-//
-//        .form-padding-0 {
-//                padding: 0 20px !important;
-//        }
-//
-//        .todo-comment-head {
-//                margin:0px;
-//        }
-//
-//        .ubot-full-width {
-//                margin-left: 0 !important;
-//        }
     }
 
     public function checkProxy(Request $request)
     {
         // https://free-proxy-list.net/
+        // https://www.blackhatprotools.info/showthread.php?2-How-To-Become-VIP-Member-amp-Why
         $target = Target::find($request->get('target_id'));
         $activeProxyID = 0;
 
