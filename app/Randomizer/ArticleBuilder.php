@@ -2,8 +2,7 @@
 
 namespace App\Randomizer;
 
-use App\Post;
-use App\Project;
+use App\Target;
 use Mikemike\Spinner\Spinner;
 
 class ArticleBuilder
@@ -13,27 +12,46 @@ class ArticleBuilder
 
     private $post;
     private $city;
-    private $project;
     private $spinner;
     private $paragraphs = [];
-    private $isUseLinks = true;
 
-    public function __construct(Post $post, $city = null, Project $project = null)
+    private $isUseLinks = true;
+    private $isUseImages;
+    private $isUseVideos;
+
+    private $paragraphFrame;
+    private $headingFrame;
+    private $linkFrame;
+    private $imageFrame;
+    private $videoFrame;
+
+    private $paragraphLink;
+
+    public function __construct(Target $target)
     {
-        $this->post = $post;
-        $this->city = $city;
-        $this->project = $project;
+        $this->post = $target->profile->getNextPost();
+        $this->city = $target->profile->city;
+        $this->isUseImages = (bool)$target->project->is_use_images;
+        $this->isUseVideos = (bool)$target->project->is_use_videos;
+        $this->paragraphFrame = $target->project->paragraph_frame;
+        $this->headingFrame = $target->project->heading_frame;
+        $this->linkFrame = $target->project->link_frame;
+        $this->imageFrame = $target->project->image_frame;
+        $this->videoFrame = $target->project->video_frame;
+        $this->paragraphLink = $target->project->paragraph_link;
         $this->spinner = new Spinner();
+
+        $this->dividedIntoParagraphs();
     }
 
-    public function useLinks($isUse)
+    public function useLinks($isUseLinks)
     {
-        $this->isUseLinks = $isUse;
+        $this->isUseLinks = $isUseLinks;
     }
 
     public function getArticle()
     {
-        $this->dividedIntoParagraphs();
+        //
     }
 
     private function dividedIntoParagraphs()
@@ -67,9 +85,9 @@ class ArticleBuilder
                 $this->paragraphs[$i]['html'],
                 $this->paragraphs[$i]['type']
             );
-//            $this->paragraphs[$i] = $this->replaceCity($this->paragraphs[$i]);
+            $this->paragraphs[$i]['html'] = $this->replaceCity($this->paragraphs[$i]['html']);
         }
-//        HeidiSQL
+
         dd($this->paragraphs);
     }
 

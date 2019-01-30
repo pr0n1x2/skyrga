@@ -24,9 +24,8 @@ class TargetsController extends Controller
     public function index()
     {
         $target = Target::find(1);
-        $post = $target->profile->getNextPost();
 
-        $articleBuilder = new ArticleBuilder($post, 'Los Angeles', $target->project);
+        $articleBuilder = new ArticleBuilder($target);
         $articleBuilder->getArticle();
     }
 
