@@ -3,18 +3,22 @@
 namespace App\Randomizer;
 
 use App\Account;
+use App\Post;
 use App\Target;
 use Carbon\Carbon;
+use Mikemike\Spinner\Spinner;
 
 class Randomizer
 {
     private $target;
     private $account;
+    private $spinner;
 
     public function __construct(Target $target, Account $account)
     {
         $this->target = $target;
         $this->account = $account;
+        $this->spinner = new Spinner();
     }
 
     // Возвращает имя профиля (как называется профиль в админке)
@@ -240,13 +244,23 @@ class Randomizer
     // Возвращает описание блога или описание компании
     public function getBlogDescription()
     {
-        //
+        $post = new Post();
+        $post->text = $this->target->profile->about;
+
+        $articleBuilder = new ArticleBuilder($post, $this->target->profile->city);
+
+        return $articleBuilder->getArticle();
     }
 
     // Возвращает описание блога или описание компании (первый параграф)
     public function getBlogDescriptionFirstParagraph()
     {
-        //
+        $post = new Post();
+        $post->text = $this->target->profile->about;
+
+        $articleBuilder = new ArticleBuilder($post, $this->target->profile->city);
+
+        return $articleBuilder->getFirstParagraph();
     }
 
     // Возвращает ключевую фразу для ссылки

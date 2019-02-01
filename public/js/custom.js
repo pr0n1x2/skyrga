@@ -1715,6 +1715,50 @@ var FormValidation = function () {
         });
     }
 
+    var hrefsValidation = function() {
+
+        var form = $('#hrefs_form');
+        var scrollTo = $('.portlet-title');
+
+        form.validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block help-block-error', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            ignore: "",  // validate all fields including form hidden input
+            messages: {
+            },
+            rules: {
+                site: {
+                    required: true,
+                    url: true
+                }
+            },
+
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                App.scrollTo(scrollTo, 0);
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element)
+                    .closest('.form-group').removeClass('has-error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                label
+                    .closest('.form-group').removeClass('has-error'); // set success class to the control group
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -1777,6 +1821,10 @@ var FormValidation = function () {
 
             if ($('#targets_form').length) {
                 targetsValidation();
+            }
+
+            if ($('#hrefs_form').length) {
+                hrefsValidation();
             }
         }
 
@@ -2078,12 +2126,67 @@ var ModalsManaged = function () {
                 previousAccount = $(this);
                 $(this).addClass('label-primary');
                 $('#target_id').val($(this).data('item'));
+                selected = $(this).parent().parent().find('.desc').text();
+                $('#target').find('span').text(selected.trim());
             });
         }
 
         return {
             init: function () {
                 manager();
+            }
+        }
+    }()
+
+    var copyAccountInfo = function() {
+        var manage = function(){
+
+            $('.copy-data').click(function () {
+                el = $(this);
+
+                if (el.hasClass('copy-email')) {
+                    data = el.parent().find('.email').text();
+                    message = "E-mail has been copied to your clipboard.";
+                } else if (el.hasClass('copy-username')) {
+                    data = el.parent().find('span').text();
+                    message = "Username has been copied to your clipboard.";
+                } else if (el.hasClass('copy-password')) {
+                    data = el.parent().find('span').text();
+                    message = "Password has been copied to your clipboard.";
+                }
+
+                el = document.createElement('textarea');
+                el.value = data;
+                el.setAttribute('readonly', '');
+                el.style.position = 'absolute';
+                el.style.left = '-9999px';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "onclick": null,
+                    "showDuration": "1000",
+                    "hideDuration": "1000",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
+                toastr.success(message);
+            });
+        }
+
+        return {
+            init: function () {
+                manage();
             }
         }
     }()
@@ -2145,6 +2248,7 @@ var ModalsManaged = function () {
                 setAccountPassword.init();
                 deleteAccount.init();
                 selectAccount.init();
+                copyAccountInfo.init();
             }
         }
 

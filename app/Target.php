@@ -58,7 +58,7 @@ class Target extends Model
         return $counts;
     }
 
-    public static function getNextTargetID($targets)
+    public static function getNextTarget($targets)
     {
         $counts = Target::getTargetsCounts($targets);
         $index = false;
@@ -78,9 +78,9 @@ class Target extends Model
                 return $target->is_register == 0;
             });
 
-            return $first->id;
+            return $first;
         }
 
-        return 0;
+        return null;
     }
 }

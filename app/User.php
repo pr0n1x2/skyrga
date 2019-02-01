@@ -55,6 +55,11 @@ class User extends Authenticatable
         return self::$userRoles[$role];
     }
 
+    public function hrefs()
+    {
+        return $this->hasMany(Href::class);
+    }
+
     public static function uploadUserPhoto(UploadedFile $file)
     {
         $filename = uniqid() . '.' . $file->extension();

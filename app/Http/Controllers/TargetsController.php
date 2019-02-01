@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Post;
 use App\Profile;
 use App\Project;
 use App\Proxy;
@@ -24,9 +25,24 @@ class TargetsController extends Controller
     public function index()
     {
         $target = Target::find(1);
+//        $post = $target->profile->getNextPost();
+//
+//        $articleBuilder = new ArticleBuilder($post, $target->profile->city, $target);
+//        $article = $articleBuilder->getArticle();
+//        $title = $articleBuilder->getTitle();
+//        $paragraph = $articleBuilder->getFirstParagraph();
 
-        $articleBuilder = new ArticleBuilder($target);
-        $articleBuilder->getArticle();
+        $post = new Post();
+        $post->text = $target->profile->about;
+
+        $articleBuilder = new ArticleBuilder($post, $target->profile->city);
+        $article = $articleBuilder->getArticle();
+        $title = $articleBuilder->getTitle();
+        $paragraph = $articleBuilder->getFirstParagraph();
+
+        dd($paragraph);
+        echo $paragraph;
+        exit;
     }
 
     /**
@@ -189,14 +205,27 @@ class TargetsController extends Controller
             ->groupBy('project_id');
 
         $counts = Target::getTargetsCounts($targets);
-        $activeTargetID = Target::getNextTargetID($targets);
+        $nextTarget = Target::getNextTarget($targets);
+
+        if ($nextTarget) {
+            $activeTargetID = $nextTarget->id;
+            $activeTargetStr = $nextTarget->profile->name . ' (' . $nextTarget->profile->domain . ')';
+        } else {
+            $activeTargetID = 0;
+        }
 
         $projects = Project::select('id', 'name', 'domain', 'register_page', 'login_page')
             ->whereIn('id', $targets->keys())
             ->orderBy('id', 'asc')
             ->get();
 
-        return view('targets.register', compact('targets', 'projects', 'counts', 'activeTargetID'));
+        return view('targets.register', compact(
+            'targets',
+            'projects',
+            'counts',
+            'activeTargetID',
+            'activeTargetStr'
+        ));
     }
 
     public function registerComplete(Request $request)

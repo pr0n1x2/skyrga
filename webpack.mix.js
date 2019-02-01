@@ -21,6 +21,7 @@ mix.styles([
     'resources/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css',
     'resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
     'resources/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
+    'resources/assets/global/plugins/bootstrap-toastr/toastr.min.css',
     'resources/assets/global/css/components.min.css',
     'resources/assets/global/css/plugins.min.css',
     'resources/assets/layouts/layout/css/layout.min.css',
@@ -45,6 +46,7 @@ mix.scripts([
     'resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js',
     'resources/assets/global/plugins/jquery-validation/js/jquery.validate.min.js',
     'resources/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
+    'resources/assets/global/plugins/bootstrap-toastr/toastr.min.js',
     'resources/assets/global/scripts/app.min.js',
     'resources/assets/layouts/layout/scripts/layout.min.js',
 ], 'public/js/app.js');
