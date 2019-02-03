@@ -37,7 +37,7 @@ class CreateHrefsTable extends Migration
             $table->index('is_analized');
             $table->index('analized_date');
             $table->index('user_id');
-            $table->unique(['site_id', 'url']);
+            $table->unique(['domain_id', 'site_id', 'url']);
         });
     }
 

@@ -53,7 +53,7 @@
                     <!-- BEGIN FORM-->
                     {{Form::open(['route' => 'hrefs.store', 'id' => 'hrefs_form', 'files' => true, 'class' => 'horizontal-form'])}}
                     <div class="form-body">
-                        <h3 class="form-section">Ahrefs Info</h3>
+                        <h3 class="form-section">Site Info</h3>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -64,10 +64,27 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
-                        <h3 class="form-section">CSV File</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">City</label>
+                                    {{Form::select('sites_city_id', $cities, old('sites_city_id'), ['placeholder' => 'Pick a City', 'class' => 'form-control', 'tabindex' => 1])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Type</label>
+                                    {{Form::select('sites_type_id', $types, old('sites_type_id'), ['placeholder' => 'Pick a Type', 'class' => 'form-control', 'tabindex' => 2])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Ahrefs Data</h3>
                         <div class="row">
                             <div class="col-md-2">
-                                <label class="control-label">Statistics File</label>
+                                <label class="control-label">Statistics CSV File</label>
                             </div>
                             <div class="col-md-10">
                                 <div class="form-group">

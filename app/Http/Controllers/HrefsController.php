@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Domain;
+use App\Href;
+use App\HrefsType;
+use App\Site;
+use App\SitesCity;
+use App\SitesType;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
@@ -25,7 +30,10 @@ class HrefsController extends Controller
      */
     public function create()
     {
-        return view('hrefs.create');
+        return view('hrefs.create', [
+            'cities' => SitesCity::orderBy('name', 'asc')->get()->pluck('name', 'id'),
+            'types' => SitesType::all()->pluck('name', 'id')
+        ]);
     }
 
     /**
@@ -57,15 +65,67 @@ class HrefsController extends Controller
                     ]));
             }
 
+            $siteId = Site::getSiteId(
+                $request->get('site'),
+                $request->get('sites_city_id'),
+                $request->get('sites_type_id')
+            );
+            // Незабыть изменить уникальный индекс
             while (($data = fgetcsv($handle, 2048, ";")) !== false) {
-                $domainRating = $data[2];
-                $url = $data[5];
-                $pageTitle = $data[6];
-                $linkUrl = $data[9];
-                $externalLinksCount = $data[8];
+                $domainRating = (int)$data[2];
 
-                $domainId = Domain::getDomainId($url);
+                if ($domainRating) {
+                    $url = $data[5];
+                    $pageTitle = $data[6];
+                    $linkUrl = $data[9];
+                    $externalLinksCount = $data[8];
+                    $linkAnchor = $data[11];
+                    $type = $data[13];
+
+                    $typeId = HrefsType::getTypeId($type);
+                    $domainId = Domain::getDomainId($url, $domainRating);
+
+                    $urlInfo = parse_url($url);
+                    $urlStr = $urlInfo['path'];
+
+                    if (isset($urlInfo['query'])) {
+                        $urlStr .= '?' . $urlInfo['query'];
+                    }
+
+                    if (strlen($urlStr) > 191) {
+                        $urlStr = substr($urlStr, 0, 191);
+                    }
+
+                    if (strlen($pageTitle) > 191) {
+                        $pageTitle = substr($pageTitle, 0, 191);
+                    }
+
+                    if (strlen($linkUrl) > 191) {
+                        $linkUrl = substr($linkUrl, 0, 191);
+                    }
+
+                    if (strlen($linkAnchor) > 191) {
+                        $linkAnchor = substr($linkAnchor, 0, 191);
+                    }
+
+                    $isUseDomain = Href::isUseDomain($domainId);
+
+                    $href = new Href();
+                    $href->domain_id = $domainId;
+                    $href->site_id = $siteId;
+                    $href->url = $urlStr;
+                    $href->page_title = $pageTitle;
+                    $href->link_url = $linkUrl;
+                    $href->link_anchor = $linkAnchor;
+                    $href->external_links_count = $externalLinksCount;
+                    $href->hrefs_status_id = 1;
+                    $href->hrefs_type_id = $typeId;
+                    $href->is_analized = !$isUseDomain ? true : false;
+                    $href->save();
+                }
             }
+
+            Domain::updateDomainRating();
 
             fclose($handle);
         }
