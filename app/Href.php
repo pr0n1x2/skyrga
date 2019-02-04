@@ -11,12 +11,12 @@ class Href extends Model
 
     public function status()
     {
-        return $this->belongsTo(HrefsStatus::class);
+        return $this->belongsTo(HrefsStatus::class, 'hrefs_status_id', 'id');
     }
 
     public function type()
     {
-        return $this->belongsTo(HrefsType::class);
+        return $this->belongsTo(HrefsType::class, 'hrefs_type_id', 'id');
     }
 
     public function site()

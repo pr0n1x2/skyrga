@@ -31,7 +31,7 @@ class Site extends Model
         if (!$site) {
             $site = new self();
             $site->domain = $domain;
-            $site->url = strtolower($url);
+            $site->url = $domainParts['scheme'] . '://' . $domainParts['host'];
             $site->sites_city_id = $city_id;
             $site->sites_type_id = $type_id;
             $site->save();

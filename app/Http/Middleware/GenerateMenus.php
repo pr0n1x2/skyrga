@@ -31,6 +31,11 @@ class GenerateMenus
                         ->append('</span>')
                         ->link->attr(['class' => 'nav-link']);
 
+                    $menu->add('Link Analysis', ['route' => 'hrefs.index', 'class' => 'nav-item'])
+                        ->prepend('<i class="fa fa-globe"></i><span class="title">')
+                        ->append('</span>')
+                        ->link->attr(['class' => 'nav-link']);
+
                     $menu->add('Articles', ['route' => 'articles.index', 'class' => 'nav-item'])
                         ->prepend('<i class="fa fa-file-text-o"></i><span class="title">')
                         ->append('</span>')

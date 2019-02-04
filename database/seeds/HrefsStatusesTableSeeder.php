@@ -12,7 +12,7 @@ class HrefsStatusesTableSeeder extends Seeder
     public function run()
     {
         $statuses = [
-            'New',
+            'New', 'Success', 'Custom Error'
         ];
 
         for ($i = 0; $i < count($statuses); $i++) {

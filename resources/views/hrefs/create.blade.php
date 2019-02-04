@@ -18,7 +18,7 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <a href="{{route('hrefs.index')}}">List of Hrefs</a>
+                        <a href="{{route('hrefs.index')}}">Link Analysis</a>
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
@@ -44,7 +44,7 @@
             <div class="portlet light bg-inverse">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-file-image-o font-red-sunglo"></i>
+                        <i class="fa fa-globe font-red-sunglo"></i>
                         <span class="caption-subject font-red-sunglo bold uppercase">Upload new ahrehs links form</span>
                     </div>
                 </div>

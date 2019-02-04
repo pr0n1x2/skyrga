@@ -20,7 +20,24 @@ class HrefsController extends Controller
      */
     public function index()
     {
-        //
+        $href = null;
+
+        $link = Href::select('hrefs.id', 'domains.rating')
+            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+            ->where('hrefs.is_analized', 1)
+            ->where('hrefs.hrefs_status_id', 1)
+            ->orderBy('domains.rating', 'desc')
+            ->orderBy('hrefs.id', 'asc')
+            ->limit(1)
+            ->get()
+            ->pluck('id')
+            ->toArray();
+
+        if ($link) {
+            $href = Href::find($link[0]);
+        }
+
+        return view('hrefs.index', compact('href'));
     }
 
     /**
@@ -70,7 +87,7 @@ class HrefsController extends Controller
                 $request->get('sites_city_id'),
                 $request->get('sites_type_id')
             );
-            // Незабыть изменить уникальный индекс
+
             while (($data = fgetcsv($handle, 2048, ";")) !== false) {
                 $domainRating = (int)$data[2];
 

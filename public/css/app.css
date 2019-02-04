@@ -785,3 +785,34 @@ div.dataTables_scrollHead table.table-bordered {
 .ubot-full-width {
     margin-left: 0 !important;
 }
+
+.hrefs-data {
+    padding: 10px 0px 5px 0;
+    word-wrap: break-word;
+}
+
+.hrefs-row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.hrefs-left {
+    padding-left: 0;
+}
+
+.hrefs-right {
+    padding-right: 0;
+}
+
+.hrefs-ribon {
+    padding-top: 50px;
+}
+
+.href-ribon.ribbon-border-hor:after {
+    border: 0 !important;
+}
+
+.radio-success {
+    border-bottom: 1px solid #c7c1c1;
+    padding-bottom: 5px;
+}
