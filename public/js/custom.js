@@ -1759,6 +1759,52 @@ var FormValidation = function () {
         });
     }
 
+    var hrefsStatusValidation = function() {
+
+        var form = $('#edit_hrefs_form');
+        var scrollTo = $('.portlet-title');
+
+        form.validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block help-block-error', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            ignore: "",  // validate all fields including form hidden input
+            messages: {
+            },
+            rules: {
+            },
+
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                App.scrollTo(scrollTo, 0);
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element)
+                    .closest('.form-group').removeClass('has-error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                label
+                    .closest('.form-group').removeClass('has-error'); // set success class to the control group
+            },
+
+            submitHandler: function (form) {
+                var errorStatus = $('input[name=hrefs_status_id]:checked').val();
+
+                if(errorStatus === undefined) {
+                    return false;
+                }
+
+                form.submit();
+            }
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -1825,6 +1871,10 @@ var FormValidation = function () {
 
             if ($('#hrefs_form').length) {
                 hrefsValidation();
+            }
+
+            if ($('#edit_hrefs_form').length) {
+                hrefsStatusValidation();
             }
         }
 
@@ -2191,6 +2241,72 @@ var ModalsManaged = function () {
         }
     }()
 
+    var linkAnalysis = function() {
+        var manage = function(){
+            var previousRadio = $('label.font-red-thunderbird');
+
+            $('.copy-data').click(function () {
+                var el = $(this);
+                var data = el.parent().find('span').text();
+
+                if (el.hasClass('copy-url')) {
+                    data = window.location.protocol + '//' + window.location.hostname + /hrefs/ + data;
+                    message = "Link url has been copied to your clipboard.";
+                } else if (el.hasClass('copy-keyword')) {
+                    message = "Keyword has been copied to your clipboard.";
+                } else if (el.hasClass('copy-anchor')) {
+                    message = "Anchor has been copied to your clipboard.";
+                }
+
+                el = document.createElement('textarea');
+                el.value = data;
+                el.setAttribute('readonly', '');
+                el.style.position = 'absolute';
+                el.style.left = '-9999px';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "onclick": null,
+                    "showDuration": "1000",
+                    "hideDuration": "1000",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
+                toastr.success(message);
+            });
+
+            $('.radio-error').click(function () {
+                if (previousRadio) {
+                    previousRadio.removeClass('font-red-thunderbird');
+                }
+
+                $(this).addClass('font-red-thunderbird');
+                previousRadio = $(this);
+            });
+
+            $('.font-green-jungle').click(function () {
+                $('label.font-red-thunderbird').removeClass('font-red-thunderbird');
+            });
+        }
+
+        return {
+            init: function () {
+                manage();
+            }
+        }
+    }()
+
     return {
         //main function to initiate the module
         init: function () {
@@ -2249,6 +2365,10 @@ var ModalsManaged = function () {
                 deleteAccount.init();
                 selectAccount.init();
                 copyAccountInfo.init();
+            }
+
+            if ($('#edit_hrefs_form').length) {
+                linkAnalysis.init();
             }
         }
 

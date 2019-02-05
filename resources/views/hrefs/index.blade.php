@@ -46,6 +46,8 @@
         </div>
         <!-- END PAGE BAR -->
         <!-- END PAGE HEADER-->
+        @include('errors')
+        @include('success')
         <div class="row hrefs-row">
             <div class="col-md-6 hrefs-left">
                 @php
@@ -63,7 +65,7 @@
                         <div class="hrefs-data col-md-8"><a href="{{$domain}}" target="_blank">{{$domain}}</a></div>
                     </div>
                     <div class="row hrefs-row">
-                        <div class="hrefs-data col-md-4">Link:</div>
+                        <div class="hrefs-data col-md-4"><strong>Link:</strong></div>
                         <div class="hrefs-data col-md-8"><a href="{{$link}}" target="_blank">{{$link}}</a></div>
                     </div>
                     <div class="row hrefs-row">
@@ -80,11 +82,15 @@
                     </div>
                     <div class="row hrefs-row">
                         <div class="hrefs-data col-md-4">Search in Google:</div>
-                        <div class="hrefs-data col-md-8"><a href="{{$google}}" target="_blank" class="btn btn-xs btn-info"> <i class="fa fa-google"></i> Find Acceptor in Google </a></div>
+                        <div class="hrefs-data col-md-8"><a href="{{$google}}" target="_blank" class="btn btn-xs blue-hoki"> <i class="fa fa-google"></i> Find Acceptor in Google </a></div>
+                    </div>
+                    <div class="row hrefs-row">
+                        <div class="hrefs-data col-md-4">Link Url:</div>
+                        <div class="hrefs-data col-md-8"><a href="javascript:;" class="btn btn-xs yellow copy-data copy-url"> <i class="fa fa-copy"></i></a> <span>{{$href->id}}</span></div>
                     </div>
                 </div>
                 <div class="mt-element-ribbon hrefs-ribon bg-grey-steel">
-                    <div class="ribbon ribbon-border-hor ribbon-clip href-ribon ribbon-color-success uppercase">
+                    <div class="ribbon ribbon-border-hor ribbon-clip href-ribon ribbon-color-info uppercase">
                         <div class="ribbon-sub ribbon-clip"></div> Acceptor site
                     </div>
                     <div class="row hrefs-row">
@@ -100,31 +106,53 @@
                         <div class="hrefs-data col-md-8">{{$href->type->name}}</div>
                     </div>
                     <div class="row hrefs-row">
-                        <div class="hrefs-data col-md-4">Keyword:</div>
-                        <div class="hrefs-data col-md-8"><a href="javascript:;" class="btn btn-xs yellow"> <i class="fa fa-copy"></i> </a>
-                            {{$href->site->domain}}
+                        <div class="hrefs-data col-md-4"><strong>Keyword:</strong></div>
+                        <div class="hrefs-data col-md-8"><a href="javascript:;" class="btn btn-xs yellow copy-data copy-keyword"> <i class="fa fa-copy"></i> </a>
+                            <span>{{$href->site->domain}}</span>
                         </div>
                     </div>
                     <div class="row hrefs-row">
                         <div class="hrefs-data col-md-4">Anchor:</div>
-                        <div class="hrefs-data col-md-8"><a href="javascript:;" class="btn btn-xs yellow"> <i class="fa fa-copy"></i> </a>
-                            {{$href->link_anchor}}
+                        <div class="hrefs-data col-md-8"><a href="javascript:;" class="btn btn-xs yellow copy-data copy-anchor"> <i class="fa fa-copy"></i> </a>
+                            <span>{{$href->link_anchor}}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 hrefs-right">
                 <div class="mt-element-ribbon hrefs-ribon bg-grey-steel">
-                    <div class="ribbon ribbon-border-hor ribbon-clip href-ribon ribbon-color-info uppercase">
+                    <div class="ribbon ribbon-border-hor ribbon-clip href-ribon ribbon-color-success uppercase">
                         <div class="ribbon-sub ribbon-clip"></div> Status
                     </div>
-                    {{Form::open(['route' => ['hrefs.index'], 'id' => 'articles_form', 'class' => 'horizontal-form'])}}
+                    {{Form::open(['route' => ['hrefs.update', $href->id], 'method' => 'put', 'id' => 'edit_hrefs_form', 'class' => 'horizontal-form'])}}
                     <div class="row hrefs-row">
-                        <div class="hrefs-data radio-success col-md-12">
+                        <div class="hrefs-status col-md-12">
                             <div class="radio-list">
-                                <label class="radio-inline">
-                                    <input type="radio" name="optionsRadios" id="optionsRadios25" value="option1" checked> The site was successfully registered and managed to place a link. </label>
+                                <label class="radio-inline font-green-jungle">
+                                    <input type="radio" name="hrefs_status_id" value="2" @if($href->hrefs_status_id == 2) checked @endif> <strong>The site was successfully registered and the link has been posted</strong> </label>
                             </div>
+                        </div>
+                        @foreach($statuses as $status)
+                            <div class="hrefs-status col-md-12">
+                                <div class="radio-list">
+                                    <label class="radio-inline radio-error @if($href->hrefs_status_id == $status->id) font-red-thunderbird @endif">
+                                        <input type="radio" name="hrefs_status_id" value="{{$status->id}}" @if($href->hrefs_status_id == $status->id) checked @endif> {{$status->name}} </label>
+                                </div>
+                            </div>
+                        @endforeach
+                        <div class="hrefs-status col-md-12">
+                            <div class="radio-list">
+                                <label class="radio-inline radio-error">
+                                    <input type="radio" name="hrefs_status_id" value="3" @if($href->hrefs_status_id == 3) checked @endif> Other reason </label>
+                            </div>
+                        </div>
+                        <div class="hrefs-status col-md-12">
+                            <div class="form-group">
+                                <textarea name="comment" class="form-control" rows="3" placeholder="The reason (optional)">{{$href->comment}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn green"><i class="fa fa-check"></i> Submit</button>
                         </div>
                     </div>
                     {{Form::close()}}

@@ -812,7 +812,22 @@ div.dataTables_scrollHead table.table-bordered {
     border: 0 !important;
 }
 
-.radio-success {
-    border-bottom: 1px solid #c7c1c1;
-    padding-bottom: 5px;
+.hrefs-status {
+    padding: 4px 0 4px 0;
+}
+
+.hrefs-right > .hrefs-ribon {
+    min-height: 700px;
+}
+
+.hrefs-left > .hrefs-ribon:nth-child(1) {
+    min-height: 400px;
+}
+
+.hrefs-left > .hrefs-ribon:nth-child(2) {
+    min-height: 270px;
+}
+
+.radio-error:hover {
+    color: #D91E18;
 }

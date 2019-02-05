@@ -53,6 +53,7 @@ Route::group(['middleware' => 'author'], function () {
 Route::group(['middleware' => 'user'], function () {
     Route::get('projects/zip', 'ProjectsController@zip');
     Route::get('projects/download/{id}/{file}', 'ProjectsController@download');
+    Route::get('hrefs/{id}', 'HrefsController@index');
 
     Route::resources([
         'images' => 'ImagesController',
@@ -67,6 +68,7 @@ Route::group(['middleware' => 'user'], function () {
         'targets' => 'TargetsController',
         'hrefs' => 'HrefsController'
     ]);
+
 
     Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');

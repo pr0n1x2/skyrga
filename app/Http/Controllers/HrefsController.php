@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Domain;
 use App\Href;
+use App\HrefsStatus;
 use App\HrefsType;
 use App\Site;
 use App\SitesCity;
 use App\SitesType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 
 class HrefsController extends Controller
@@ -18,26 +21,32 @@ class HrefsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id = null)
     {
         $href = null;
 
-        $link = Href::select('hrefs.id', 'domains.rating')
-            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
-            ->where('hrefs.is_analized', 1)
-            ->where('hrefs.hrefs_status_id', 1)
-            ->orderBy('domains.rating', 'desc')
-            ->orderBy('hrefs.id', 'asc')
-            ->limit(1)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+        if (is_numeric($id)) {
+            $href = Href::find($id);
+        } else {
+            $link = Href::select('hrefs.id', 'domains.rating')
+                ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+                ->where('hrefs.is_analized', 1)
+                ->where('hrefs.hrefs_status_id', 1)
+                ->orderBy('domains.rating', 'desc')
+                ->orderBy('hrefs.id', 'asc')
+                ->limit(1)
+                ->get()
+                ->pluck('id')
+                ->toArray();
 
-        if ($link) {
-            $href = Href::find($link[0]);
+            if ($link) {
+                $href = Href::find($link[0]);
+            }
         }
 
-        return view('hrefs.index', compact('href'));
+        $statuses = HrefsStatus::where('id', '>', 3)->get();
+
+        return view('hrefs.index', compact('href', 'statuses'));
     }
 
     /**
@@ -167,7 +176,7 @@ class HrefsController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -179,7 +188,19 @@ class HrefsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'hrefs_status_id' => 'required',
+        ]);
+
+        $href = Href::find($id);
+        $href->hrefs_status_id = $request->get('hrefs_status_id');
+        $href->comment = $request->get('comment');
+        $href->analized_date = Carbon::now()->format('Y-m-d');
+        $href->user_id = Auth::user()->id;
+        $href->save();
+
+        return redirect()->route('hrefs.index')
+            ->with('success', 'The link was successfully processed and saved with the new status.');
     }
 
     /**
