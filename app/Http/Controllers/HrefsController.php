@@ -12,10 +12,13 @@ use App\SitesType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
 
 class HrefsController extends Controller
 {
+    const PAGINATE_COUNT = 25;
+
     /**
      * Display a listing of the resource.
      *
@@ -24,6 +27,9 @@ class HrefsController extends Controller
     public function index($id = null)
     {
         $href = null;
+        $subDomains = null;
+        $statuses = null;
+        $pagesFromDomain = null;
 
         if (is_numeric($id)) {
             $href = Href::find($id);
@@ -44,9 +50,36 @@ class HrefsController extends Controller
             }
         }
 
-        $statuses = HrefsStatus::where('id', '>', 3)->get();
+        if ($href) {
+            if ($href->domain->root_domain_id) {
+                $subDomainsIds = $href->domain->rootDomain->subDomains->filter(function ($value) use ($href) {
+                    return $value->id != $href->domain->id;
+                })->pluck('id')->toArray();
 
-        return view('hrefs.index', compact('href', 'statuses'));
+                if ($subDomainsIds) {
+                    $subDomains = Href::with(['domain' => function ($query) {
+                        $query->with('scheme');
+                    }, 'site'])->whereIn('domain_id', $subDomainsIds)
+                        ->orderBy('id')
+                        ->get();
+                }
+            }
+
+            $pagesFromDomain = Href::with(['domain' => function ($query) {
+                $query->with('scheme');
+            }, 'site'])->where('domain_id', $href->domain_id)
+                ->where('id', '<>', $href->id)
+                ->orderBy('id', 'asc')
+                ->get();
+
+            if (!$pagesFromDomain->count()) {
+                $pagesFromDomain = null;
+            }
+
+            $statuses = HrefsStatus::where('id', '>', 3)->get();
+        }
+
+        return view('hrefs.index', compact('href', 'statuses', 'subDomains', 'pagesFromDomain'));
     }
 
     /**
@@ -212,5 +245,45 @@ class HrefsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function successful(Request $request)
+    {
+//        Задание для Андрея
+//        DB::connection()->enableQueryLog();
+        $domain = null;
+        $date = null;
+
+        $query = Href::select(['hrefs.id', 'hrefs.domain_id', 'hrefs.analized_date', 'hrefs.user_id'])
+            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+            ->with(['domain' => function ($query) {
+                $query->with('scheme');
+            }, 'user'])
+            ->where([['hrefs.is_analized', 1], ['hrefs.hrefs_status_id', 2]])
+            ->orderBy('hrefs.analized_date', 'desc')
+            ->orderBy('hrefs.id', 'asc');
+
+        if ($request->query('search')) {
+            $domain = $request->query('domain');
+            $date = $request->query('date');
+
+            if ($domain) {
+                $query->where('domains.domain', 'like', '%' . $domain . '%');
+            }
+
+            if ($date) {
+                $query->where('hrefs.analized_date', $date);
+            }
+        }
+
+        $hrefs = $query->paginate(self::PAGINATE_COUNT);
+        $hrefs->appends($request->only(['domain', 'date', 'search']));
+
+//        dd($hrefs);
+//        dd(DB::getQueryLog());
+
+
+
+        return view('hrefs.successful', compact('hrefs', 'domain', 'date'));
     }
 }

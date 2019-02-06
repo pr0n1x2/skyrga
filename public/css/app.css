@@ -804,6 +804,28 @@ div.dataTables_scrollHead table.table-bordered {
     padding-right: 0;
 }
 
+.hrefs-center {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.hrefs-table {
+    background-color: transparent !important;
+}
+
+.hrefs-table>thead>tr>th {
+    border-bottom: 2px solid #88a0b9;
+}
+
+.hrefs-table>tbody>tr>td {
+    border-top: 1px solid #acbac7;
+    vertical-align: middle;
+}
+
+.hrefs-table-hover>tbody>tr:hover {
+    background-color: #f7f5f5;
+}
+
 .hrefs-ribon {
     padding-top: 50px;
 }
@@ -831,3 +853,4 @@ div.dataTables_scrollHead table.table-bordered {
 .radio-error:hover {
     color: #D91E18;
 }
+
