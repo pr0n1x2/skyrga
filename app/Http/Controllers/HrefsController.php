@@ -261,7 +261,7 @@ class HrefsController extends Controller
             }, 'user'])
             ->where([['hrefs.is_analized', 1], ['hrefs.hrefs_status_id', 2]])
             ->orderBy('hrefs.analized_date', 'desc')
-            ->orderBy('hrefs.id', 'asc');
+            ->orderBy('hrefs.id', 'desc');
 
         if ($request->query('search')) {
             $domain = $request->query('domain');

@@ -22,7 +22,7 @@
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
-                    <span>Successful Domains</span>
+                    <span> List of Successful Domains </span>
                 </li>
             </ul>
             <div class="page-toolbar">
@@ -94,12 +94,13 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th> ID </th>
-                                <th> Domain </th>
-                                <th> Status </th>
-                                <th> Date </th>
-                                <th> User </th>
-                                <th> Action </th>
+                                <th sryle="width:10%"> ID </th>
+                                <th sryle="width:30%"> Domain </th>
+                                <th sryle="width:5%"> Domain Rating </th>
+                                <th sryle="width:15%"> Status </th>
+                                <th sryle="width:15%"> Date </th>
+                                <th sryle="width:15%"> User </th>
+                                <th sryle="width:10%"> Action </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -111,10 +112,11 @@
                                 <tr>
                                     <td> {{$href->id}} </td>
                                     <td> <a href="{{$domain}}" target="_blank">{{$domain}}</a> </td>
-                                    <td>  </td>
+                                    <td> {{$href->domain->rating}} </td>
+                                    <td> <span class="label label-success"> Successful </span> </td>
                                     <td> {{$date}} </td>
                                     <td> {{$href->user->fullname}} </td>
-                                    <td> Action </td>
+                                    <td> <a href="{{route('hrefs.analyze', $href->id)}}" target="_blank" class="btn btn-xs purple"> <i class="fa fa-external-link"></i> Analyze Link </a> </td>
                                 </tr>
                             @endforeach
                             </tbody>
