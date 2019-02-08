@@ -32,6 +32,15 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
+                                <a href="{{route('hrefs.successful')}}">
+                                    <i class="fa fa-thumbs-o-up"></i> Show Successful Domains</a>
+                            </li>
+                            <li>
+                                <a href="{{route('hrefs.failed')}}">
+                                    <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
                                 <a href="{{route('hrefs.index')}}">
                                     <i class="icon-action-undo"></i> Back to Hrefs</a>
                             </li>

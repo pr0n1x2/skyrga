@@ -854,3 +854,18 @@ div.dataTables_scrollHead table.table-bordered {
     color: #D91E18;
 }
 
+.table-data-scrollable {
+    text-align: right;
+}
+
+.field-to-rigth {
+    padding-right: 0;
+}
+
+.button-right {
+    text-align: right;
+}
+
+.table-td-first {
+    text-align: center;
+}

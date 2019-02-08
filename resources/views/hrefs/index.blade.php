@@ -28,12 +28,12 @@
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                         <li>
-                            <a href="#">
-                                <i class="icon-bell"></i> Action</a>
+                            <a href="{{route('hrefs.successful')}}">
+                                <i class="fa fa-thumbs-o-up"></i> Show Successful Domains</a>
                         </li>
                         <li>
-                            <a href="#">
-                                <i class="icon-shield"></i> Another action</a>
+                            <a href="{{route('hrefs.failed')}}">
+                                <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
                         </li>
                         <li class="divider"> </li>
                         <li>
@@ -56,7 +56,7 @@
         @if($href->is_analized && $href->hrefs_status_id != 1)
             <div class="alert alert-info alert-dismissable">
                 @php
-                    $date = Carbon\Carbon::createFromFormat('Y-m-d', $href->analized_date)->format('F d, Y');
+                    $date = $href->updated_at->format('F d, Y');
                 @endphp
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
                 <strong>Info!</strong> The status of this link was last changed on {{$date}} by user {{$href->user->fullname}}.

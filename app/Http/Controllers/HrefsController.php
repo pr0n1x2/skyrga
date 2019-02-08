@@ -17,7 +17,7 @@ use Illuminate\Support\MessageBag;
 
 class HrefsController extends Controller
 {
-    const PAGINATE_COUNT = 25;
+    const PAGINATE_COUNT = 20;
 
     /**
      * Display a listing of the resource.
@@ -34,20 +34,14 @@ class HrefsController extends Controller
         if (is_numeric($id)) {
             $href = Href::find($id);
         } else {
-            $link = Href::select('hrefs.id', 'domains.rating')
+            $href = Href::select('hrefs.*')
+                ->with(['domain', 'site', 'type'])
                 ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
                 ->where('hrefs.is_analized', 1)
                 ->where('hrefs.hrefs_status_id', 1)
                 ->orderBy('domains.rating', 'desc')
                 ->orderBy('hrefs.id', 'asc')
-                ->limit(1)
-                ->get()
-                ->pluck('id')
-                ->toArray();
-
-            if ($link) {
-                $href = Href::find($link[0]);
-            }
+                ->first();
         }
 
         if ($href) {
@@ -228,7 +222,11 @@ class HrefsController extends Controller
         $href = Href::find($id);
         $href->hrefs_status_id = $request->get('hrefs_status_id');
         $href->comment = $request->get('comment');
-        $href->analized_date = Carbon::now()->format('Y-m-d');
+
+        if (!$href->analized_date) {
+            $href->analized_date = Carbon::now()->format('Y-m-d');
+        }
+
         $href->user_id = Auth::user()->id;
         $href->save();
 
@@ -249,8 +247,6 @@ class HrefsController extends Controller
 
     public function successful(Request $request)
     {
-//        Задание для Андрея
-//        DB::connection()->enableQueryLog();
         $domain = null;
         $date = null;
 
@@ -279,11 +275,40 @@ class HrefsController extends Controller
         $hrefs = $query->paginate(self::PAGINATE_COUNT);
         $hrefs->appends($request->only(['domain', 'date', 'search']));
 
-//        dd($hrefs);
-//        dd(DB::getQueryLog());
-
-
-
         return view('hrefs.successful', compact('hrefs', 'domain', 'date'));
+    }
+
+    public function failed(Request $request)
+    {
+        $domain = null;
+        $date = null;
+
+        $query = Href::select(['hrefs.id', 'hrefs.domain_id', 'hrefs.analized_date', 'hrefs.user_id'])
+            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+            ->with(['domain' => function ($query) {
+                $query->with('scheme');
+            }, 'user'])
+            ->where('hrefs.is_analized', 1)
+            ->whereNotIn('hrefs.hrefs_status_id', [1, 2])
+            ->orderBy('hrefs.analized_date', 'desc')
+            ->orderBy('hrefs.id', 'desc');
+
+        if ($request->query('search')) {
+            $domain = $request->query('domain');
+            $date = $request->query('date');
+
+            if ($domain) {
+                $query->where('domains.domain', 'like', '%' . $domain . '%');
+            }
+
+            if ($date) {
+                $query->where('hrefs.analized_date', $date);
+            }
+        }
+
+        $hrefs = $query->paginate(self::PAGINATE_COUNT);
+        $hrefs->appends($request->only(['domain', 'date', 'search']));
+
+        return view('hrefs.failed', compact('hrefs', 'domain', 'date'));
     }
 }

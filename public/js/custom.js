@@ -22,7 +22,7 @@ var ComponentsDateTimePickers = function () {
     var handleDatePickers = function () {
         $('.date-picker').datepicker({
             rtl: App.isRTL(),
-            orientation: "left",
+            orientation: "auto",
             autoclose: true,
             weekStart: 1
         });

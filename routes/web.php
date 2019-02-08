@@ -54,6 +54,7 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('projects/zip', 'ProjectsController@zip');
     Route::get('projects/download/{id}/{file}', 'ProjectsController@download');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
+    Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
 
     Route::resources([
