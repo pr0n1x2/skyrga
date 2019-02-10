@@ -109,7 +109,7 @@ class HrefsController extends Controller
         $colsCount = 22;
 
         if (($handle = fopen($request->csv_file->path(), "r")) !== false) {
-            $data = fgetcsv($handle, 2048, ";");
+            $data = fgetcsv($handle, 2048, ",");
 
             if (is_array($data) && count($data) != $colsCount) {
                 return redirect()->back()
@@ -124,7 +124,10 @@ class HrefsController extends Controller
                 $request->get('sites_type_id')
             );
 
-            while (($data = fgetcsv($handle, 2048, ";")) !== false) {
+            $successedDomains = 0;
+            $failedDomains = 0;
+
+            while (($data = fgetcsv($handle, 2048, ",")) !== false) {
                 $domainRating = (int)$data[2];
 
                 if ($domainRating) {
@@ -161,7 +164,13 @@ class HrefsController extends Controller
                         $linkAnchor = substr($linkAnchor, 0, 191);
                     }
 
-                    $isUseDomain = Href::isUseDomain($domainId);
+                    if (!Href::isUseDomain($domainId)) {
+                        $isUseDomain = true;
+                        $successedDomains++;
+                    } else {
+                        $isUseDomain = false;
+                        $failedDomains++;
+                    }
 
                     $href = new Href();
                     $href->domain_id = $domainId;
@@ -173,8 +182,13 @@ class HrefsController extends Controller
                     $href->external_links_count = $externalLinksCount;
                     $href->hrefs_status_id = 1;
                     $href->hrefs_type_id = $typeId;
-                    $href->is_analized = !$isUseDomain ? true : false;
-                    $href->save();
+                    $href->is_analized = $isUseDomain;
+
+                    try {
+                        $href->save();
+                    } catch (\Exception $e) {
+                        continue;
+                    }
                 }
             }
 
@@ -182,6 +196,13 @@ class HrefsController extends Controller
 
             fclose($handle);
         }
+
+        return redirect()->route('hrefs.index')
+            ->with(
+                'success',
+                "The data was successfully loaded into the database. Added {$successedDomains} new domains. " .
+                "Found {$failedDomains} domains."
+            );
     }
 
     /**

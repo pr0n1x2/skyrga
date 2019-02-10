@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
 {
-    private static $secondLevelDomains = ['gov', 'edu', 'com', 'net', 'org'];
+    private static $secondLevelDomains = ['com', 'edu', 'gov', 'net', 'org', 'co', 'me', 'in', 'ne'];
     private static $domainsList;
     private static $domainsSchemes;
     private static $updatedRating = [];
@@ -58,7 +58,15 @@ class Domain extends Model
                     $domain = $rootDomain;
                     $rootDomain = null;
                 } else {
-                    $domain = implode('.', $subDomains) . '.' . $rootDomain;
+                    if ($subDomains[0] != 'www') {
+                        $domain = implode('.', $subDomains) . '.' . $rootDomain;
+                    } else {
+                        for ($i = 1; $i < count($subDomains); $i++) {
+                            $subDomainsWithoutWww[] = $subDomains[$i];
+                        }
+
+                        $domain = implode('.', $subDomainsWithoutWww) . '.' . $rootDomain;
+                    }
                 }
             } else {
                 $domain = $rootDomain;
