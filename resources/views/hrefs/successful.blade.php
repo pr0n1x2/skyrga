@@ -35,6 +35,12 @@
                             <a href="{{route('hrefs.failed')}}">
                                 <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
                         </li>
+                        @if(\Illuminate\Support\Facades\Auth::user()->role == \App\User::ADMIN_ROLE)
+                            <li>
+                                <a href="{{route('hrefs.pending')}}">
+                                    <i class="fa fa-hand-peace-o"></i> Show Pending Domains</a>
+                            </li>
+                        @endif
                         <li class="divider"> </li>
                         <li>
                             <a href="{{route('hrefs.index')}}">

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Upload New Ahrehs Links')
+@section('title', 'Edit Pending Domain')
 
 @section('content')
     <div class="page-content-wrapper">
@@ -8,7 +8,7 @@
         <div class="page-content">
             <!-- BEGIN PAGE HEADER-->
             <!-- BEGIN PAGE TITLE-->
-            <h3 class="page-title"> Upload New Ahrehs Links </h3>
+            <h3 class="page-title"> Edit Pending Domain Page </h3>
             <!-- END PAGE TITLE-->
             <!-- BEGIN PAGE BAR -->
             <div class="page-bar">
@@ -22,7 +22,11 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <span>Upload New Ahrehs Links Page</span>
+                        <a href="{{route('hrefs.pending')}}">List of Pending Domains</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <span>Edit Pending Domain Page</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -39,14 +43,10 @@
                                 <a href="{{route('hrefs.failed')}}">
                                     <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
                             </li>
-                            <li>
-                                <a href="{{route('hrefs.pending')}}">
-                                    <i class="fa fa-hand-peace-o"></i> Show Pending Domains</a>
-                            </li>
                             <li class="divider"> </li>
                             <li>
-                                <a href="{{route('hrefs.index')}}">
-                                    <i class="icon-action-undo"></i> Back to Hrefs</a>
+                                <a href="{{route('hrefs.pending')}}">
+                                    <i class="icon-action-undo"></i> Back to Pending Domains</a>
                             </li>
                         </ul>
                     </div>
@@ -57,58 +57,49 @@
             <div class="portlet light bg-inverse">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-globe font-red-sunglo"></i>
-                        <span class="caption-subject font-red-sunglo bold uppercase">Upload new ahrehs links form</span>
+                        <i class="fa fa-file-video-o font-red-sunglo"></i>
+                        <span class="caption-subject font-red-sunglo bold uppercase">Edit pending domain form</span>
                     </div>
                 </div>
                 @include('errors')
                 <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    {{Form::open(['route' => 'hrefs.store', 'id' => 'hrefs_form', 'files' => true, 'class' => 'horizontal-form'])}}
+                    {{Form::open(['route' => ['hrefs.update', $href->id], 'method' => 'put', 'id' => 'hrefs_edit_form', 'class' => 'horizontal-form'])}}
                     <div class="form-body">
-                        <h3 class="form-section">Site Info</h3>
+                        <h3 class="form-section">Domain Info</h3>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <a href="/hrefs/{{$href->id}}" target="_blank" class="btn btn-xs purple"> <i class="fa fa-external-link"></i> Analyze Link </a>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Domain:</label>
+                                    @php
+                                        $domain = $href->domain->scheme->name . $href->domain->domain;
+                                    @endphp
+                                    <a href="{{$domain}}" target="_blank">{{$domain}}</a>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-3 button-right">
+                                <div class="form-group">
+                                    <a href="{{route('projects.create', $href->id)}}" class="btn red">
+                                        <i class="fa fa-gears"></i> Create Project
+                                    </a>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Need to prepare</h3>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="control-label">Site Url</label>
-                                    <input type="text" name="site" id="site" value="{{old('site')}}" maxlength="191" class="form-control" placeholder="Site Url">
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">City</label>
-                                    {{Form::select('sites_city_id', $cities, old('sites_city_id'), ['placeholder' => 'Pick a City', 'class' => 'form-control', 'tabindex' => 1])}}
-                                </div>
-                            </div>
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Type</label>
-                                    {{Form::select('sites_type_id', $types, old('sites_type_id'), ['placeholder' => 'Pick a Type', 'class' => 'form-control', 'tabindex' => 2])}}
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <h3 class="form-section">Ahrefs Data</h3>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label">Statistics CSV File</label>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <span class="btn green btn-file">
-                                            <span class="fileinput-new"> Select file </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="csv_file"> </span>
-                                        <span class="fileinput-filename"> </span> &nbsp;
-                                        <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
+                                    <label class="control-label">Requirements</label>
+                                    <textarea name="pending_comment" id="pending_comment" class="form-control" placeholder="Requirements" rows="15">{{$href->pending_comment}}</textarea>
                                 </div>
                             </div>
                             <!--/span-->
@@ -116,12 +107,14 @@
                         <!--/row-->
                     </div>
                     <div class="form-actions left">
-                        <a href="{{route('hrefs.index')}}" class="btn default">Cancel</a>
+                        <input type="hidden" name="hrefs_status_id" value="{{$href->hrefs_status_id}}">
+                        <input type="hidden" name="action" value="edit">
+                        <a href="{{route('hrefs.pending')}}" class="btn default">Cancel</a>
                         <button type="submit" class="btn blue">
-                            <i class="fa fa-check"></i> Upload</button>
+                            <i class="fa fa-check"></i> Save</button>
                     </div>
-                {{Form::close()}}
-                <!-- END FORM-->
+                    {{Form::close()}}
+                    <!-- END FORM-->
                 </div>
             </div>
         </div>

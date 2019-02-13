@@ -55,7 +55,8 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('projects/download/{id}/{file}', 'ProjectsController@download');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
-    Route::get('hrefs/{id}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
+    Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
+    Route::put('hrefs/{id}', 'HrefsController@update')->where('id', '[0-9]+')->name('hrefs.update');
 
     Route::resources([
         'images' => 'ImagesController',
@@ -67,10 +68,8 @@ Route::group(['middleware' => 'user'], function () {
         'projects' => 'ProjectsController',
         'proxies' => 'ProxiesController',
         'articles' => 'ArticlesController',
-        'targets' => 'TargetsController',
-        'hrefs' => 'HrefsController'
+        'targets' => 'TargetsController'
     ]);
-
 
     Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');
@@ -78,7 +77,11 @@ Route::group(['middleware' => 'user'], function () {
 });
 
 Route::group(['middleware' => 'admin'], function () {
+    Route::get('projects/create/{id}', 'ProjectsController@create')->name('projects.create');
+    Route::get('hrefs/pending', 'HrefsController@pending')->name('hrefs.pending');
+
     Route::resources([
         'users' => 'UsersController',
+        'hrefs' => 'HrefsController'
     ]);
 });

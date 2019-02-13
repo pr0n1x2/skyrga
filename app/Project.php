@@ -27,6 +27,16 @@ class Project extends Model
         'video_frame', 'paragraph_link', 'state_associations', 'post_date', 'is_archive'
     ];
 
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class);
+    }
+
+    public function href()
+    {
+        return $this->belongsTo(Href::class);
+    }
+
     public function accounts()
     {
         return $this->hasMany(Account::class);

@@ -34,6 +34,11 @@ class Href extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function project()
+    {
+        return $this->hasOne(Project::class);
+    }
+
     public static function isUseDomain($domainId)
     {
         if (is_null(self::$domains)) {

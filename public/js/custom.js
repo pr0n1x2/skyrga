@@ -2307,6 +2307,13 @@ var ModalsManaged = function () {
         }
     }()
 
+    var hrefsRemoving = function() {
+        $('#delete').on('show.bs.modal', function (e) {
+            var button = e.relatedTarget;
+            $('#hrefs_delete_form').attr('action', '/hrefs/' + button.dataset.item);
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -2369,6 +2376,10 @@ var ModalsManaged = function () {
 
             if ($('#edit_hrefs_form').length) {
                 linkAnalysis.init();
+            }
+
+            if ($('#hrefs_delete_form').length) {
+                hrefsRemoving();
             }
         }
 

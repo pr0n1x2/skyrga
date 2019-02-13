@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Href;
 use App\Profile;
 use App\Project;
 use Carbon\Carbon;
@@ -36,9 +37,11 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('projects.create');
+        $href = Href::find($id);
+
+        return view('projects.create', compact('href'));
     }
 
     /**

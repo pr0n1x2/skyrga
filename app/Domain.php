@@ -31,6 +31,11 @@ class Domain extends Model
         return $this->belongsTo(DomainsScheme::class, 'domains_scheme_id', 'id');
     }
 
+    public function project()
+    {
+        return $this->hasOne(Project::class);
+    }
+
     public static function getDomainInfo(&$domainParts, $onlyDomain = true)
     {
         $hostParts = explode('.', $domainParts['host']);

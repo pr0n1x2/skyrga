@@ -35,11 +35,17 @@
                             <a href="{{route('hrefs.failed')}}">
                                 <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
                         </li>
+                        @if(\Illuminate\Support\Facades\Auth::user()->role == \App\User::ADMIN_ROLE)
+                        <li>
+                            <a href="{{route('hrefs.pending')}}">
+                                <i class="fa fa-hand-peace-o"></i> Show Pending Domains</a>
+                        </li>
                         <li class="divider"> </li>
                         <li>
                             <a href="{{route('hrefs.create')}}">
                                 <i class="fa fa-upload"></i> Upload New Data</a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -155,6 +161,14 @@
                                     <input type="radio" name="hrefs_status_id" value="2" @if($href->hrefs_status_id == 2) checked @endif> <strong>The site was successfully registered and the link has been posted</strong> </label>
                             </div>
                         </div>
+                        @if(\Illuminate\Support\Facades\Auth::user()->role == \App\User::ADMIN_ROLE)
+                            <div class="hrefs-status col-md-12">
+                                <div class="radio-list">
+                                    <label class="radio-inline font-yellow">
+                                        <input type="radio" name="hrefs_status_id" value="3" @if($href->hrefs_status_id == 3) checked @endif> <strong>Donor allows to post a link. Send to prepare</strong> </label>
+                                </div>
+                            </div>
+                        @endif
                         @foreach($statuses as $status)
                             <div class="hrefs-status col-md-12">
                                 <div class="radio-list">
@@ -166,7 +180,7 @@
                         <div class="hrefs-status col-md-12">
                             <div class="radio-list">
                                 <label class="radio-inline radio-error">
-                                    <input type="radio" name="hrefs_status_id" value="3" @if($href->hrefs_status_id == 3) checked @endif> Other reason </label>
+                                    <input type="radio" name="hrefs_status_id" value="5" @if($href->hrefs_status_id == 5) checked @endif> Other reason </label>
                             </div>
                         </div>
                         <div class="hrefs-status col-md-12">

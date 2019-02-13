@@ -28,10 +28,6 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
-                                <a href="{{route('projects.create')}}">
-                                    <i class="fa fa-gears"></i> Add new Project</a>
-                            </li>
-                            <li>
                                 <a data-toggle="modal" href="#archive">
                                     <i class="fa fa-trash-o"></i> Move All to Archive </a>
                             </li>

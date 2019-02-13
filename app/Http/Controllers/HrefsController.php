@@ -45,6 +45,10 @@ class HrefsController extends Controller
         }
 
         if ($href) {
+            if ($href->hrefs_status_id == 4) {
+                return redirect()->route('hrefs.index');
+            }
+
             if ($href->domain->root_domain_id) {
                 $subDomainsIds = $href->domain->rootDomain->subDomains->filter(function ($value) use ($href) {
                     return $value->id != $href->domain->id;
@@ -70,7 +74,7 @@ class HrefsController extends Controller
                 $pagesFromDomain = null;
             }
 
-            $statuses = HrefsStatus::where('id', '>', 3)->get();
+            $statuses = HrefsStatus::where('id', '>', 5)->get();
         }
 
         return view('hrefs.index', compact('href', 'statuses', 'subDomains', 'pagesFromDomain'));
@@ -224,7 +228,9 @@ class HrefsController extends Controller
      */
     public function edit($id)
     {
+        $href = Href::find($id);
 
+        return view('hrefs.edit', compact('href'));
     }
 
     /**
@@ -243,13 +249,30 @@ class HrefsController extends Controller
         $href = Href::find($id);
         $href->hrefs_status_id = $request->get('hrefs_status_id');
         $href->comment = $request->get('comment');
+        $href->pending_comment = $request->get('pending_comment');
 
         if (!$href->analized_date) {
             $href->analized_date = Carbon::now()->format('Y-m-d');
         }
 
-        $href->user_id = Auth::user()->id;
+        if ($href->hrefs_status_id == 3) {
+            if (!$href->user_id) {
+                $href->user_id = Auth::user()->id;
+            }
+
+            if (!$href->pending_date) {
+                $href->pending_date = Carbon::now()->format('Y-m-d H:i:s');
+            }
+        } else {
+            $href->user_id = Auth::user()->id;
+        }
+
         $href->save();
+
+        if ($request->has('action')) {
+            return redirect()->route('hrefs.pending')
+                ->with('success', 'Domain has been updated successfully.');
+        }
 
         return redirect()->route('hrefs.index')
             ->with('success', 'The link was successfully processed and saved with the new status.');
@@ -263,7 +286,16 @@ class HrefsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $href = Href::find($id);
+        $href->hrefs_status_id = 1;
+        $href->analized_date = null;
+        $href->user_id = null;
+        $href->comment = null;
+        $href->pending_date = null;
+        $href->pending_comment = null;
+        $href->save();
+
+        return redirect()->back()->with('success', 'The domain was successfully removed.');
     }
 
     public function successful(Request $request)
@@ -310,7 +342,7 @@ class HrefsController extends Controller
                 $query->with('scheme');
             }, 'user'])
             ->where('hrefs.is_analized', 1)
-            ->whereNotIn('hrefs.hrefs_status_id', [1, 2])
+            ->whereNotIn('hrefs.hrefs_status_id', [1, 2, 3, 4])
             ->orderBy('hrefs.analized_date', 'desc')
             ->orderBy('hrefs.id', 'desc');
 
@@ -331,5 +363,38 @@ class HrefsController extends Controller
         $hrefs->appends($request->only(['domain', 'date', 'search']));
 
         return view('hrefs.failed', compact('hrefs', 'domain', 'date'));
+    }
+
+    public function pending(Request $request)
+    {
+        $domain = null;
+        $date = null;
+
+        $query = Href::select(['hrefs.id', 'hrefs.domain_id', 'hrefs.pending_date'])
+            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+            ->with(['domain' => function ($query) {
+                $query->with('scheme');
+            }])
+            ->where('hrefs.is_analized', 1)
+            ->where('hrefs.hrefs_status_id', 3)
+            ->orderBy('hrefs.pending_date', 'desc');
+
+        if ($request->query('search')) {
+            $domain = $request->query('domain');
+            $date = $request->query('date');
+
+            if ($domain) {
+                $query->where('domains.domain', 'like', '%' . $domain . '%');
+            }
+
+            if ($date) {
+                $query->whereBetween('hrefs.pending_date', [$date . ' 00:00:00', $date . ' 23:59:59']);
+            }
+        }
+
+        $hrefs = $query->paginate(self::PAGINATE_COUNT);
+        $hrefs->appends($request->only(['domain', 'date', 'search']));
+
+        return view('hrefs.pending', compact('hrefs', 'domain', 'date'));
     }
 }

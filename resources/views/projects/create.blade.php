@@ -56,16 +56,17 @@
                         <h3 class="form-section">General Project Info</h3>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Name</label>
-                                    <input type="text" name="name" id="name" value="{{old('name')}}" maxlength="70" class="form-control" placeholder="Name">
+                                @php
+                                    $domain = $href->domain->scheme->name . $href->domain->domain;
+                                @endphp
+                                <div class="alert alert-info">
+                                    <strong>Domain: </strong> <a href="{{$domain}}" target="_blank">{{$domain}}</a>
                                 </div>
                             </div>
                             <!--/span-->
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Domain</label>
-                                    <input type="text" name="domain" id="domain" value="{{old('domain')}}" maxlength="70" class="form-control" placeholder="Domain">
+                                <div class="alert alert-info">
+                                    <a href="/hrefs/{{$href->id}}" target="_blank" class="btn btn-xs purple"> <i class="fa fa-external-link"></i> Analyze Link </a>
                                 </div>
                             </div>
                             <!--/span-->
@@ -88,9 +89,27 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
-                        <h3 class="form-section">Profile Settings</h3>
+                        <h3 class="form-section">Registration Settings</h3>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No registration required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_login" @if (old('is_no_need_login')) checked @endif class="make-switch" id="is_no_need_login">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to register without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_login_by_himself" @if (old('is_login_by_himself')) checked @endif class="make-switch" id="is_login_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Proxy</label>
                                     <div class="checkbox-list">
@@ -98,10 +117,47 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--/span-->
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="login_instructions" id="login_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{old('login_instructions')}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="login_youtube" id="login_youtube" value="{{old('login_youtube')}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use Single Account</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_single_account" @if (old('is_use_single_account')) checked @endif class="make-switch" id="is_use_single_account">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Account ID</label>
+                                    <input type="text" name="account_id" id="account_id" value="{{old('account_id')}}" maxlength="8" class="form-control" placeholder="Account ID">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Generate Random Address</label>
                                     <div class="checkbox-list">
@@ -109,49 +165,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Separate Username</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_same_username" @if (old('is_same_username')) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Separate Password</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_same_password" @if (old('is_same_password')) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Use Easy Password</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_easy_password" @if (old('is_easy_password')) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Generate Random Phone</label>
                                     <div class="checkbox-list">
@@ -163,7 +177,7 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Email As Username</label>
                                     <div class="checkbox-list">
@@ -172,11 +186,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Domain Word As Username</label>
                                     <div class="checkbox-list">
@@ -188,7 +198,37 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Separate Password</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_password" @if (old('is_same_password')) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Separate Username</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_username" @if (old('is_same_username')) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use Easy Password</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_easy_password" @if (old('is_easy_password')) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Only Main Anchor</label>
                                     <div class="checkbox-list">
@@ -197,10 +237,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Post Date After Registration</label>
                                     <input type="text" name="post_date" id="post_date" value="{{old('post_date')}}" maxlength="2" class="form-control" placeholder="">
@@ -209,9 +246,88 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <h3 class="form-section">Login Settings</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="sing_in_instructions" id="sing_in_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{old('sing_in_instructions')}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="sing_in_youtube" id="sing_in_youtube" value="{{old('sing_in_youtube')}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No login required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_sing_in" @if (old('is_no_need_sing_in')) checked @endif class="make-switch" id="is_no_need_sing_in">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to login without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_sing_in_by_himself" @if (old('is_sing_in_by_himself')) checked @endif class="make-switch" id="is_sing_in_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
                         <h3 class="form-section">Post Settings</h3>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No post required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_post" @if (old('is_no_need_post')) checked @endif class="make-switch" id="is_no_need_post">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to post without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_post_by_himself" @if (old('is_post_by_himself')) checked @endif class="make-switch" id="is_post_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="post_instructions" id="post_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{old('post_instructions')}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="post_youtube" id="post_youtube" value="{{old('post_youtube')}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Post</label>
                                     <div class="checkbox-list">
@@ -220,10 +336,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Images In Post</label>
                                     <div class="checkbox-list">
@@ -232,10 +345,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Videos In Post</label>
                                     <div class="checkbox-list">
@@ -308,10 +418,10 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
-                        <h3 class="form-section">Ubot Files</h3>
+                        <h3 class="form-section">Materials</h3>
                         <div class="row">
                             <div class="col-md-2">
-                                <label class="control-label">Register Script</label>
+                                <label class="control-label">Attach a file</label>
                             </div>
                             <div class="col-md-10">
                                 <div class="form-group">
@@ -319,45 +429,7 @@
                                             <span class="btn green btn-file">
                                             <span class="fileinput-new"> Select file </span>
                                             <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="login_file"> </span>
-                                        <span class="fileinput-filename"> </span> &nbsp;
-                                        <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label">Login Script</label>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                            <span class="btn green btn-file">
-                                            <span class="fileinput-new"> Select file </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="singin_file"> </span>
-                                        <span class="fileinput-filename"> </span> &nbsp;
-                                        <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label">Posting Script</label>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                            <span class="btn green btn-file">
-                                            <span class="fileinput-new"> Select file </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="post_file"> </span>
+                                            <input type="file" name="materials"> </span>
                                         <span class="fileinput-filename"> </span> &nbsp;
                                         <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
                                     </div>
@@ -368,6 +440,8 @@
                         <!--/row-->
                     </div>
                     <div class="form-actions left">
+                        <input type="hidden" name="domain_id" value="{{$href->domain_id}}">
+                        <input type="hidden" name="href_id" value="{{$href->id}}">
                         <a href="{{route('projects.index')}}" class="btn default">Cancel</a>
                         <button type="submit" class="btn blue">
                             <i class="fa fa-check"></i> Save</button>
