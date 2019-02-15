@@ -768,6 +768,72 @@ var TableDatatablesManaged = function () {
         });
     }
 
+    var initAccountsTable = function () {
+
+        var table = $('#accounts_table');
+
+        // begin first table
+        table.dataTable({
+
+            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
+            "language": {
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                },
+                "emptyTable": "No data available in table",
+                "info": "Showing _START_ to _END_ of _TOTAL_ accounts",
+                "infoEmpty": "No accounts found",
+                "infoFiltered": "(filtered1 from _MAX_ total accounts)",
+                "lengthMenu": "Show _MENU_",
+                "search": "Search:",
+                "zeroRecords": "No matching accounts found",
+                "paginate": {
+                    "previous":"Prev",
+                    "next": "Next",
+                    "last": "Last",
+                    "first": "First"
+                }
+            },
+
+            // Or you can use remote translation file
+            //"language": {
+            //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
+            //},
+
+            // Uncomment below line("dom" parameter) to fix the dropdown overflow issue in the datatable cells. The default datatable layout
+            // setup uses scrollable div(table-scrollable) with overflow:auto to enable vertical scroll(see: assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js).
+            // So when dropdowns used the scrollable div should be removed.
+            //"dom": "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>t<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+
+            "bStateSave": true, // save datatable state(pagination, sort, etc) in cookie.
+
+            /*"columnDefs": [ {
+                "targets": 0,
+                "orderable": false,
+                "searchable": false
+            }],*/
+
+            "lengthMenu": [
+                [5, 15, 20, -1],
+                [5, 15, 20, "All"] // change per page values here
+            ],
+            // set the initial value
+            "pageLength": 20,
+            "pagingType": "bootstrap_full_number",
+            "columnDefs": [{  // set default column settings
+                'orderable': false,
+                'targets': [6]
+            }, {
+                "searchable": false,
+                "targets": [6]
+            }],
+            "order": [
+                [0, "desc"]
+            ] // set first column as a default sort by asc
+        });
+    }
+
     return {
 
         //main function to initiate the module
@@ -818,6 +884,10 @@ var TableDatatablesManaged = function () {
 
             if ($('#tasks_table').length) {
                 initAuthorArticlesTable();
+            }
+
+            if ($('#accounts_table').length) {
+                initAccountsTable();
             }
         }
 
@@ -1259,6 +1329,12 @@ var FormValidation = function () {
                     maxlength: 20,
                     required: true
                 },
+                gmail: {
+                    required: true,
+                },
+                gmail_password: {
+                    required: true,
+                },
                 address1: {
                     minlength: 3,
                     maxlength: 60,
@@ -1305,6 +1381,9 @@ var FormValidation = function () {
                 },
                 main_anchor: {
                     required: true
+                },
+                proxy: {
+                    required: true
                 }
             },
 
@@ -1346,25 +1425,15 @@ var FormValidation = function () {
             messages: {
             },
             rules: {
-                name: {
-                    minlength: 2,
-                    maxlength: 70,
-                    required: true
-                },
-                domain: {
-                    maxlength: 70,
-                    url: true,
-                    required: true
-                },
                 register_page: {
+                    required: false,
                     maxlength: 191,
-                    url: true,
-                    required: true
+                    url: true
                 },
                 login_page: {
+                    required: false,
                     maxlength: 191,
-                    url: true,
-                    required: true
+                    url: true
                 },
                 post_date: {
                     required: false,
@@ -1805,6 +1874,133 @@ var FormValidation = function () {
         });
     }
 
+    var accountValidation = function() {
+
+        var form = $('#accounts_form');
+        var scrollTo = $('.portlet-title');
+
+        form.validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block help-block-error', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            ignore: "",  // validate all fields including form hidden input
+            messages: {
+            },
+            rules: {
+                mail_account_id: {
+                    required: true
+                },
+                gender: {
+                    required: true
+                },
+                username: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 40,
+                },
+                password: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 25
+                },
+                firstname: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 25
+                },
+                lastname: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 25
+                },
+                prefix: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 10
+                },
+                middlename: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 25
+                },
+                birthday: {
+                    required: true,
+                    date: true
+                },
+                address1: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 60
+                },
+                address2: {
+                    minlength: 3,
+                    maxlength: 60
+                },
+                state: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 30
+                },
+                state_shortcode: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 2
+                },
+                city: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 40
+                },
+                zip: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 10
+                },
+                phone: {
+                    required: true,
+                    minlength: 16,
+                    maxlength: 20
+                },
+                domain_word: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 40
+                }
+            },
+
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                App.scrollTo(scrollTo, 0);
+            },
+
+            errorPlacement: function(error, element) {
+                if (element.attr('name') == 'birthday') {
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+
+            unhighlight: function (element) { // revert the change done by hightlight
+                $(element)
+                    .closest('.form-group').removeClass('has-error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                label
+                    .closest('.form-group').removeClass('has-error'); // set success class to the control group
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -1875,6 +2071,10 @@ var FormValidation = function () {
 
             if ($('#edit_hrefs_form').length) {
                 hrefsStatusValidation();
+            }
+
+            if ($('#accounts_form').length) {
+                accountValidation();
             }
         }
 
@@ -2314,6 +2514,13 @@ var ModalsManaged = function () {
         });
     }
 
+    var accountsDeleting = function() {
+        $('#delete').on('show.bs.modal', function (e) {
+            var button = e.relatedTarget;
+            $('#accounts_delete_form').attr('action', '/accounts/' + button.dataset.item);
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -2380,6 +2587,10 @@ var ModalsManaged = function () {
 
             if ($('#hrefs_delete_form').length) {
                 hrefsRemoving();
+            }
+
+            if ($('#accounts_delete_form').length) {
+                accountsDeleting();
             }
         }
 

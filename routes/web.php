@@ -51,8 +51,7 @@ Route::group(['middleware' => 'author'], function () {
 });
 
 Route::group(['middleware' => 'user'], function () {
-    Route::get('projects/zip', 'ProjectsController@zip');
-    Route::get('projects/download/{id}/{file}', 'ProjectsController@download');
+    Route::get('projects/download/{id}', 'ProjectsController@download');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
@@ -65,23 +64,25 @@ Route::group(['middleware' => 'user'], function () {
         'mail-accounts' => 'MailAccountsController',
         'posts' => 'PostsController',
         'profiles' => 'ProfilesController',
-        'projects' => 'ProjectsController',
         'proxies' => 'ProxiesController',
         'articles' => 'ArticlesController',
-        'targets' => 'TargetsController'
+        'targets' => 'TargetsController',
+        'accounts' => 'AccountsController'
     ]);
 
-    Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
+//    Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');
     Route::post('articles/confirm/{id}', 'ArticlesController@confirm')->name('articles.confirm');
 });
 
 Route::group(['middleware' => 'admin'], function () {
-    Route::get('projects/create/{id}', 'ProjectsController@create')->name('projects.create');
     Route::get('hrefs/pending', 'HrefsController@pending')->name('hrefs.pending');
 
     Route::resources([
         'users' => 'UsersController',
-        'hrefs' => 'HrefsController'
+        'hrefs' => 'HrefsController',
+        'projects' => 'ProjectsController'
     ]);
+
+    Route::get('projects/create/{id}', 'ProjectsController@create')->name('projects.create');
 });

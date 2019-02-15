@@ -23,16 +23,8 @@ class ProjectCreating
      */
     public function __construct(Project $project)
     {
-        if ($project->login_file instanceof UploadedFile) {
-            $project->login_file = Project::uploadFile(Project::getRandomFileName(), $project->login_file);
-        }
-
-        if ($project->singin_file instanceof UploadedFile) {
-            $project->singin_file = Project::uploadFile(Project::getRandomFileName(), $project->singin_file);
-        }
-
-        if ($project->post_file instanceof UploadedFile) {
-            $project->post_file = Project::uploadFile(Project::getRandomFileName(), $project->post_file);
+        if ($project->materials instanceof UploadedFile) {
+            $project->materials = Project::uploadFile(Project::getRandomFileName(), $project->materials);
         }
     }
 

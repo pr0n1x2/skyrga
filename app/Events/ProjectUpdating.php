@@ -23,22 +23,9 @@ class ProjectUpdating
      */
     public function __construct(Project $project)
     {
-        if ($project->login_file instanceof UploadedFile) {
-            Project::removeFile($project->getOriginal('login_file'));
-            $project->
-            login_file = Project::uploadFile(Project::getRegisterFilename($project->id), $project->login_file);
-        }
-
-        if ($project->singin_file instanceof UploadedFile) {
-            Project::removeFile($project->getOriginal('singin_file'));
-            $project->
-            singin_file = Project::uploadFile(Project::getSingInFilename($project->id), $project->singin_file);
-        }
-
-        if ($project->post_file instanceof UploadedFile) {
-            Project::removeFile($project->getOriginal('post_file'));
-            $project->
-            post_file = Project::uploadFile(Project::getPostFilename($project->id), $project->post_file);
+        if ($project->materials instanceof UploadedFile) {
+            Project::removeFile($project->getOriginal('materials'));
+            $project->materials = Project::uploadFile(Project::getRandomFileName(), $project->materials);
         }
     }
 

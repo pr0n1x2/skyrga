@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'List of Projects')
+@section('title', 'List of Public Accounts')
 
 @section('content')
     <div class="page-content-wrapper">
@@ -8,7 +8,7 @@
         <div class="page-content">
             <!-- BEGIN PAGE HEADER-->
             <!-- BEGIN PAGE TITLE-->
-            <h3 class="page-title"> List of Projects </h3>
+            <h3 class="page-title"> List of Public Accounts </h3>
             <!-- END PAGE TITLE-->
             <!-- BEGIN PAGE BAR -->
             <div class="page-bar">
@@ -18,7 +18,7 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <span>List of Projects</span>
+                        <span>List of Public Accounts</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -27,10 +27,10 @@
                             <i class="fa fa-angle-down"></i>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <!--<li>
-                                <a href="">
-                                    <i class="fa fa-anchor"></i> Create New Targets </a>
-                            </li>-->
+                            <li>
+                                <a href="{{route('accounts.create')}}">
+                                    <i class="fa fa-user-plus"></i> Add new Public Accounts</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -43,30 +43,27 @@
                     <!-- BEGIN EXAMPLE TABLE PORTLET-->
                     <div class="portlet light bordered">
                         <div class="portlet-body">
-                            <table class="table table-striped table-bordered table-hover table-checkable order-column" id="projects_table">
+                            <table class="table table-striped table-bordered table-hover table-checkable order-column" id="accounts_table">
                                 <thead>
                                 <tr>
                                     <th style="width: 10%"> ID </th>
-                                    <th style="width: 55%"> Domain </th>
-                                    <th style="width: 15%"> Status </th>
-                                    <th style="width: 20%"> Actions </th>
+                                    <th style="width: 25%"> E-mail </th>
+                                    <th style="width: 15%"> Username </th>
+                                    <th style="width: 15%"> Password </th>
+                                    <th style="width: 10%"> Firstname </th>
+                                    <th style="width: 10%"> Lastname </th>
+                                    <th style="width: 15%"> Actions </th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($projects as $project)
-                                    @php
-                                        $domain = $project->domain->scheme->name . $project->domain->domain;
-                                    @endphp
+                                @foreach ($accounts as $account)
                                     <tr class="odd gradeX">
-                                        <td> {{$project->id}} </td>
-                                        <td> <a href="{{$domain}}" target="_blank">{{$domain}}</a></td>
-                                        <td>
-                                            @if (!$project->is_archive)
-                                                <span class="label label-sm label-success"> Active </span>
-                                            @else
-                                                <span class="label label-sm label-danger"> Archived </span>
-                                            @endif
-                                        </td>
+                                        <td> {{$account->id}} </td>
+                                        <td> {{$account->email->email}} </td>
+                                        <td> {{$account->username}} </td>
+                                        <td> {{$account->password}} </td>
+                                        <td> {{$account->firstname}} </td>
+                                        <td> {{$account->lastname}} </td>
                                         <td>
                                             <div class="btn-group">
                                                 <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
@@ -74,16 +71,12 @@
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
                                                     <li>
-                                                        <a href="{{route('projects.edit', $project->id)}}">
+                                                        <a href="{{route('accounts.edit', $account->id)}}">
                                                             <i class="fa fa-edit"></i> Edit </a>
                                                     </li>
                                                     <li>
-                                                        <a data-toggle="modal" href="#delete" data-item="{{$project->id}}">
-                                                            <i class="fa fa-trash-o"></i> Move to Archive </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{route('targets.create')}}">
-                                                            <i class="fa fa-anchor"></i> Create New Targets </a>
+                                                        <a data-toggle="modal" href="#delete" data-item="{{$account->id}}">
+                                                            <i class="fa fa-remove"></i> Delete </a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -99,16 +92,16 @@
             </div>
             <div class="modal fade" id="delete" tabindex="-1" role="delete" aria-hidden="true">
                 <div class="modal-dialog">
-                    {{Form::open(['route' => ['projects.destroy', null], 'method' => 'delete', 'id' => 'projects_delete_form'])}}
+                    {{Form::open(['route' => ['accounts.destroy', null], 'method' => 'delete', 'id' => 'accounts_delete_form'])}}
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title">Move to Archive</h4>
+                            <h4 class="modal-title">Delete Public Account</h4>
                         </div>
-                        <div class="modal-body"> Are you sure you want to archive the project? </div>
+                        <div class="modal-body"> Are you sure you want to delete this account? </div>
                         <div class="modal-footer">
                             <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn green">Yes</button>
+                            <button type="submit" class="btn green">Delete</button>
                         </div>
                     </div>
                 {{Form::close()}}

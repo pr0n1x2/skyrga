@@ -149,8 +149,8 @@
                             <!--/span-->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Account ID</label>
-                                    <input type="text" name="account_id" id="account_id" value="{{old('account_id')}}" maxlength="8" class="form-control" placeholder="Account ID">
+                                    <label class="control-label">Public Account</label>
+                                    {{Form::select('account_id', $accounts, old('account_id'), ['placeholder' => 'Pick a Public Account', 'class' => 'form-control', 'tabindex' => 1])}}
                                 </div>
                             </div>
                             <!--/span-->

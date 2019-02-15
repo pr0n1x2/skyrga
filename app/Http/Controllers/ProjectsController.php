@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\Href;
 use App\Profile;
 use App\Project;
@@ -12,10 +13,10 @@ use Illuminate\Http\Request;
 class ProjectsController extends Controller
 {
     private $rules = [
-        'name' => 'required|min:2|max:70',
-        'domain' => 'required|url|max:70',
-        'register_page' => 'required|url|max:191',
-        'login_page' => 'required|url|max:191',
+        'domain_id' => 'required|numeric',
+        'href_id' => 'required|numeric',
+        'register_page' => 'nullable|url|max:191',
+        'login_page' => 'nullable|url|max:191',
         'post_date' => 'nullable|numeric|digits_between:1,10',
         'paragraph_link' => 'nullable|numeric|digits_between:1,4'
     ];
@@ -27,7 +28,9 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = Project::select('id', 'name', 'is_archive')->get();
+        $projects = Project::with(['domain' => function ($query) {
+            $query->with('scheme');
+        }])->select('id', 'domain_id', 'is_archive')->get();
 
         return view('projects.index', compact('projects'));
     }
@@ -41,7 +44,16 @@ class ProjectsController extends Controller
     {
         $href = Href::find($id);
 
-        return view('projects.create', compact('href'));
+        $accounts = Account::with('email')
+            ->whereIsPublic(1)
+            ->orderBy('id', 'desc')
+            ->get()
+            ->pluck('email', 'id')
+            ->map(function ($item) {
+                return $item->email;
+            });
+
+        return view('projects.create', compact('href', 'accounts'));
     }
 
     /**
@@ -83,7 +95,19 @@ class ProjectsController extends Controller
     {
         $project = Project::find($id);
 
-        return view('projects.edit', compact('project'));
+        $query = Account::with('email')
+            ->whereIsPublic(1)
+            ->orderBy('id', 'desc');
+
+        if ($project->account_id) {
+            $query->orWhere('id', $project->account_id);
+        }
+
+        $accounts = $query->get()->pluck('email', 'id')->map(function ($item) {
+            return $item->email;
+        });
+
+        return view('projects.edit', compact('project', 'accounts'));
     }
 
     /**
@@ -140,24 +164,13 @@ class ProjectsController extends Controller
      * @param  string  $file
      * @return \Illuminate\Http\Response
      */
-    public function download($id, $file)
+    public function download($id)
     {
         $project = Project::find($id);
-        $pathToFile = public_path() . Project::PATH_TO_UBOT_FILES;
+        $pathToFile = public_path() . Project::PATH_TO_PROJECTS_FILES . $project->materials;
+        $path_parts = pathinfo($pathToFile);
 
-        switch ($file) {
-            case 'register':
-                $pathToFile .= $project->login_file;
-                break;
-            case 'singin':
-                $pathToFile .= $project->singin_file;
-                break;
-            case 'post':
-                $pathToFile .= $project->post_file;
-                break;
-        }
-
-        return response()->download($pathToFile);
+        return response()->download($pathToFile, 'Project' . $project->id . '.' . $path_parts['extension']);
     }
 
     /**
@@ -165,7 +178,7 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function zip()
+    /*public function zip()
     {
         $date = Carbon::now();
         $filename = 'Ubot-Scripts-' . $date->toDateString() . '.zip';
@@ -195,5 +208,5 @@ class ProjectsController extends Controller
         $zipper->close();
 
         return response()->download($filename)->deleteFileAfterSend();
-    }
+    }*/
 }

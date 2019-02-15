@@ -11,20 +11,22 @@ use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
-    const PATH_TO_UBOT_FILES = '/files/ubots/';
+    const PATH_TO_PROJECTS_FILES = '/files/projects/';
 
     protected $dispatchesEvents = [
         'creating' => ProjectCreating::class,
-        'created' => ProjectCreated::class,
         'updating' => ProjectUpdating::class
     ];
 
     protected $fillable = [
-        'name', 'domain', 'register_page', 'login_page', 'login_file', 'singin_file', 'post_file',
-        'is_generate_address', 'is_same_username', 'is_same_password', 'is_easy_password', 'is_generate_phone',
-        'is_use_email_as_username', 'is_use_domainword_as_username', 'is_use_main_anchor', 'is_use_post',
-        'is_use_images', 'is_use_videos', 'paragraph_frame', 'heading_frame', 'link_frame', 'image_frame',
-        'video_frame', 'paragraph_link', 'state_associations', 'post_date', 'is_archive'
+        'domain_id', 'href_id', 'register_page', 'login_page', 'login_instructions', 'login_youtube',
+        'is_login_by_himself', 'is_no_need_login', 'sing_in_instructions', 'sing_in_youtube', 'is_sing_in_by_himself',
+        'is_no_need_sing_in', 'post_instructions', 'post_youtube', 'is_post_by_himself', 'is_no_need_post',
+        'is_use_single_account', 'account_id', 'is_use_proxy', 'is_generate_address', 'is_same_username',
+        'is_same_password', 'is_easy_password', 'is_generate_phone', 'is_use_email_as_username',
+        'is_use_domainword_as_username', 'is_use_main_anchor', 'is_use_post', 'is_use_images', 'is_use_videos',
+        'paragraph_frame', 'heading_frame', 'link_frame', 'image_frame', 'video_frame', 'paragraph_link',
+        'state_associations', 'materials', 'post_date', 'is_archive'
     ];
 
     public function domain()
@@ -57,45 +59,28 @@ class Project extends Model
         return uniqid();
     }
 
-    public static function getRegisterFilename($project_id)
-    {
-        return sprintf('%04d', $project_id) . '_register';
-    }
-
-    public static function getSingInFilename($project_id)
-    {
-        return sprintf('%04d', $project_id) . '_sing_in';
-    }
-
-    public static function getPostFilename($project_id)
-    {
-        return sprintf('%04d', $project_id) . '_post';
-    }
-
     public static function uploadFile($filename, UploadedFile $file)
     {
-//        $filename = $filename . '.' . $file->clientExtension();
-        $filename = $filename . '.ubot';
-        $file->storeAs(self::PATH_TO_UBOT_FILES, $filename);
+        $filename = $filename . '.' . $file->getClientOriginalExtension();
+        $file->storeAs(self::PATH_TO_PROJECTS_FILES, $filename);
 
         return $filename;
     }
 
-    public static function renameFile($filename, $new_filename)
-    {
-        $new_filename = $new_filename . '.ubot';
-        Storage::move(self::PATH_TO_UBOT_FILES . $filename, self::PATH_TO_UBOT_FILES . $new_filename);
-
-        return $new_filename;
-    }
-
     public static function removeFile($filename)
     {
-        Storage::delete(self::PATH_TO_UBOT_FILES . $filename);
+        Storage::delete(self::PATH_TO_PROJECTS_FILES . $filename);
     }
 
     public function setCheckboxes($request)
     {
+        $this->is_login_by_himself = !$request->is_login_by_himself ? 0 : 1;
+        $this->is_no_need_login = !$request->is_no_need_login ? 0 : 1;
+        $this->is_sing_in_by_himself = !$request->is_sing_in_by_himself ? 0 : 1;
+        $this->is_no_need_sing_in = !$request->is_no_need_sing_in ? 0 : 1;
+        $this->is_post_by_himself = !$request->is_post_by_himself ? 0 : 1;
+        $this->is_no_need_post = !$request->is_no_need_post ? 0 : 1;
+        $this->is_use_single_account = !$request->is_use_single_account ? 0 : 1;
         $this->is_use_proxy = !$request->is_use_proxy ? 0 : 1;
         $this->is_generate_address = !$request->is_generate_address ? 0 : 1;
         $this->is_same_username = !$request->is_same_username ? 0 : 1;

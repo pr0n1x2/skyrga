@@ -14,6 +14,8 @@ class ProfilesController extends Controller
         'domain'                    => 'required|url|max:70',
         'mail_account_id'           => 'required',
         'group_id'                  => 'required',
+        'gmail'                     => 'required|max:191',
+        'gmail_password'            => 'required|max:40',
         'business_name'             => 'required|min:10|max:140',
         'phone'                     => 'required|min:10|max:20',
         'address1'                  => 'required|min:3|max:60',
@@ -26,7 +28,8 @@ class ProfilesController extends Controller
         'blog_name'                 => 'required',
         'about'                     => 'required',
         'anchor'                    => 'required',
-        'main_anchor'               => 'required'
+        'main_anchor'               => 'required',
+        'proxy'                     => 'required|max:80'
     ];
 
     /**

@@ -56,16 +56,17 @@
                         <h3 class="form-section">General Project Info</h3>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Name</label>
-                                    <input type="text" name="name" id="name" value="{{$project->name}}" maxlength="70" class="form-control" placeholder="Name">
+                                @php
+                                    $domain = $project->domain->scheme->name . $project->domain->domain;
+                                @endphp
+                                <div class="alert alert-info">
+                                    <strong>Domain: </strong> <a href="{{$domain}}" target="_blank">{{$domain}}</a>
                                 </div>
                             </div>
                             <!--/span-->
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Domain</label>
-                                    <input type="text" name="domain" id="domain" value="{{$project->domain}}" maxlength="70" class="form-control" placeholder="Domain">
+                                <div class="alert alert-info">
+                                    <a href="/hrefs/{{$project->href_id}}" target="_blank" class="btn btn-xs purple"> <i class="fa fa-external-link"></i> Analyze Link </a>
                                 </div>
                             </div>
                             <!--/span-->
@@ -88,9 +89,27 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
-                        <h3 class="form-section">Profile Settings</h3>
+                        <h3 class="form-section">Registration Settings</h3>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No registration required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_login" @if ($project->is_no_need_login) checked @endif class="make-switch" id="is_no_need_login">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to register without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_login_by_himself" @if ($project->is_login_by_himself) checked @endif class="make-switch" id="is_login_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Proxy</label>
                                     <div class="checkbox-list">
@@ -98,10 +117,47 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--/span-->
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="login_instructions" id="login_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{$project->login_instructions}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="login_youtube" id="login_youtube" value="{{$project->login_youtube}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use Single Account</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_single_account" @if ($project->is_use_single_account) checked @endif class="make-switch" id="is_use_single_account">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Public Account</label>
+                                    {{Form::select('account_id', $accounts, $project->account_id, ['placeholder' => 'Pick a Public Account', 'class' => 'form-control', 'tabindex' => 1])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Generate Random Address</label>
                                     <div class="checkbox-list">
@@ -109,49 +165,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Separate Username</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_same_username" @if ($project->is_same_username) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Separate Password</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_same_password" @if ($project->is_same_password) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Use Easy Password</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_easy_password" @if ($project->is_easy_password) checked @endif class="make-switch" id="is_easy_password">
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Generate Random Phone</label>
                                     <div class="checkbox-list">
@@ -163,7 +177,7 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Email As Username</label>
                                     <div class="checkbox-list">
@@ -172,10 +186,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Domain Word As Username</label>
                                     <div class="checkbox-list">
@@ -187,7 +198,37 @@
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Separate Password</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_password" @if ($project->is_same_password) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Separate Username</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_same_username" @if ($project->is_same_username) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use Easy Password</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_easy_password" @if ($project->is_easy_password) checked @endif class="make-switch" id="is_easy_password">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Only Main Anchor</label>
                                     <div class="checkbox-list">
@@ -196,10 +237,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Post Date After Registration</label>
                                     <input type="text" name="post_date" id="post_date" value="{{$project->post_date}}" maxlength="2" class="form-control" placeholder="">
@@ -208,9 +246,88 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <h3 class="form-section">Login Settings</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="sing_in_instructions" id="sing_in_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{$project->sing_in_instructions}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="sing_in_youtube" id="sing_in_youtube" value="{{$project->sing_in_youtube}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No login required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_sing_in" @if ($project->is_no_need_sing_in) checked @endif class="make-switch" id="is_no_need_sing_in">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to login without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_sing_in_by_himself" @if ($project->is_sing_in_by_himself) checked @endif class="make-switch" id="is_sing_in_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
                         <h3 class="form-section">Post Settings</h3>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No post required</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_no_need_post" @if ($project->is_no_need_post) checked @endif class="make-switch" id="is_no_need_post">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Need to post without the use of Ubot</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_post_by_himself" @if ($project->is_post_by_himself) checked @endif class="make-switch" id="is_post_by_himself">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Special Instructions</label>
+                                    <textarea name="post_instructions" id="post_instructions" class="form-control" placeholder="Special Instructions" rows="8">{{$project->post_instructions}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Youtube Link</label>
+                                    <input type="text" name="post_youtube" id="post_youtube" value="{{$project->post_youtube}}" maxlength="15" class="form-control" placeholder="Youtube Link">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Post</label>
                                     <div class="checkbox-list">
@@ -219,10 +336,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Images In Post</label>
                                     <div class="checkbox-list">
@@ -231,10 +345,7 @@
                                 </div>
                             </div>
                             <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Use Videos In Post</label>
                                     <div class="checkbox-list">
@@ -307,13 +418,13 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
-                        <h3 class="form-section">Ubot Files</h3>
+                        <h3 class="form-section">Materials</h3>
                         <div class="row">
                             <div class="col-md-2">
-                                <label class="control-label">Register Script
+                                <label class="control-label">Attach a file
                                     <br />
-                                    @if ($project->login_file)
-                                        <a href="/projects/download/{{$project->id}}/register">download</a>
+                                    @if ($project->materials)
+                                        <a href="/projects/download/{{$project->id}}">download</a>
                                     @else
                                         <em>not uploaded</em>
                                     @endif
@@ -325,72 +436,9 @@
                                             <span class="btn green btn-file">
                                             <span class="fileinput-new"> Select file </span>
                                             <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="login_file"> </span>
+                                            <input type="file" name="materials"> </span>
                                         <span class="fileinput-filename"> </span> &nbsp;
                                         <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label">Login Script <br />
-                                    @if ($project->singin_file)
-                                        <a href="/projects/download/{{$project->id}}/singin">download</a>
-                                    @else
-                                        <em>not uploaded</em>
-                                    @endif
-                                </label>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                            <span class="btn green btn-file">
-                                            <span class="fileinput-new"> Select file </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="singin_file"> </span>
-                                        <span class="fileinput-filename"> </span> &nbsp;
-                                        <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label class="control-label">Posting Script <br />
-                                    @if ($project->post_file)
-                                        <a href="/projects/download/{{$project->id}}/post">download</a>
-                                    @else
-                                        <em>not uploaded</em>
-                                    @endif
-                                </label>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                            <span class="btn green btn-file">
-                                            <span class="fileinput-new"> Select file </span>
-                                            <span class="fileinput-exists"> Change </span>
-                                            <input type="file" name="post_file"> </span>
-                                        <span class="fileinput-filename"> </span> &nbsp;
-                                        <a href="javascript:;" class="close fileinput-exists" data-dismiss="fileinput"> </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <!--/row-->
-                        <h3 class="form-section">Status</h3>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">Active</label>
-                                    <div class="checkbox-list">
-                                        <input type="checkbox" name="is_archive" @if (!$project->is_archive) checked @endif class="make-switch" id="is_archive">
                                     </div>
                                 </div>
                             </div>
@@ -399,6 +447,8 @@
                         <!--/row-->
                     </div>
                     <div class="form-actions left">
+                        <input type="hidden" name="domain_id" value="{{$project->domain_id}}">
+                        <input type="hidden" name="href_id" value="{{$project->href_id}}">
                         <a href="{{route('projects.index')}}" class="btn default">Cancel</a>
                         <button type="submit" class="btn blue">
                             <i class="fa fa-check"></i> Save</button>

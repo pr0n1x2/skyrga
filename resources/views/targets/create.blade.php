@@ -44,7 +44,7 @@
             <div class="portlet light bg-inverse">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-database font-red-sunglo"></i>
+                        <i class="fa fa-anchor font-red-sunglo"></i>
                         <span class="caption-subject font-red-sunglo bold uppercase">Create new targets form</span>
                     </div>
                 </div>

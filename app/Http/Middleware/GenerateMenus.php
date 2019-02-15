@@ -46,10 +46,17 @@ class GenerateMenus
                         ->append('</span>')
                         ->link->attr(['class' => 'nav-link']);
 
-                    $menu->add('Projects', ['route' => 'projects.index', 'class' => 'nav-item'])
-                        ->prepend('<i class="fa fa-gears"></i><span class="title">')
+                    $menu->add('Public Accounts', ['route' => 'accounts.index', 'class' => 'nav-item'])
+                        ->prepend('<i class="fa fa-user-plus"></i><span class="title">')
                         ->append('</span>')
                         ->link->attr(['class' => 'nav-link']);
+
+                    if (Auth::user()->role == User::ADMIN_ROLE) {
+                        $menu->add('Projects', ['route' => 'projects.index', 'class' => 'nav-item'])
+                            ->prepend('<i class="fa fa-gears"></i><span class="title">')
+                            ->append('</span>')
+                            ->link->attr(['class' => 'nav-link']);
+                    }
 
                     $menu->add('Proxy', ['route' => 'proxies.index', 'class' => 'nav-item'])
                         ->prepend('<i class="fa fa-code-fork"></i><span class="title">')

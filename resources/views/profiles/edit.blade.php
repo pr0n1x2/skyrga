@@ -98,6 +98,24 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <h3 class="form-section">Gmail Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gmail</label>
+                                    <input type="text" name="gmail" id="gmail" value="{{$profile->gmail}}" maxlength="191" class="form-control" placeholder="Gmail">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gmail Password</label>
+                                    <input type="text" name="gmail_password" id="gmail_password" value="{{$profile->gmail_password}}" maxlength="40" class="form-control" placeholder="Gmail Password">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
                         <h3 class="form-section">Profile Address Info</h3>
                         <div class="row">
                             <div class="col-md-6">
@@ -215,6 +233,17 @@
                                 <div class="form-group">
                                     <label class="control-label">Main Anchor</label>
                                     <textarea name="main_anchor" id="main_anchor" class="form-control" placeholder="Spin Main Anchor" rows="5">{{$profile->main_anchor}}</textarea>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Proxy Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Proxy</label>
+                                    <input type="text" name="proxy" id="proxy" value="{{$profile->proxy}}" maxlength="80" class="form-control" placeholder="Proxy">
                                 </div>
                             </div>
                             <!--/span-->
