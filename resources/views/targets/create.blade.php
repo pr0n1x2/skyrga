@@ -57,7 +57,28 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label">Deadline</label>
+                                    <?php
+                                        $periodicity = [
+                                            1 => 'Everyday',
+                                            2 => 'Every two days',
+                                            3 => 'Every three days',
+                                            4 => 'Every four days',
+                                            5 => 'Every five days',
+                                            6 => 'Every six days',
+                                            7 => 'Every seven days',
+                                            8 => 'Every eight days',
+                                            9 => 'Every nine days',
+                                            10 => 'Every ten days'
+                                        ];
+                                    ?>
+                                    <label class="control-label">Periodicity</label>
+                                    {{Form::select('periodicity', $periodicity, old('periodicity'), ['placeholder' => 'Pick a Periodicity', 'id' => 'periodicity', 'class' => 'form-control'])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Start date</label>
                                     <div class="input-group input-medium date date-picker" data-date-format="yyyy-mm-dd" data-date-start-date="+0d">
                                         <input type="text" name="date" id="date" value="{{old('date')}}" class="form-control" readonly>
                                         <span class="input-group-btn">
@@ -71,11 +92,22 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Profiles</label>
+                                    {{Form::select('profiles[]', $profiles, old('profiles'), ['multiple' => 'multiple', 'class' => 'form-control'])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
                     </div>
                     <div class="form-actions left">
+                        <input type="hidden" name="project_id" value="{{$id}}">
                         <a href="{{route('projects.index')}}" class="btn default">Cancel</a>
                         <button type="submit" class="btn blue">
-                            <i class="fa fa-check"></i> Save</button>
+                            <i class="fa fa-check"></i> Create</button>
                     </div>
                     {{Form::close()}}
                 <!-- END FORM-->

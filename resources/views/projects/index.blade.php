@@ -82,7 +82,7 @@
                                                             <i class="fa fa-trash-o"></i> Move to Archive </a>
                                                     </li>
                                                     <li>
-                                                        <a href="{{route('targets.create')}}">
+                                                        <a href="{{route('targets.create', $project->id)}}">
                                                             <i class="fa fa-anchor"></i> Create New Targets </a>
                                                     </li>
                                                 </ul>

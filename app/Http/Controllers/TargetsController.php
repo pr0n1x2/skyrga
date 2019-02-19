@@ -50,9 +50,11 @@ class TargetsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('targets.create');
+        $profiles = Profile::whereIsDeleted(0)->get()->pluck('name', 'id');
+
+        return view('targets.create', compact('id', 'profiles'));
     }
 
     /**
@@ -64,44 +66,61 @@ class TargetsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'date' => 'required|date'
+            'periodicity' => 'required',
+            'date' => 'required|date',
+            'profiles' => 'required',
+            'project_id' => 'required'
         ]);
 
-        $profiles = Profile::select('id', 'group_id')->whereIsDeleted(0)->orderBy('group_id', 'asc')->get();
-        $projects = Project::select('id', 'post_date')->whereIsArchive(0)->orderBy('id', 'asc')->get();
+        $periodicity = $request->get('periodicity');
+        $project_id = $request->get('project_id');
+        $profilesFromForm = $request->get('profiles');
+        $publicationCount = 0;
 
-        $beginDate = Carbon::createFromFormat('Y-m-d', $request->get('date'));
-        $endDate = Carbon::createFromTimestamp($beginDate->getTimestamp())->addDay($projects->count() - 1);
-        $firstDate = Carbon::createFromTimestamp($beginDate->getTimestamp());
+        $profiles = Profile::select('id')
+            ->orderBy('id')
+            ->get()
+            ->map(function ($item) use (&$profilesFromForm, &$publicationCount) {
+                if (!in_array($item->id, $profilesFromForm)) {
+                    return false;
+                } else {
+                    $publicationCount++;
+                    return $item;
+                }
+            });
 
-        foreach ($projects as $project) {
-            $date = Carbon::createFromTimestamp($firstDate->getTimestamp());
-            $groupId = $profiles->first()->group_id;
+        $profilesCount = $profiles->count();
 
-            foreach ($profiles as $profile) {
-                if ($groupId != $profile->group_id) {
-                    $groupId = $profile->group_id;
+        $targets = [];
+        $matrix = Target::getMatrix($request->get('date'));
+        $step = 0;
 
-                    $date->addDay(1);
-
-                    if ($date->greaterThan($endDate)) {
-                        $date = Carbon::createFromTimestamp($beginDate->getTimestamp());
+        foreach ($matrix as $date => $values) {
+            if (!$step) {
+                for ($i = 0; $i < $profilesCount; $i++) {
+                    if ($profiles[$i] !== false && $values[$i] == 0 && !in_array($profiles[$i]->id, $targets)) {
+                        $targets[$date] = $profiles[$i]->id;
+                        $step = $periodicity - 1;
+                        break;
                     }
                 }
-
-                $post_date = empty($project->post_date)
-                    ? Carbon::createFromTimestamp($date->getTimestamp())->addDay(1)
-                    : Carbon::createFromTimestamp($date->getTimestamp())->addDay($project->post_date);
-
-                $target = new Target();
-                $target->profile_id = $profile->id;
-                $target->project_id = $project->id;
-                $target->register_date = $date->format('Y-m-d');
-                $target->post_date = $post_date->format('Y-m-d');
-                $target->save();
+            } else {
+                $step--;
             }
 
-            $firstDate->addDay(1);
+            if (count($targets) == $publicationCount) {
+                break;
+            }
+        }
+
+        foreach ($targets as $date => $profile_id) {
+            $target = new Target();
+            $target->profile_id = $profile_id;
+            $target->project_id = $project_id;
+            $target->register_date = $date;
+            $target->post_date = $date;
+            $target->post_date = $date;
+            $target->save();
         }
 
         return redirect()->route('projects.index')->with('success', 'New targets has been successfully created.');

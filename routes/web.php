@@ -85,4 +85,5 @@ Route::group(['middleware' => 'admin'], function () {
     ]);
 
     Route::get('projects/create/{id}', 'ProjectsController@create')->name('projects.create');
+    Route::get('targets/create/{id}', 'TargetsController@create')->name('targets.create');
 });

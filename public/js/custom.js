@@ -1745,10 +1745,14 @@ var FormValidation = function () {
             messages: {
             },
             rules: {
+                periodicity: {
+                    required: true
+                },
                 date: {
                     required: true,
                     date: true
-                }
+                },
+                "profiles[]": "required"
             },
 
             invalidHandler: function (event, validator) { //display error alert on form submit
