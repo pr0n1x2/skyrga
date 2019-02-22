@@ -12,7 +12,7 @@ use App\Randomizer\ArticleBuilder;
 use App\Randomizer\Randomizer;
 use App\Target;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TargetsController extends Controller
@@ -22,7 +22,7 @@ class TargetsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /*public function index()
     {
         $target = Target::find(1);
 //        $post = $target->profile->getNextPost();
@@ -43,6 +43,23 @@ class TargetsController extends Controller
         dd($paragraph);
         echo $paragraph;
         exit;
+    }*/
+
+    public function index($date = null)
+    {
+        $isToday = false;
+
+        if (!$date) {
+            $date = Carbon::now()->format('Y-m-d');
+            $isToday = true;
+        }
+
+        $targets = Target::with(['project.domain.scheme', 'profile:id,name'])
+            ->whereRegisterDate($date)
+            ->orderBy('project_id', 'asc')
+            ->get();
+
+        return view('targets.index', compact('targets', 'date', 'isToday'));
     }
 
     /**
@@ -76,6 +93,8 @@ class TargetsController extends Controller
         $project_id = $request->get('project_id');
         $profilesFromForm = $request->get('profiles');
         $publicationCount = 0;
+
+        $project = Project::find($project_id);
 
         $profiles = Profile::select('id')
             ->orderBy('id')
@@ -114,12 +133,18 @@ class TargetsController extends Controller
         }
 
         foreach ($targets as $date => $profile_id) {
+            if ($project->post_date) {
+                $postDate = Carbon::createFromFormat('Y-m-d', $date)->addDay($project->post_date);
+                $postDate = $postDate->format('Y-m-d');
+            } else {
+                $postDate = $date;
+            }
+
             $target = new Target();
             $target->profile_id = $profile_id;
-            $target->project_id = $project_id;
+            $target->project_id = $project->id;
             $target->register_date = $date;
-            $target->post_date = $date;
-            $target->post_date = $date;
+            $target->post_date = $postDate;
             $target->save();
         }
 
@@ -198,7 +223,15 @@ class TargetsController extends Controller
         return response()->json($result);
     }
 
-    public function register($date = null)
+    public function register($id, $date = null)
+    {
+        $target = Target::find($id);
+        $account = $target->getAccount();
+
+        return view('targets.register', compact('target', 'account'));
+    }
+
+    /*public function register($date = null)
     {
         $date = is_null($date) ? Carbon::now() : Carbon::createFromFormat('Y-m-d', $date);
 
@@ -245,7 +278,7 @@ class TargetsController extends Controller
             'activeTargetID',
             'activeTargetStr'
         ));
-    }
+    }*/
 
     public function registerComplete(Request $request)
     {
@@ -310,5 +343,71 @@ class TargetsController extends Controller
         $randomizer = new Randomizer($target, $account);
 
         return view('targets.generate', compact('target', 'randomizer'));
+    }
+
+    public function martix()
+    {
+        $startDate = '2019-02-20';
+
+        $date = Carbon::createFromFormat('Y-m-d', $startDate);
+        $profiles = Profile::select('id')->orderBy('id')->get();
+        $profilesCount = $profiles->count();
+
+        $tagrets = Target::select('register_date', 'profile_id', 'project_id')
+            ->where('register_date', '>=', $startDate)
+            ->orderBy('register_date', 'asc')
+            ->orderBy('profile_id')
+            ->get()
+            ->groupBy('register_date')
+            ->toArray();
+
+        $in_array = function ($profile_id, $date) use (&$tagrets) {
+            for ($i = 0; $i < count($tagrets[$date]); $i++) {
+                if ($tagrets[$date][$i]['profile_id'] == $profile_id) {
+                    return $tagrets[$date][$i]['project_id'];
+                }
+            }
+
+            return 0;
+        };
+
+        $matrix = [];
+
+        for ($i = 0; $i < 730; $i++) {
+            $dateStr = $date->format('Y-m-d');
+            $profs = [];
+
+            for ($j = 0; $j < $profilesCount; $j++) {
+                if (isset($tagrets[$dateStr])) {
+                    $profs[] = $in_array($profiles[$j]->id, $dateStr);
+                } else {
+                    $profs[] = 0;
+                }
+            }
+
+            $matrix[$dateStr] = $profs;
+            $date->addDay(1);
+        }
+
+        echo '<table border="1" width="100%">';
+
+        foreach ($matrix as $date => $values) {
+            echo '<tr><td><strong>' . $date . '</strong></td>';
+
+            for ($i = 0; $i < count($values); $i++) {
+                if ($values[$i] == 0) {
+                    echo '<td style="color:red">' . $values[$i] . '</td>';
+                } else {
+                    echo '<td>' . $values[$i] . '</td>';
+                }
+
+            }
+
+            echo '</tr>';
+        }
+
+        echo '</table>';
+
+        exit;
     }
 }

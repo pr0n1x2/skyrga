@@ -44,6 +44,31 @@ class Target extends Model
         return $this->profile->email->id;
     }
 
+    public function getAccount()
+    {
+        if (!$this->account_id) {
+            if (!$this->project->account_id) {
+                $account = new Account();
+                $account->generateRandomAccount($this);
+                $account->save();
+
+                $this->account_id = $account->id;
+                $this->save();
+
+                return $account;
+            } else {
+                $account = Account::find($this->project->account_id);
+
+                $this->account_id = $account->id;
+                $this->save();
+
+                return $account;
+            }
+        }
+
+        return $this->account;
+    }
+
     /*public static function getTargetsCounts($targets)
     {
         $counts = [];
@@ -119,27 +144,6 @@ class Target extends Model
             $date->addDay(1);
         }
 
-        self::printMatrix($matrix);
-
         return $matrix;
-    }
-
-    public static function printMatrix($matrix)
-    {
-        echo '<table border="1" width="100%">';
-
-        foreach ($matrix as $date => $values) {
-            echo '<tr><td><strong>' . $date . '</strong></td>';
-
-            for ($i = 0; $i < count($values); $i++) {
-                echo '<td>' . $values[$i] . '</td>';
-            }
-
-            echo '</tr>';
-        }
-
-        echo '</table>';
-
-        exit;
     }
 }

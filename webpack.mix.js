@@ -22,6 +22,7 @@ mix.styles([
     'resources/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css',
     'resources/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css',
     'resources/assets/global/plugins/bootstrap-toastr/toastr.min.css',
+    'resources/assets/global/plugins/bootstrap-editable/bootstrap-editable/css/bootstrap-editable.css',
     'resources/assets/global/css/components.min.css',
     'resources/assets/global/css/plugins.min.css',
     'resources/assets/layouts/layout/css/layout.min.css',
@@ -47,6 +48,7 @@ mix.scripts([
     'resources/assets/global/plugins/jquery-validation/js/jquery.validate.min.js',
     'resources/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
     'resources/assets/global/plugins/bootstrap-toastr/toastr.min.js',
+    'resources/assets/global/plugins/bootstrap-editable/bootstrap-editable/js/bootstrap-editable.js',
     'resources/assets/global/scripts/app.min.js',
     'resources/assets/layouts/layout/scripts/layout.min.js',
 ], 'public/js/app.js');
@@ -59,6 +61,7 @@ mix.copy('resources/assets/global/plugins/simple-line-icons/fonts', 'public/font
 
 mix.copy('resources/assets/global/plugins/datatables/images', 'public/img/datatables');
 mix.copy('resources/assets/global/plugins/uniform/images', 'public/img/uniform');
+mix.copy('resources/assets/global/plugins/bootstrap-editable/bootstrap-editable/img', 'public/img/editable');
 mix.copy('resources/assets/global/img', 'public/img');
 mix.copy('resources/assets/layouts/layout/img/sidebar_toggler_icon_darkblue.png', 'public/img/sidebar_toggler_icon_darkblue.png');
 mix.copy('resources/assets/layouts/layout/img/avatar3_small.jpg', 'public/img/avatar.png');

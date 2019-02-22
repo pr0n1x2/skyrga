@@ -89,13 +89,13 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th sryle="width:10%" class="table-td-first"> ID </th>
-                                    <th sryle="width:30%"> Domain </th>
-                                    <th sryle="width:5%"> Domain Rating </th>
-                                    <th sryle="width:15%"> Status </th>
-                                    <th sryle="width:15%"> Date </th>
-                                    <th sryle="width:15%"> User </th>
-                                    <th sryle="width:10%"> Action </th>
+                                    <th style="width:10%" class="table-td-first"> ID </th>
+                                    <th style="width:30%"> Domain </th>
+                                    <th style="width:5%"> Domain Rating </th>
+                                    <th style="width:15%"> Status </th>
+                                    <th style="width:15%"> Date </th>
+                                    <th style="width:15%"> User </th>
+                                    <th style="width:10%"> Action </th>
                                 </tr>
                                 </thead>
                                 <tbody>

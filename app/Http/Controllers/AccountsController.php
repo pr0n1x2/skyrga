@@ -122,18 +122,120 @@ class AccountsController extends Controller
         return redirect()->route('accounts.index')->with('success', 'Account has been deleted.');
     }
 
+    public function setUsername(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->username = $request->get('value');
+        $account->save();
+    }
+
     public function setPassword(Request $request)
     {
-        $account = Account::find($request->get('id'));
-        $result['status'] = false;
+        $account = Account::find($request->get('pk'));
+        $account->password = $request->get('value');
+        $account->save();
+    }
 
-        if ($account) {
-            $account->password = $request->get('password');
-            $account->save();
+    public function setPrefix(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->prefix = $request->get('value');
+        $account->save();
+    }
 
-            $result['status'] = true;
-        }
+    public function setGender(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->gender = $request->get('value');
+        $account->save();
+    }
 
-        return response()->json($result);
+    public function setFirstname(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->firstname = $request->get('value');
+        $account->save();
+    }
+
+    public function setLastname(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->lastname = $request->get('value');
+        $account->save();
+    }
+
+    public function setMiddlename(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->middlename = $request->get('value');
+        $account->save();
+    }
+
+    public function setCity(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->city = $request->get('value');
+        $account->save();
+    }
+
+    public function setAddress1(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->address1 = $request->get('value');
+        $account->save();
+    }
+
+    public function setAddress2(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->address2 = $request->get('value');
+        $account->save();
+    }
+
+    public function setZip(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->zip = $request->get('value');
+        $account->save();
+    }
+
+    public function setPhone(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->phone = $request->get('value');
+        $account->save();
+    }
+
+    public function setDomainWord(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->domain_word = $request->get('value');
+        $account->save();
+    }
+
+    public function setEmail(Request $request)
+    {
+        $account = Account::find($request->get('pk'));
+        $account->mail_account_id = $request->get('value');
+        $account->save();
+    }
+
+    public function setState(Request $request)
+    {
+        $states = ['AL' => 'Alabama', 'AK' => 'Alaska', 'AZ' => 'Arizona', 'AR' => 'Arkansas', 'CA' => 'California',
+            'CO' => 'Colorado', 'CT' => 'Connecticut', 'DE' => 'Delaware', 'FL' => 'Florida', 'GA' => 'Georgia',
+            'HI' => 'Hawaii', 'ID' => 'Idaho', 'IL' => 'Illinois', 'IN' => 'Indiana', 'IA' => 'Iowa', 'KS' => 'Kansas',
+            'KY' => 'Kentucky', 'LA' => 'Louisiana', 'ME' => 'Maine', 'MD' => 'Maryland', 'MA' => 'Massachusetts',
+            'MI' => 'Michigan', 'MN' => 'Minnesota', 'MS' => 'Mississippi', 'MO' => 'Missouri', 'MT' => 'Montana',
+            'NE' => 'Nebraska', 'NV' => 'Nevada', 'NH' => 'New Hampshire', 'NJ' => 'New Jersey', 'NM' => 'New Mexico',
+            'NY' => 'New York', 'NC' => 'North Carolina', 'ND' => 'North Dakota', 'OH' => 'Ohio', 'OK' => 'Oklahoma',
+            'OR' => 'Oregon', 'PA' => 'Pennsylvania', 'RI' => 'Rhode Island', 'SC' => 'South Carolina',
+            'SD' => 'South Dakota', 'TN' => 'Tennessee', 'TX' => 'Texas', 'UT' => 'Utah', 'VT' => 'Vermont',
+            'VA' => 'Virginia', 'WA' => 'Washington', 'WV' => 'West Virginia', 'WI' => 'Wisconsin',  'WY' =>'Wyoming'];
+
+        $account = Account::find($request->get('pk'));
+        $account->state_shortcode = $request->get('value');
+        $account->state = $states[$request->get('value')];
+        $account->save();
     }
 }

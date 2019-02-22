@@ -424,7 +424,7 @@
                                 <label class="control-label">Attach a file
                                     <br />
                                     @if ($project->materials)
-                                        <a href="/projects/download/{{$project->id}}">download</a>
+                                        <a href="{{route('projects.download', $project->id)}}">download</a>
                                     @else
                                         <em>not uploaded</em>
                                     @endif

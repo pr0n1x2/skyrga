@@ -2525,6 +2525,272 @@ var ModalsManaged = function () {
         });
     }
 
+    var targetsRegistration = function() {
+        $('.copy-data').click(function () {
+            var el = $(this);
+            var field = el.data('field');
+            var parent = el.parent();
+            var copyElement = parent.find('a.editable-field');
+            var message = null;
+            var value = null;
+
+            if (copyElement.length) {
+                if (el.hasClass('copy-attr')) {
+                    value = copyElement.attr('href');
+                } else {
+                    value = copyElement.text();
+                }
+            } else {
+                value = parent.find('span.not_editable').text();
+            }
+
+            switch (field) {
+                case 'domain': message = "Domain"; break;
+                case 'regpage': message = "Register page"; break;
+                case 'youtube': message = "YouTube link"; break;
+                case 'email': message = "E-mail"; break;
+                case 'username': message = "Username"; break;
+                case 'password': message = "Password"; break;
+                case 'prefix': message = "Prefix"; break;
+                case 'gender': message = "Gender"; break;
+                case 'firstname': message = "First name"; break;
+                case 'lastname': message = "Last name"; break;
+                case 'middlename': message = "Middle name"; break;
+                case 'city': message = "City"; break;
+                case 'address1': message = "Address 1"; break;
+                case 'address2': message = "Address 2"; break;
+                case 'state': message = "State"; break;
+                case 'zip': message = "Zip code"; break;
+                case 'phone': message = "Phone"; break;
+                case 'domain_word': message = "Domain word"; break;
+            }
+
+            message = message + ' has been copied to your clipboard.';
+
+            el = document.createElement('textarea');
+            el.value = value;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+            toastr.success(message);
+        });
+
+        $('#username').editable();
+        $('#password').editable();
+        $('#firstname').editable();
+        $('#lastname').editable();
+        $('#middlename').editable();
+        $('#city').editable();
+        $('#address1').editable();
+        $('#address2').editable();
+        $('#zip').editable();
+        $('#phone').editable();
+        $('#domain_word').editable();
+
+        $('#prefix').editable({
+            title: 'Select Prefix',
+            source: [{
+                value: 'Mr.',
+                text: 'Mr.'
+            }, {
+                value: 'Ms.',
+                text: 'Ms.'
+            }]
+        });
+
+        $('#gender').editable({
+            title: 'Select Gender',
+            source: [{
+                value: 'male',
+                text: 'male'
+            }, {
+                value: 'female',
+                text: 'female'
+            }]
+        });
+
+        $('#email').editable({
+            url: '/post',
+            title: 'Select E-mail',
+            showbuttons: false
+        });
+
+        $('#state').editable({
+            title: 'Select State',
+            source: [{
+                value: 'AL',
+                text: 'Alabama'
+            }, {
+                value: 'AK',
+                text: 'Alaska'
+            }, {
+                value: 'AZ',
+                text: 'Arizona'
+            }, {
+                value: 'AR',
+                text: 'Arkansas'
+            }, {
+                value: 'CA',
+                text: 'California'
+            }, {
+                value: 'CO',
+                text: 'Colorado'
+            }, {
+                value: 'CT',
+                text: 'Connecticut'
+            }, {
+                value: 'DE',
+                text: 'Delaware'
+            }, {
+                value: 'FL',
+                text: 'Florida'
+            }, {
+                value: 'GA',
+                text: 'Georgia'
+            }, {
+                value: 'HI',
+                text: 'Hawaii'
+            }, {
+                value: 'ID',
+                text: 'Idaho'
+            }, {
+                value: 'IL',
+                text: 'Illinois'
+            }, {
+                value: 'IN',
+                text: 'Indiana'
+            }, {
+                value: 'IA',
+                text: 'Iowa'
+            }, {
+                value: 'KS',
+                text: 'Kansas'
+            }, {
+                value: 'KY',
+                text: 'Kentucky'
+            }, {
+                value: 'LA',
+                text: 'Louisiana'
+            }, {
+                value: 'ME',
+                text: 'Maine'
+            }, {
+                value: 'MD',
+                text: 'Maryland'
+            }, {
+                value: 'MA',
+                text: 'Massachusetts'
+            }, {
+                value: 'MI',
+                text: 'Michigan'
+            }, {
+                value: 'MN',
+                text: 'Minnesota'
+            }, {
+                value: 'MS',
+                text: 'Mississippi'
+            }, {
+                value: 'MO',
+                text: 'Missouri'
+            }, {
+                value: 'MT',
+                text: 'Montana'
+            }, {
+                value: 'NE',
+                text: 'Nebraska'
+            }, {
+                value: 'NV',
+                text: 'Nevada'
+            }, {
+                value: 'NH',
+                text: 'New Hampshire'
+            }, {
+                value: 'NJ',
+                text: 'New Jersey'
+            }, {
+                value: 'NM',
+                text: 'New Mexico'
+            }, {
+                value: 'NY',
+                text: 'New York'
+            }, {
+                value: 'NC',
+                text: 'North Carolina'
+            }, {
+                value: 'ND',
+                text: 'North Dakota'
+            }, {
+                value: 'OH',
+                text: 'Ohio'
+            }, {
+                value: 'OK',
+                text: 'Oklahoma'
+            }, {
+                value: 'OR',
+                text: 'Oregon'
+            }, {
+                value: 'PA',
+                text: 'Pennsylvania'
+            }, {
+                value: 'RI',
+                text: 'Rhode Island'
+            }, {
+                value: 'SC',
+                text: 'South Carolina'
+            }, {
+                value: 'SD',
+                text: 'South Dakota'
+            }, {
+                value: 'TN',
+                text: 'Tennessee'
+            }, {
+                value: 'TX',
+                text: 'Texas'
+            }, {
+                value: 'UT',
+                text: 'Utah'
+            }, {
+                value: 'VT',
+                text: 'Vermont'
+            }, {
+                value: 'VA',
+                text: 'Virginia'
+            }, {
+                value: 'WA',
+                text: 'Washington'
+            }, {
+                value: 'WV',
+                text: 'West Virginia'
+            }, {
+                value: 'WI',
+                text: 'Wisconsin'
+            }, {
+                value: 'WY',
+                text: 'Wyoming'
+            }]
+        });
+    }
+
     return {
         //main function to initiate the module
         init: function () {
@@ -2595,6 +2861,10 @@ var ModalsManaged = function () {
 
             if ($('#accounts_delete_form').length) {
                 accountsDeleting();
+            }
+
+            if ($('#targets_register_form').length) {
+                targetsRegistration();
             }
         }
 
@@ -2758,6 +3028,9 @@ var MenuToggle = function() {
     };
 
 }();
+
+$.fn.editable.defaults.mode = 'popup';
+$.fn.editable.defaults.inputclass = 'form-control';
 
 $.fn.bootstrapSwitch.defaults.onText = 'YES';
 $.fn.bootstrapSwitch.defaults.offText = 'NO';
