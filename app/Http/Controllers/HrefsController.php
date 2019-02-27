@@ -9,6 +9,7 @@ use App\HrefsType;
 use App\Site;
 use App\SitesCity;
 use App\SitesType;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,14 +35,15 @@ class HrefsController extends Controller
         if (is_numeric($id)) {
             $href = Href::find($id);
         } else {
-            $href = Href::select('hrefs.*')
-                ->with(['domain', 'site', 'type'])
-                ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
-                ->where('hrefs.is_analized', 1)
-                ->where('hrefs.hrefs_status_id', 1)
-                ->orderBy('domains.rating', 'desc')
-                ->orderBy('hrefs.id', 'asc')
-                ->first();
+            $user = User::find(Auth::user()->id);
+
+            if ($user->last_href_id) {
+                $hrefId = $user->last_href_id;
+            } else {
+                $hrefId = Href::getNextHref();
+            }
+
+            $href = Href::with(['domain', 'site', 'type'])->whereId($hrefId)->first();
         }
 
         if ($href) {
@@ -273,6 +275,10 @@ class HrefsController extends Controller
             return redirect()->route('hrefs.pending')
                 ->with('success', 'Domain has been updated successfully.');
         }
+
+        $user = User::find(Auth::user()->id);
+        $user->last_href_id = Href::getNextHref();
+        $user->save();
 
         return redirect()->route('hrefs.index')
             ->with('success', 'The link was successfully processed and saved with the new status.');

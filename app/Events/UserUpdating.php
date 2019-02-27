@@ -38,6 +38,10 @@ class UserUpdating
             User::removeUserPhoto($user->getOriginal('photo'));
             $user->photo = User::uploadUserPhoto($user->photo);
         }
+
+        if (!$user->is_active) {
+            $user->last_href_id = 0;
+        }
     }
 
     /**

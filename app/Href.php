@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Href extends Model
@@ -37,6 +38,27 @@ class Href extends Model
     public function project()
     {
         return $this->hasOne(Project::class);
+    }
+
+    public static function getNextHref()
+    {
+        $usedHrefs = User::select('last_href_id')
+            ->where('last_href_id', '>', 0)
+            ->where('id', '<>', Auth::user()->id)
+            ->get()
+            ->pluck('last_href_id')
+            ->toArray();
+
+        $href = Href::select('hrefs.id')
+            ->join('domains', 'hrefs.domain_id', '=', 'domains.id')
+            ->where('hrefs.is_analized', 1)
+            ->where('hrefs.hrefs_status_id', 1)
+            ->whereNotIn('hrefs.id', $usedHrefs)
+            ->orderBy('domains.rating', 'desc')
+            ->orderBy('hrefs.id', 'asc')
+            ->first();
+
+        return $href->id;
     }
 
     public static function isUseDomain($domainId)

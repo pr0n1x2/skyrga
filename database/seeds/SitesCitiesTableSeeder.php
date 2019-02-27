@@ -14,7 +14,8 @@ class SitesCitiesTableSeeder extends Seeder
         $schemes = ['Los Angeles', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'San Antonio', 'San Diego',
             'Dallas', 'San Jose', 'Austin', 'Indianapolis', 'San Francisco', 'Charlotte', 'Fort Worth', 'Seattle',
             'Denver', 'Washington', 'Oklahoma City', 'Portland', 'Las Vegas', 'Tucson', 'Atlanta', 'Colorado Springs',
-            'Tulsa', 'Tampa', 'Aurora', 'Orlando', 'Salt Lake City', 'Cincinnati', 'Boise'];
+            'Tulsa', 'Tampa', 'Aurora', 'Orlando', 'Salt Lake City', 'Cincinnati', 'Boise', 'New York', 'Sacramento',
+            'Tallahassee', 'Jacksonville', 'Albany', 'Harrisburg', 'Springfield', 'Columbus'];
 
         for ($i = 0; $i < count($schemes); $i++) {
             DB::table('sites_cities')->insert([

@@ -54,7 +54,7 @@
         <div class="page-content ubot-full-width">
             <!-- BEGIN PAGE HEADER-->
             <!-- BEGIN PAGE TITLE-->
-            <h3 class="page-title"> Redirect to {{$target->project->domain}} </h3>
+            <h3 class="page-title"> Redirect to {{$target->project->domain->scheme->name}}{{$target->project->domain->domain}} </h3>
             <!-- END PAGE TITLE-->
             <!-- END PAGE HEADER-->
             <div class="note note-info" id="data-is-complete">

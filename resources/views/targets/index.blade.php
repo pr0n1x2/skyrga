@@ -41,11 +41,29 @@
                                 <a href="{{route('hrefs.failed')}}">
                                     <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
                             </li>
+                            @if(\Illuminate\Support\Facades\Auth::user()->role == \App\User::ADMIN_ROLE)
+                                <li class="divider"> </li>
+                                <li>
+                                    <a href="{{route('targets.upload')}}">
+                                        <i class="fa fa-upload"></i> Upload New Ubot Archive</a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
             </div>
             <!-- END PAGE BAR -->
+            @if($user->is_new_ubot_archive)
+                <div class="alert alert-block alert-danger fade in">
+                    <button type="button" class="close" data-dismiss="alert"></button>
+                    <h4 class="alert-heading">Attention!</h4>
+                    <p> A new archive has been posted. Download it before you start working. </p>
+                    <p>
+                        <a class="btn blue" href="{{route('targets.ubot')}}"> <i class="fa fa-download"></i> Download </a>
+                    </p>
+                </div>
+            @endif
+            @include('success')
             <!-- END PAGE HEADER-->
             <div class="row">
                 <div class="col-md-12">

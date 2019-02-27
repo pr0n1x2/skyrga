@@ -12,9 +12,7 @@
 */
 
 //Route::get('targets/register/{date?}', 'TargetsController@register')->name('targets.register');
-//Route::get('targets/register-complete/', 'TargetsController@registerComplete');
 //Route::post('targets/proxy', 'TargetsController@checkProxy')->name('targets.proxy');
-//Route::post('targets/generate', 'TargetsController@generate')->name('targets.generate');
 Route::post('profile/set-reserve-email', 'ProfilesController@setReserveEmail');
 //Route::post('targets/remove', 'TargetsController@remove');
 
@@ -51,9 +49,11 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('mail-accounts/get-reserve-emails', 'MailAccountsController@getReserveEmails');
     Route::get('mail-accounts/{id}', 'MailAccountsController@show');
     Route::get('targets/register/{id}/{date?}', 'TargetsController@register')->name('targets.register');
-    Route::get('targets/{date?}', 'TargetsController@index')->name('targets.index');
+    Route::get('targets/ubot', 'TargetsController@downloadUbot')->name('targets.ubot');
     Route::get('targets/martix', 'TargetsController@martix');
+    Route::get('targets/{date?}', 'TargetsController@index')->name('targets.index');
     Route::get('projects/download/{id}', 'ProjectsController@download')->name('projects.download');
+    Route::get('targets/register-complete/{id}', 'TargetsController@registerComplete');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
@@ -77,6 +77,8 @@ Route::group(['middleware' => 'user'], function () {
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');
     Route::post('articles/confirm/{id}', 'ArticlesController@confirm')->name('articles.confirm');
 
+    Route::post('targets/generate', 'TargetsController@generate')->name('targets.generate');
+
     Route::post('accounts/username', 'AccountsController@setUsername');
     Route::post('accounts/password', 'AccountsController@setPassword');
     Route::post('accounts/prefix', 'AccountsController@setPrefix');
@@ -97,6 +99,7 @@ Route::group(['middleware' => 'user'], function () {
 Route::group(['middleware' => 'admin'], function () {
 
     Route::get('hrefs/pending', 'HrefsController@pending')->name('hrefs.pending');
+    Route::get('targets/ubot/upload', 'TargetsController@upload')->name('targets.upload');
 
     Route::resources([
         'users' => 'UsersController',
@@ -106,4 +109,5 @@ Route::group(['middleware' => 'admin'], function () {
 
     Route::get('projects/create/{id}', 'ProjectsController@create')->name('projects.create');
     Route::get('targets/create/{id}', 'TargetsController@create')->name('targets.create');
+    Route::post('targets/storeubot', 'TargetsController@storeUbot')->name('targets.storeubot');
 });

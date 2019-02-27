@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Target extends Model
 {
+    const PATH_TO_UBOT_ARCHIVE = '/files/ubot/';
+    const UBOT_ARCHIVE_FILENAME = 'ubot.rar';
+
     public function profile()
     {
         return $this->belongsTo(Profile::class);
@@ -67,6 +70,11 @@ class Target extends Model
         }
 
         return $this->account;
+    }
+
+    public function getDomainForUbot()
+    {
+        return str_replace('.', '-', $this->project->domain->domain);
     }
 
     /*public static function getTargetsCounts($targets)

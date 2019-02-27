@@ -11,8 +11,10 @@ use App\Proxy\ProxyChecker;
 use App\Randomizer\ArticleBuilder;
 use App\Randomizer\Randomizer;
 use App\Target;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TargetsController extends Controller
@@ -59,7 +61,9 @@ class TargetsController extends Controller
             ->orderBy('project_id', 'asc')
             ->get();
 
-        return view('targets.index', compact('targets', 'date', 'isToday'));
+        $user = User::find(Auth::user()->id);
+
+        return view('targets.index', compact('targets', 'user', 'date', 'isToday'));
     }
 
     /**
@@ -228,6 +232,8 @@ class TargetsController extends Controller
         $target = Target::find($id);
         $account = $target->getAccount();
 
+        $target->getDomainForUbot();
+
         return view('targets.register', compact('target', 'account'));
     }
 
@@ -292,7 +298,7 @@ class TargetsController extends Controller
         return view('targets.regcomplete', compact('target', 'request'));
     }
 
-    public function checkProxy(Request $request)
+    /*public function checkProxy(Request $request)
     {
         // https://free-proxy-list.net/
         // https://www.blackhatprotools.info/showthread.php?2-How-To-Become-VIP-Member-amp-Why
@@ -322,27 +328,48 @@ class TargetsController extends Controller
         }
 
         return view('targets.proxy', compact('target', 'activeProxyID'));
-    }
+    }*/
 
     public function generate(Request $request)
     {
         $target = Target::find($request->get('target_id'));
-
-        if ($request->get('action') == 'register') {
-            $account = new Account();
-            $account->generateRandomAccount($target);
-            $account->save();
-
-            $target->account_id = $account->id;
-            $target->is_register = 1;
-            $target->save();
-        } else {
-            $account = $target->account;
-        }
-
+        $account = $target->account;
         $randomizer = new Randomizer($target, $account);
 
         return view('targets.generate', compact('target', 'randomizer'));
+    }
+
+    public function upload()
+    {
+        return view('targets.upload');
+    }
+
+    public function storeUbot(Request $request)
+    {
+        $this->validate($request, [
+            'ubot' => 'required|file'
+        ]);
+
+        $request->ubot->storeAs(Target::PATH_TO_UBOT_ARCHIVE, Target::UBOT_ARCHIVE_FILENAME);
+
+        DB::table('users')
+            ->where('id', '<>', Auth::user()->id)
+            ->whereIn('role', [User::ADMIN_ROLE, User::USER_ROLE])
+            ->update(['is_new_ubot_archive' => true]);
+
+        return redirect()->route('targets.index')->with('success', 'New archive was successfully uploaded.');
+    }
+
+    public function downloadUbot()
+    {
+        $user = User::find(Auth::user()->id);
+        $user->is_new_ubot_archive = false;
+        $user->save();
+
+        $file = public_path() . Target::PATH_TO_UBOT_ARCHIVE . Target::UBOT_ARCHIVE_FILENAME;
+        $filename = 'UbotArchive' . Carbon::now()->format('Y-m-d') . '.rar';
+
+        return response()->download($file, $filename);
     }
 
     public function martix()

@@ -1,3 +1,23 @@
+@php
+    $loginRequired = true;
+    $runUbot = true;
+    $ubotError = 0;
+
+    if ($target->project->is_login_by_himself) {
+        $runUbot = false;
+        $ubotError = 1;
+    }
+
+    if ($target->project->is_no_need_login) {
+        $loginRequired = false;
+        $runUbot = false;
+        $ubotError = 2;
+    }
+
+    if ($target->is_register) {
+        $ubotError = 3;
+    }
+@endphp
 @extends('layout')
 
 @section('title', 'Registration')
@@ -40,6 +60,19 @@
                 </div>
             </div>
             <!-- END PAGE BAR -->
+            @if($target->is_register)
+                <div class="alert alert-success">
+                    Registration already completed.
+                </div>
+            @elseif(!$target->is_register && !$loginRequired)
+                <div class="alert alert-info">
+                    <strong>Information!</strong> For this domain registration is not required.
+                </div>
+            @elseif(!$target->is_register && $loginRequired && !$runUbot)
+                <div class="alert alert-danger">
+                    <strong>Attention!</strong> You must register yourself without using a script.
+                </div>
+            @endif
             <!-- END PAGE HEADER-->
             <div class="row">
                 <div class="col-md-12">
@@ -50,7 +83,7 @@
                                 {{Form::open(['route' => ['targets.update', $account->id], 'id' => 'targets_register_form', 'class' => 'horizontal-form'])}}
                                     <div class="form-body">
                                         @php
-                                            $isEditable = false;
+                                            $isEditable = true;
                                         @endphp
                                         <h3 class="form-section">Domain Info</h3>
                                         <div class="row">
@@ -365,12 +398,20 @@
                                     </div>
                                 {{Form::close()}}
                                 <!-- END FORM-->
+                                {{Form::open(['route' => 'targets.generate', 'id' => 'ubot_action_form', 'class' => 'horizontal-form'])}}
+                                    <input type="hidden" name="allow_ubot" value="1" />
+                                    <input type="hidden" name="error_ubot" value="{{$ubotError}}" />
+                                    <input type="hidden" name="target_id" value="{{$target->id}}" />
+                                    <input type="hidden" name="action" value="register" />
+                                    <!--<input type="hidden" name="domain" value="{{$target->getDomainForUbot()}}" />-->
+                                    <input type="hidden" name="domain" value="localpages-com" />
+                                {{Form::close()}}
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
-    </div>
     <!-- END CONTENT BODY -->
     </div>
 @endsection
