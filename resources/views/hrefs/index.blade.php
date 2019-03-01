@@ -179,7 +179,7 @@
                         @endforeach
                         <div class="hrefs-status col-md-12">
                             <div class="radio-list">
-                                <label class="radio-inline radio-error">
+                                <label class="radio-inline radio-error @if($href->hrefs_status_id == 5) font-red-thunderbird @endif">
                                     <input type="radio" name="hrefs_status_id" value="5" @if($href->hrefs_status_id == 5) checked @endif> Other reason </label>
                             </div>
                         </div>
