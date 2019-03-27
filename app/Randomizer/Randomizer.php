@@ -81,6 +81,12 @@ class Randomizer
         return 'Mister';
     }
 
+    // Возвращает должность пользователя
+    public function getPosition()
+    {
+        return $this->target->profile->position;
+    }
+
     // Возвращает имя пользователя
     public function getFirstname()
     {
@@ -133,6 +139,24 @@ class Randomizer
     {
         $date = Carbon::createFromFormat('Y-m-d', $this->account->birthday);
         return $date->format('F');
+    }
+
+    // Возвращает альтернативное имя, предназначенное для SEO
+    public function getAlternativeFirstname()
+    {
+        $text = trim($this->spinner->process($this->target->profile->alternative_firstname));
+        $text = preg_replace("/\s{2,}/", " ", $text);
+
+        return $text;
+    }
+
+    // Возвращает альтернативную фамилию, предназначенное для SEO
+    public function getAlternativeLastname()
+    {
+        $text = trim($this->spinner->process($this->target->profile->alternative_lastname));
+        $text = preg_replace("/\s{2,}/", " ", $text);
+
+        return $text;
     }
 
     // Возвращает адрес (улица, дом)
@@ -217,6 +241,18 @@ class Randomizer
         return $this->account->domain_word;
     }
 
+    // Возвращает альтернативное имя субдомена для блога
+    public function getAlternativeDomainName()
+    {
+        return $this->target->profile->primary_domain_word;
+    }
+
+    // Возвращает второе альтернативное имя субдомена для блога
+    public function getAlternativeDomainName2()
+    {
+        return $this->target->profile->secondary_domain_word;
+    }
+
     // Возвращает название компании
     public function getBusinessName()
     {
@@ -273,6 +309,24 @@ class Randomizer
     public function getMainAnchor()
     {
         //
+    }
+
+    // Возвращает uri для субдомена или страницы (вариант 1)
+    public function getURI1()
+    {
+        return $this->target->profile->url1;
+    }
+
+    // Возвращает uri для субдомена или страницы (вариант 2)
+    public function getURI2()
+    {
+        return $this->target->profile->url2;
+    }
+
+    // Возвращает uri для субдомена или страницы (вариант 3)
+    public function getURI3()
+    {
+        return $this->target->profile->url3;
     }
 
     // Возвращает настраиваемое поле #1

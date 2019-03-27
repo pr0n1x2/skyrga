@@ -1324,10 +1324,56 @@ var FormValidation = function () {
                     maxlength: 140,
                     required: true
                 },
+                username: {
+                    minlength: 3,
+                    maxlength: 40,
+                    required: true
+                },
+                password: {
+                    minlength: 3,
+                    maxlength: 25,
+                    required: true
+                },
+                gender: {
+                    required: true
+                },
+                position: {
+                    required: true
+                },
+                prefix: {
+                    required: true
+                },
+                firstname: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 25,
+                },
+                middlename: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 25,
+                },
+                lastname: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 25,
+                },
                 phone: {
                     minlength: 10,
                     maxlength: 20,
                     required: true
+                },
+                birthday: {
+                    required: true,
+                    date: true
+                },
+                alternative_firstname: {
+                    required: true,
+                    maxlength: 191,
+                },
+                alternative_lastname: {
+                    required: true,
+                    maxlength: 191,
                 },
                 gmail: {
                     required: true,
@@ -1360,6 +1406,31 @@ var FormValidation = function () {
                     maxlength: 10,
                     required: true
                 },
+                url1: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 191,
+                },
+                url2: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 191,
+                },
+                url3: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 191,
+                },
+                primary_domain_word: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 191,
+                },
+                secondary_domain_word: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 191,
+                },
                 security_answer_mother: {
                     minlength: 3,
                     maxlength: 30,
@@ -1389,6 +1460,14 @@ var FormValidation = function () {
 
             invalidHandler: function (event, validator) { //display error alert on form submit
                 App.scrollTo(scrollTo, 0);
+            },
+
+            errorPlacement: function(error, element) {
+                if (element.attr('name') == 'birthday') {
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
             },
 
             highlight: function (element) { // hightlight error inputs

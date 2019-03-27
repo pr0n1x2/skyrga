@@ -286,16 +286,16 @@ class TargetsController extends Controller
         ));
     }*/
 
-    public function registerComplete(Request $request)
+    public function registerComplete($id, $date = null)
     {
-        $target = Target::find($request->get('target_id'));
+        $target = Target::find($id);
 
-        if ($request->has('username')) {
-            $target->account->username = $request->get('username');
-            $target->account->save();
-        }
+//        if ($request->has('username')) {
+//            $target->account->username = $request->get('username');
+//            $target->account->save();
+//        }
 
-        return view('targets.regcomplete', compact('target', 'request'));
+        return view('targets.regcomplete', compact('target', 'request', 'date'));
     }
 
     /*public function checkProxy(Request $request)

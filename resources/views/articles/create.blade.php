@@ -1,4 +1,4 @@
-@extends('layout')
+Deadline@extends('layout')
 
 @section('title', 'Create New Article')
 

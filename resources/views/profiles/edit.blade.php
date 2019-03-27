@@ -116,6 +116,110 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <h3 class="form-section">Default Account Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Username</label>
+                                    <input type="text" name="username" id="username" value="{{$profile->username}}" maxlength="40" class="form-control" placeholder="Username">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Password</label>
+                                    <input type="text" name="password" id="password" value="{{$profile->password}}" maxlength="25" class="form-control" placeholder="Password">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Gender</label>
+                                    {{Form::select('gender', ['female' => 'Female', 'male' => 'Male'], $profile->gender, ['placeholder' => 'Pick a Gender', 'class' => 'form-control'])}}
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Position</label>
+                                    <input type="text" name="position" id="position" value="{{$profile->position}}" maxlength="80" class="form-control" placeholder="Position">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Prefix</label>
+                                    <input type="text" name="prefix" id="prefix" value="{{$profile->prefix}}" maxlength="10" class="form-control" placeholder="Prefix">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Firstname</label>
+                                    <input type="text" name="firstname" id="firstname" value="{{$profile->firstname}}" maxlength="25" class="form-control" placeholder="Firstname">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Middlename</label>
+                                    <input type="text" name="middlename" id="middlename" value="{{$profile->middlename}}" maxlength="25" class="form-control" placeholder="Middlename">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Lastname</label>
+                                    <input type="text" name="lastname" id="lastname" value="{{$profile->lastname}}" maxlength="25" class="form-control" placeholder="Lastname">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Birthday</label>
+                                    <div class="input-group input-medium date date-picker" data-date-format="yyyy-mm-dd">
+                                        <input type="text" name="birthday" id="birthday" value="{{$profile->birthday}}" class="form-control" readonly>
+                                        <span class="input-group-btn">
+                                            <button class="btn default" type="button">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Alternative Name</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Alternative Firstname</label>
+                                    <input type="text" name="alternative_firstname" id="alternative_firstname" value="{{$profile->alternative_firstname}}" maxlength="80" class="form-control" placeholder="Alternative Firstname">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Alternative Lastname</label>
+                                    <input type="text" name="alternative_lastname" id="alternative_lastname" value="{{$profile->alternative_lastname}}" maxlength="80" class="form-control" placeholder="Alternative Lastname">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
                         <h3 class="form-section">Profile Address Info</h3>
                         <div class="row">
                             <div class="col-md-6">
@@ -180,6 +284,52 @@
                                 <div class="form-group">
                                     <label class="control-label">Zip</label>
                                     <input type="text" name="zip" id="zip" value="{{$profile->zip}}" maxlength="10" class="form-control" placeholder="Zip">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Uri Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Uri 1</label>
+                                    <input type="text" name="url1" id="url1" value="{{$profile->url1}}" maxlength="191" class="form-control" placeholder="Uri 1">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Uri 2</label>
+                                    <input type="text" name="url2" id="url2" value="{{$profile->url2}}" maxlength="191" class="form-control" placeholder="Uri 2">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Uri 3</label>
+                                    <input type="text" name="url3" id="url3" value="{{$profile->url3}}" maxlength="191" class="form-control" placeholder="Uri 3">
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <h3 class="form-section">Domain Word Info</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Primary Domain Word</label>
+                                    <input type="text" name="primary_domain_word" id="primary_domain_word" value="{{$profile->primary_domain_word}}" maxlength="191" class="form-control" placeholder="Primary Domain Word">
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Secondary Domain Word</label>
+                                    <input type="text" name="secondary_domain_word" id="secondary_domain_word" value="{{$profile->secondary_domain_word}}" maxlength="191" class="form-control" placeholder="Secondary Domain Word">
                                 </div>
                             </div>
                             <!--/span-->

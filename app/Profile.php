@@ -8,9 +8,11 @@ class Profile extends Model
 {
     protected $fillable = [
         'name', 'domain', 'group_id', 'mail_account_id', 'reserve_mail_account_id', 'gmail', 'gmail_password',
-        'business_name', 'address1', 'address2', 'city', 'state', 'state_shortcode', 'zip', 'phone',
-        'security_answer_mother', 'security_answer_pet', 'blog_name', 'about', 'anchor', 'main_anchor', 'proxy',
-        'field1', 'field2', 'field3'
+        'gender', 'username', 'password', 'prefix', 'firstname', 'middlename', 'lastname', 'birthday', 'position',
+        'url1', 'url2', 'url3', 'primary_domain_word', 'secondary_domain_word', 'alternative_firstname',
+        'alternative_lastname', 'business_name', 'address1', 'address2', 'city', 'state', 'state_shortcode', 'zip',
+        'phone', 'security_answer_mother', 'security_answer_pet', 'blog_name', 'about', 'anchor', 'main_anchor',
+        'proxy', 'field1', 'field2', 'field3'
     ];
 
     public function group()

@@ -246,6 +246,18 @@
                             <!--/span-->
                         </div>
                         <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use Default Profile</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="use_default_user_profile" @if ($project->use_default_user_profile) checked @endif class="make-switch" id="use_default_user_profile">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
                         <h3 class="form-section">Login Settings</h3>
                         <div class="row">
                             <div class="col-md-12">

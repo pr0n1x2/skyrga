@@ -13,6 +13,7 @@
     <input type="hidden" name="prefix" value="{{$randomizer->getPrefix()}}">
     <input type="hidden" name="prefix_withou_dot" value="{{$randomizer->getPrefixWithoutDot()}}">
     <input type="hidden" name="prefix_full" value="{{$randomizer->getPrefixFull()}}">
+    <input type="hidden" name="position" value="{{$randomizer->getPosition()}}">
     <input type="hidden" name="firstname" value="{{$randomizer->getFirstname()}}">
     <input type="hidden" name="middlename" value="{{$randomizer->getMiddlename()}}">
     <input type="hidden" name="middlename_short" value="{{$randomizer->getMiddlenameShort()}}">
@@ -22,6 +23,8 @@
     <input type="hidden" name="birthday_month_int" value="{{$randomizer->getBirthdayMonthInt()}}">
     <input type="hidden" name="birthday_day_int" value="{{$randomizer->getBirthdayDayInt()}}">
     <input type="hidden" name="birthday_month_name" value="{{$randomizer->getBirthdayMonthName()}}">
+    <input type="hidden" name="alternative_firstname" value="{{$randomizer->getAlternativeFirstname()}}">
+    <input type="hidden" name="alternative_lastname" value="{{$randomizer->getAlternativeLastname()}}">
     <input type="hidden" name="address1" value="{{$randomizer->getAddress1()}}">
     <input type="hidden" name="address2" value="{{$randomizer->getAddress2()}}">
     <input type="hidden" name="city" value="{{$randomizer->getCity()}}">
@@ -34,6 +37,8 @@
     <input type="hidden" name="phone_part1" value="{{$randomizer->getPhonePart1()}}">
     <input type="hidden" name="phone_part2" value="{{$randomizer->getPhonePart2()}}">
     <input type="hidden" name="domain_name" value="{{$randomizer->getDomainName()}}">
+    <input type="hidden" name="primary_domain_word" value="{{$randomizer->getAlternativeDomainName()}}">
+    <input type="hidden" name="secondary_domain_word" value="{{$randomizer->getAlternativeDomainName2()}}">
     <input type="hidden" name="business_name" value="{{$randomizer->getBusinessName()}}">
     <input type="hidden" name="mothers_maiden_name" value="{{$randomizer->getMothersMaidenName()}}">
     <input type="hidden" name="pet_name" value="{{$randomizer->getPetName()}}">
@@ -42,6 +47,9 @@
     <input type="hidden" name="blog_first_paragraph" value="{{$randomizer->getBlogDescriptionFirstParagraph()}}">
     <input type="hidden" name="anchor" value="{{$randomizer->getAnchor()}}">
     <input type="hidden" name="main_anchor" value="{{$randomizer->getMainAnchor()}}">
+    <input type="hidden" name="uri1" value="{{$randomizer->getURI1()}}">
+    <input type="hidden" name="uri2" value="{{$randomizer->getURI2()}}">
+    <input type="hidden" name="uri3" value="{{$randomizer->getURI3()}}">
     <input type="hidden" name="custom_field1" value="{{$randomizer->getCustomField1()}}">
     <input type="hidden" name="custom_field2" value="{{$randomizer->getCustomField2()}}">
     <input type="hidden" name="custom_field3" value="{{$randomizer->getCustomField3()}}">

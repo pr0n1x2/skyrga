@@ -34,14 +34,14 @@ class Account extends Model
         $this->faker->addProvider(new DateTime($this->faker));
 
         $this->setEmail($target);
-        $this->setGender();
-        $this->setFirstname();
-        $this->setMiddlename();
-        $this->setLastname();
+        $this->setGender($target);
+        $this->setFirstname($target);
+        $this->setMiddlename($target);
+        $this->setLastname($target);
         $this->setUsername($target);
         $this->setPassword($target);
-        $this->setPrefix();
-        $this->setBirthday();
+        $this->setPrefix($target);
+        $this->setBirthday($target);
         $this->setAddress($target);
         $this->setPhone($target);
         $this->setDomainWord($target);
@@ -62,34 +62,50 @@ class Account extends Model
         return $this->emailName;
     }
 
-    private function setGender()
+    private function setGender($target)
     {
-        $gender = ['female', 'male'];
-        $this->gender = $gender[rand(0, 1)];
+        if ($target->project->use_default_user_profile) {
+            $this->gender = $target->profile->gender;
+        } else {
+            $gender = ['female', 'male'];
+            $this->gender = $gender[rand(0, 1)];
+        }
     }
 
-    private function setFirstname()
+    private function setFirstname($target)
     {
-        $this->firstname = $this->faker->firstName($this->gender);
+        if ($target->project->use_default_user_profile) {
+            $this->firstname = $target->profile->firstname;
+        } else {
+            $this->firstname = $this->faker->firstName($this->gender);
+        }
     }
 
-    private function setLastname()
+    private function setLastname($target)
     {
-        $this->lastname = $this->faker->lastName;
+        if ($target->project->use_default_user_profile) {
+            $this->lastname = $target->profile->lastname;
+        } else {
+            $this->lastname = $this->faker->lastName;
+        }
     }
 
-    private function setMiddlename()
+    private function setMiddlename($target)
     {
-        $male = ['Jack', 'Judd', 'Lane', 'Coy', 'Brock', 'Dash', 'Clark', 'Drew', 'Ray', 'Finn', 'Seth', 'Neil',
-            'Zane', 'Will', 'Troy', 'Shane', 'Jax', 'Reeve', 'Glenn', 'Jace', 'Drake', 'Wade', 'David', 'Robert'];
+        if ($target->project->use_default_user_profile) {
+            $this->middlename = $target->profile->middlename;
+        } else {
+            $male = ['Jack', 'Judd', 'Lane', 'Coy', 'Brock', 'Dash', 'Clark', 'Drew', 'Ray', 'Finn', 'Seth', 'Neil',
+                'Zane', 'Will', 'Troy', 'Shane', 'Jax', 'Reeve', 'Glenn', 'Jace', 'Drake', 'Wade', 'David', 'Robert'];
 
-        $female = ['Bree', 'Dawn', 'Fawn', 'Fern', 'Aryn', 'Jae', 'Jaidyn', 'Kathryn', 'Krystan', 'Lee', 'Lynn',
-            'Mae', 'Sue', 'Blair', 'Blaise', 'Blake', 'Blayne', 'Brooke', 'Kate', 'Merle', 'Raine', 'Rose', 'Rylie',
-            'Taye'];
+            $female = ['Bree', 'Dawn', 'Fawn', 'Fern', 'Aryn', 'Jae', 'Jaidyn', 'Kathryn', 'Krystan', 'Lee', 'Lynn',
+                'Mae', 'Sue', 'Blair', 'Blaise', 'Blake', 'Blayne', 'Brooke', 'Kate', 'Merle', 'Raine', 'Rose', 'Rylie',
+                'Taye'];
 
-        $index = rand(0, 23);
+            $index = rand(0, 23);
 
-        $this->middlename = $this->gender == 'male' ? $male[$index] : $female[$index];
+            $this->middlename = $this->gender == 'male' ? $male[$index] : $female[$index];
+        }
     }
 
     private function setUsername($target)
@@ -97,54 +113,70 @@ class Account extends Model
         if ($target->project->is_use_email_as_username) {
             $this->username = $this->emailName;
         } else {
-            $firstname = substr(mb_strtolower($this->firstname), 0, rand(3, 6));
-            $middlename = substr(mb_strtolower($this->middlename), 0, 1);
-            $lastname = substr(mb_strtolower($this->lastname), 0, rand(3, 8));
+            if ($target->project->use_default_user_profile) {
+                $this->username = $target->profile->username;
+            } else {
+                $firstname = substr(mb_strtolower($this->firstname), 0, rand(3, 6));
+                $middlename = substr(mb_strtolower($this->middlename), 0, 1);
+                $lastname = substr(mb_strtolower($this->lastname), 0, rand(3, 8));
 
-            $this->username = str_replace("'", "", $firstname . $middlename . $lastname);
+                $this->username = str_replace("'", "", $firstname . $middlename . $lastname);
+            }
         }
     }
 
     private function setPassword($target)
     {
         if (!$target->project->is_same_password) {
-            if (!$target->project->is_easy_password) {
-                do {
-                    $password = str_random(rand(10, 13));
-                    $numberPos = false;
-
-                    for ($i = 0; $i < strlen($password) - 3; $i++) {
-                        if (is_numeric($password{$i})) {
-                            $numberPos = $i + 2;
-                            break;
-                        }
-                    }
-                } while ($numberPos === false);
-
-                $symbols = ['&', '@', '!', '#', '$', '*'];
-
-                $part1 = substr($password, 0, $numberPos);
-                $part2 = substr($password, $numberPos);
-
-                $password = $part1 . $symbols[rand(0, 5)] . substr($part2, 1);
+            if ($target->project->use_default_user_profile) {
+                $this->password = $target->profile->password;
             } else {
-                $password = str_random(rand(10, 13));
-            }
+                if (!$target->project->is_easy_password) {
+                    do {
+                        $password = str_random(rand(10, 13));
+                        $numberPos = false;
 
-            $this->password = $password;
+                        for ($i = 0; $i < strlen($password) - 3; $i++) {
+                            if (is_numeric($password{$i})) {
+                                $numberPos = $i + 2;
+                                break;
+                            }
+                        }
+                    } while ($numberPos === false);
+
+                    $symbols = ['&', '@', '!', '#', '$', '*'];
+
+                    $part1 = substr($password, 0, $numberPos);
+                    $part2 = substr($password, $numberPos);
+
+                    $password = $part1 . $symbols[rand(0, 5)] . substr($part2, 1);
+                } else {
+                    $password = str_random(rand(10, 13));
+                }
+
+                $this->password = $password;
+            }
         } else {
             $this->password = null;
         }
     }
 
-    private function setPrefix()
+    private function setPrefix($target)
     {
-        $this->prefix = $this->gender == 'male' ? 'Mr.' : 'Ms.';
+        if ($target->project->use_default_user_profile) {
+            $this->prefix = $target->profile->prefix;
+        } else {
+            $this->prefix = $this->gender == 'male' ? 'Mr.' : 'Ms.';
+        }
     }
 
-    private function setBirthday()
+    private function setBirthday($target)
     {
-        $this->birthday = $this->faker->dateTimeBetween('-50 years', '1995-01-01')->format('Y-m-d');
+        if ($target->project->use_default_user_profile) {
+            $this->birthday = $target->profile->birthday;
+        } else {
+            $this->birthday = $this->faker->dateTimeBetween('-50 years', '1995-01-01')->format('Y-m-d');
+        }
     }
 
     private function setAddress($target)

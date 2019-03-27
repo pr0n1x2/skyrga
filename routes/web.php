@@ -53,7 +53,7 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('targets/martix', 'TargetsController@martix');
     Route::get('targets/{date?}', 'TargetsController@index')->name('targets.index');
     Route::get('projects/download/{id}', 'ProjectsController@download')->name('projects.download');
-    Route::get('targets/register-complete/{id}', 'TargetsController@registerComplete');
+    Route::get('targets/register-complete/{id}/{date?}', 'TargetsController@registerComplete');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');

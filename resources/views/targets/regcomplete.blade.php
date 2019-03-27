@@ -24,9 +24,12 @@
                             <i class="fa fa-info"></i>Account Info </div>
                     </div>
                     <div class="portlet-body">
+                        @php
+                            $domain = $target->project->domain->scheme->name . $target->project->domain->domain;
+                        @endphp
                         <div class="row">
                             <div class="fa-item col-md-4">Target:</div>
-                            <div class="fa-item col-md-8">{{$target->project->domain}}</div>
+                            <div class="fa-item col-md-8">{{$domain}}</div>
                         </div>
                         <div class="row">
                             <div class="fa-item col-md-4">E-mail:</div>
@@ -68,7 +71,7 @@
                             <i class="fa fa-arrow-circle-o-right"></i>Continue Registration </div>
                     </div>
                     <div class="portlet-body">
-                        <a href="{{route('targets.register', $request->get('date'))}}" class="btn btn-lg blue">
+                        <a href="{{route('targets.index', $date)}}" class="btn btn-lg blue">
                             <i class="fa fa-forward"></i> Go To Next Step
                         </a>
                     </div>
