@@ -32,6 +32,15 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
+                                <a href="{{route('fields.create', ['id' => $project->id])}}">
+                                    <i class="fa fa-briefcase"></i> Create Project Fields</a>
+                            </li>
+                            <li>
+                                <a href="{{route('fields.edit', ['id' => $project->id])}}">
+                                    <i class="fa fa-briefcase"></i> Edit Project Fields</a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
                                 <a href="{{route('projects.index')}}">
                                     <i class="icon-action-undo"></i> Back to Projects</a>
                             </li>
@@ -40,6 +49,7 @@
                 </div>
             </div>
             <!-- END PAGE BAR -->
+            @include('success')
             <!-- END PAGE HEADER-->
             <div class="portlet light bg-inverse">
                 <div class="portlet-title">

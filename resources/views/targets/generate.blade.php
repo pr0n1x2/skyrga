@@ -53,6 +53,16 @@
     <input type="hidden" name="custom_field1" value="{{$randomizer->getCustomField1()}}">
     <input type="hidden" name="custom_field2" value="{{$randomizer->getCustomField2()}}">
     <input type="hidden" name="custom_field3" value="{{$randomizer->getCustomField3()}}">
+    <input type="hidden" name="additional_profile_field1" value="{{$randomizer->getProjectField1(1)}}">
+    <input type="hidden" name="additional_profile_field2" value="{{$randomizer->getProjectField1(2)}}">
+    <input type="hidden" name="additional_profile_field3" value="{{$randomizer->getProjectField1(3)}}">
+    <input type="hidden" name="additional_profile_field4" value="{{$randomizer->getProjectField1(4)}}">
+    <input type="hidden" name="additional_profile_field5" value="{{$randomizer->getProjectField1(5)}}">
+    <input type="hidden" name="additional_profile_field6" value="{{$randomizer->getProjectField1(6)}}">
+    <input type="hidden" name="additional_profile_field7" value="{{$randomizer->getProjectField1(7)}}">
+    <input type="hidden" name="additional_profile_field8" value="{{$randomizer->getProjectField1(8)}}">
+    <input type="hidden" name="additional_profile_field9" value="{{$randomizer->getProjectField1(9)}}">
+    <input type="hidden" name="additional_profile_field10" value="{{$randomizer->getProjectField1(10)}}">
 
     <input type="hidden" name="is_change_username" value="{{$target->project->is_same_username}}">
 

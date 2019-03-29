@@ -4,6 +4,7 @@ namespace App\Randomizer;
 
 use App\Account;
 use App\Post;
+use App\ProjectField;
 use App\Target;
 use Carbon\Carbon;
 use Mikemike\Spinner\Spinner;
@@ -13,12 +14,18 @@ class Randomizer
     private $target;
     private $account;
     private $spinner;
+    private $fields;
 
     public function __construct(Target $target, Account $account)
     {
         $this->target = $target;
         $this->account = $account;
         $this->spinner = new Spinner();
+        $this->fields = ProjectField::select('name', 'value')
+            ->where([['project_id', '=', $this->target->project_id], ['profile_id', '=', $this->target->profile_id]])
+            ->get()
+            ->pluck('value', 'name')
+            ->toArray();
     }
 
     // Возвращает имя профиля (как называется профиль в админке)
@@ -345,5 +352,18 @@ class Randomizer
     public function getCustomField3()
     {
         return $this->target->profile->field3;
+    }
+
+    // Возвращает дополнительное поле профиля для проекта, от 1 до 10
+    public function getProjectField1($id)
+    {
+        $key = 'field' . $id;
+        $value = '';
+
+        if (key_exists($key, $this->fields)) {
+            $value = $this->fields[$key];
+        }
+
+        return $value;
     }
 }

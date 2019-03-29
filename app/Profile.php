@@ -88,4 +88,14 @@ class Profile extends Model
 
         return $post;
     }
+
+    public static function getProfilesIds()
+    {
+        $ids = self::select('id')
+            ->orderBy('id', 'asc')
+            ->pluck('id')
+            ->toArray();
+
+        return $ids;
+    }
 }

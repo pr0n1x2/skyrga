@@ -38,7 +38,7 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <a href="{{route('targets.index')}}">List of Targets</a>
+                        <a href="/targets/{{$date}}">List of Targets</a>
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
@@ -80,48 +80,79 @@
                         <div class="portlet light bg-inverse">
                             <div class="portlet-body form">
                                 <!-- BEGIN FORM-->
-                                {{Form::open(['route' => ['targets.update', $account->id], 'id' => 'targets_register_form', 'class' => 'horizontal-form'])}}
+                                {{Form::open(['route' => ['targets.update', $target->id], 'method' => 'put', 'id' => 'targets_register_form', 'class' => 'horizontal-form'])}}
                                     <div class="form-body">
                                         @php
                                             $isEditable = true;
                                         @endphp
-                                        <h3 class="form-section">Domain Info</h3>
+                                        <h3 class="form-section">Profile Info</h3>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    @php
-                                                        $domain = $target->project->domain->scheme->name . $target->project->domain->domain;
-                                                    @endphp
+                                                    <label class="control-label"><strong>Name:</strong></label>
+                                                    {{$target->profile->name}}
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
                                                     <label class="control-label">Domain:</label>
-                                                    <a href="{{$domain}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> {{$domain}}</a>
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="domain">
+                                                    <a href="{{$target->profile->domain}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> {{$target->profile->domain}}</a>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="profile-domain">
                                                         <i class="fa fa-clipboard"></i> copy
                                                     </a>
                                                 </div>
                                             </div>
                                             <!--/span-->
-                                            @if (!empty($target->project->register_page))
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Register page:</label>
-                                                        <a href="{{$target->project->register_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open register page</a>
-                                                        <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="regpage">
-                                                            <i class="fa fa-clipboard"></i> copy
-                                                        </a>
-                                                    </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label"><strong>E-mail:</strong></label>
+                                                    @if($isEditable)
+                                                        <a href="javascript:;" class="editable-field" id="email" data-type="select" data-pk="{{$account->id}}" data-value="{{$target->getEmailID()}}" data-url="/accounts/email" data-source="/mail-accounts/get-reserve-emails">{{$target->getEmail()}}</a>
+                                                    @else
+                                                        <span class="not_editable">{{$target->getEmail()}}</span>
+                                                    @endif
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data" data-field="email">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
                                                 </div>
-                                                <!--/span-->
-                                            @endif
-                                            @if (!empty($target->project->materials))
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Materials:</label>
-                                                        <a href="{{route('projects.download', $target->project_id)}}"><i class="fa fa-download"></i> Download materials</a>
-                                                    </div>
-                                                </div>
-                                                <!--/span-->
-                                            @endif
+                                            </div>
+                                            <!--/span-->
                                         </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">E-mail Login Page:</label>
+                                                    <a href="{{$account->email->login_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open login page</a>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emaillogpage">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">E-mail Login:</label>
+                                                    <span class="not_editable">{{$account->email->account_name}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emaillogin">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">E-mail Password:</label>
+                                                    <span class="not_editable">{{$account->email->password}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emailpass">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
                                         @if (!empty($target->project->login_instructions))
                                             <h3 class="form-section">Special Instructions</h3>
                                             <div class="row">
@@ -140,7 +171,7 @@
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <a href="https://www.youtube.com/watch?v={{$target->project->login_youtube}}" class="editable-field" target="_blank">
-                                                            <i class="fa fa-youtube-play font-red-thunderbird"></i> Watch the video on YouTube
+                                                            <i class="fa fa-youtube-play font-red-thunderbird"></i> Watch Video On YouTube
                                                         </a>
                                                         <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="youtube">
                                                             <i class="fa fa-clipboard"></i> copy
@@ -151,28 +182,57 @@
                                             </div>
                                             <!--/row-->
                                         @endif
-                                        <h3 class="form-section">Account Info</h3>
+                                        <h3 class="form-section">Donor Info</h3>
                                         <div class="row">
+                                            @if (!empty($target->project->register_page))
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label"><strong>Register page:</strong></label>
+                                                        <a href="{{$target->project->register_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open register page</a>
+                                                        <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="regpage">
+                                                            <i class="fa fa-clipboard"></i> copy
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            @endif
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="control-label">E-mail:</label>
-                                                    @if($isEditable)
-                                                        <a href="javascript:;" class="editable-field" id="email" data-type="select" data-pk="{{$account->id}}" data-value="{{$target->getEmailID()}}" data-url="/accounts/email" data-source="/mail-accounts/get-reserve-emails">{{$target->getEmail()}}</a>
-                                                    @else
-                                                        <span class="not_editable">{{$target->getEmail()}}</span>
-                                                    @endif
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data" data-field="email">
+                                                    @php
+                                                        $domain = $target->project->domain->scheme->name . $target->project->domain->domain;
+                                                    @endphp
+                                                    <label class="control-label">Domain:</label>
+                                                    <a href="{{$domain}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> {{$domain}}</a>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="domain">
                                                         <i class="fa fa-clipboard"></i> copy
                                                     </a>
                                                 </div>
                                             </div>
                                             <!--/span-->
+                                            @if (!empty($target->project->materials))
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Materials:</label>
+                                                        <a href="{{route('projects.download', $target->project_id)}}"><i class="fa fa-download"></i> Download materials</a>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            @endif
+                                        </div>
+                                        <!--/row-->
+                                        <h3 class="form-section">Account Info</h3>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Authorization Data</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!--/row-->
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="control-label label-bold">Username:</label>
+                                                    <label class="control-label">Username:</label>
                                                     @if($isEditable)
                                                         <a href="#" class="editable-field" id="username" data-type="text" data-pk="{{$account->id}}" data-url="/accounts/username" data-title="Enter username">{{$account->username}}</a>
                                                     @else
@@ -186,7 +246,7 @@
                                             <!--/span-->
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="control-label label-bold">Password:</label>
+                                                    <label class="control-label">Password:</label>
                                                     @if($isEditable)
                                                         <a href="#" class="editable-field" id="password" data-type="text" data-pk="{{$account->id}}" data-url="/accounts/password" data-title="Enter password">{{$account->password}}</a>
                                                     @else
@@ -198,6 +258,14 @@
                                                 </div>
                                             </div>
                                             <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Person Data</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!--/row-->
                                         <div class="row">
@@ -281,6 +349,27 @@
                                                 </div>
                                             </div>
                                             <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Position:</label>
+                                                    <span class="not_editable">{{$target->profile->position}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="position">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Address</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!--/row-->
                                         <div class="row">
@@ -374,6 +463,35 @@
                                         </div>
                                         <!--/row-->
                                         <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Company</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Name:</label>
+                                                    <span class="not_editable">{{$target->profile->business_name}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="company">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Subdomain</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label class="control-label">Domain word:</label>
@@ -390,9 +508,55 @@
                                             <!--/span-->
                                         </div>
                                         <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="control-label label-bold">Google Account Data</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Login:</label>
+                                                    <span class="not_editable">{{$target->profile->gmail}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="google-login">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Password:</label>
+                                                    <span class="not_editable">{{$target->profile->gmail_password}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="google-pass">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <h3 class="form-section">Registration Status</h3>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Registration Is Completed</label>
+                                                    <div class="checkbox-list">
+                                                        <input type="checkbox" name="is_register" @if ($target->is_register)) checked @endif class="make-switch" id="is_register">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
                                     </div>
                                     <div class="form-actions left">
-                                        <button type="button" class="btn default">Cancel</button>
+                                        <input type="hidden" name="target-action" value="register">
+                                        <input type="hidden" name="date" value="{{$date}}">
+                                        <a href="/targets/{{$date}}" class="btn default">Cancel</a>
                                         <button type="submit" class="btn blue">
                                             <i class="fa fa-check"></i> Save</button>
                                     </div>

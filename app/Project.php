@@ -44,6 +44,11 @@ class Project extends Model
         return $this->hasMany(Account::class);
     }
 
+    public function fields()
+    {
+        return $this->hasMany(ProjectField::class);
+    }
+
     public function proxies()
     {
         return $this->belongsToMany(

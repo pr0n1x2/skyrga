@@ -57,8 +57,8 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
+    Route::get('fields/create/{id}', 'ProjectFieldsController@create')->name('fields.create');
     Route::put('hrefs/{id}', 'HrefsController@update')->where('id', '[0-9]+')->name('hrefs.update');
-
 
     Route::resources([
         'images' => 'ImagesController',
@@ -70,14 +70,16 @@ Route::group(['middleware' => 'user'], function () {
         'proxies' => 'ProxiesController',
         'articles' => 'ArticlesController',
         'targets' => 'TargetsController',
-        'accounts' => 'AccountsController'
+        'accounts' => 'AccountsController',
     ]);
+
+    Route::resource('fields', 'ProjectFieldsController', ['except' => 'create']);
 
 //    Route::post('projects/archive', 'ProjectsController@archive')->name('projects.archive');
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');
     Route::post('articles/confirm/{id}', 'ArticlesController@confirm')->name('articles.confirm');
-
     Route::post('targets/generate', 'TargetsController@generate')->name('targets.generate');
+
 
     Route::post('accounts/username', 'AccountsController@setUsername');
     Route::post('accounts/password', 'AccountsController@setPassword');

@@ -186,7 +186,20 @@ class TargetsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $target = Target::find($id);
+        $date = $request->get('date');
+        $message = null;
+
+        switch ($request->get('target-action')) {
+            case 'register':
+                $target->is_register = isset($request->is_register) ? true : false;
+                $message = 'Registration status was successfully saved.';
+                break;
+        }
+
+        $target->save();
+
+        return redirect('/targets/' . $date)->with('success', $message);
     }
 
     /**
@@ -234,7 +247,7 @@ class TargetsController extends Controller
 
         $target->getDomainForUbot();
 
-        return view('targets.register', compact('target', 'account'));
+        return view('targets.register', compact('target', 'account', 'date'));
     }
 
     /*public function register($date = null)
@@ -294,6 +307,9 @@ class TargetsController extends Controller
 //            $target->account->username = $request->get('username');
 //            $target->account->save();
 //        }
+
+        $target->is_register = true;
+        $target->save();
 
         return view('targets.regcomplete', compact('target', 'request', 'date'));
     }

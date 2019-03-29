@@ -95,7 +95,7 @@
                                             <td> {{$target->profile->name}} </td>
                                             <td> <a href="{{$domain}}" target="_blank">{{$domain}}</a> </td>
                                             <td class="table-td-first">
-                                                <a href="{{route('targets.register', [$target->id, $dateForLink])}}" class="btn btn-sm default">
+                                                <a href="{{route('targets.register', [$target->id, $dateForLink])}}" class="btn btn-sm @if(!$target->is_register) default @else btn-success @endif">
                                                     <i class="fa fa-external-link"></i> Register
                                                 </a>
                                             </td>

@@ -32,8 +32,8 @@
                             <div class="fa-item col-md-8">{{$domain}}</div>
                         </div>
                         <div class="row">
-                            <div class="fa-item col-md-4">E-mail:</div>
-                            <div class="fa-item col-md-8">{{$target->account->email->email}}</div>
+                            <div class="fa-item col-md-4"><strong>E-mail:</strong></div>
+                            <div class="fa-item col-md-8"><strong>{{$target->account->email->email}}</strong></div>
                         </div>
                         <div class="row">
                             <div class="fa-item col-md-4">Username:</div>
@@ -71,7 +71,7 @@
                             <i class="fa fa-arrow-circle-o-right"></i>Continue Registration </div>
                     </div>
                     <div class="portlet-body">
-                        <a href="{{route('targets.index', $date)}}" class="btn btn-lg blue">
+                        <a href="/targets/{{$date}}" class="btn btn-lg blue">
                             <i class="fa fa-forward"></i> Go To Next Step
                         </a>
                     </div>

@@ -2624,6 +2624,10 @@ var ModalsManaged = function () {
             }
 
             switch (field) {
+                case 'profile-domain': message = "Profile domain"; break;
+                case 'emaillogpage': message = "E-mail login page"; break;
+                case 'emaillogin': message = "E-mail login"; break;
+                case 'emailpass': message = "E-mail password"; break;
                 case 'domain': message = "Domain"; break;
                 case 'regpage': message = "Register page"; break;
                 case 'youtube': message = "YouTube link"; break;
@@ -2635,13 +2639,17 @@ var ModalsManaged = function () {
                 case 'firstname': message = "First name"; break;
                 case 'lastname': message = "Last name"; break;
                 case 'middlename': message = "Middle name"; break;
+                case 'position': message = "Position"; break;
                 case 'city': message = "City"; break;
                 case 'address1': message = "Address 1"; break;
                 case 'address2': message = "Address 2"; break;
                 case 'state': message = "State"; break;
                 case 'zip': message = "Zip code"; break;
                 case 'phone': message = "Phone"; break;
+                case 'company': message = "Company"; break;
                 case 'domain_word': message = "Domain word"; break;
+                case 'google-login': message = "Google login"; break;
+                case 'google-pass': message = "Google password"; break;
             }
 
             message = message + ' has been copied to your clipboard.';
