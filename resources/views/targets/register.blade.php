@@ -52,8 +52,8 @@
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
-                                <a href="{{route('hrefs.failed')}}">
-                                    <i class="fa fa-thumbs-o-down"></i> Show Failed Domains</a>
+                                <a href="/targets/{{$date}}">
+                                    <i class="icon-action-undo"></i> Back to Targets</a>
                             </li>
                         </ul>
                     </div>

@@ -36,6 +36,11 @@ class GenerateMenus
                         ->append('</span>')
                         ->link->attr(['class' => 'nav-link']);
 
+                    $menu->add('Targets', ['route' => 'targets.index', 'class' => 'nav-item'])
+                        ->prepend('<i class="fa fa-anchor"></i><span class="title">')
+                        ->append('</span>')
+                        ->link->attr(['class' => 'nav-link']);
+
                     $menu->add('Articles', ['route' => 'articles.index', 'class' => 'nav-item'])
                         ->prepend('<i class="fa fa-file-text-o"></i><span class="title">')
                         ->append('</span>')

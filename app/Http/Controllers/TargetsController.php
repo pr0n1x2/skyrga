@@ -195,6 +195,10 @@ class TargetsController extends Controller
                 $target->is_register = isset($request->is_register) ? true : false;
                 $message = 'Registration status was successfully saved.';
                 break;
+            case 'login':
+                $target->is_login = isset($request->is_login) ? true : false;
+                $message = 'Authorization status was successfully saved.';
+                break;
         }
 
         $target->save();
@@ -250,55 +254,6 @@ class TargetsController extends Controller
         return view('targets.register', compact('target', 'account', 'date'));
     }
 
-    /*public function register($date = null)
-    {
-        $date = is_null($date) ? Carbon::now() : Carbon::createFromFormat('Y-m-d', $date);
-
-        $targets = Target::with([
-            'profile' => function ($query) {
-                $query->select('id', 'name', 'domain', 'mail_account_id', 'reserve_mail_account_id');
-            },
-            'profile.email' => function ($query) {
-                $query->select('id', 'email');
-            },
-            'profile.reserveEmail' => function ($query) {
-                $query->select('id', 'email');
-            },
-            'account' => function ($query) {
-                $query->select('id', 'mail_account_id', 'username', 'password');
-            },
-            'account.email' => function ($query) {
-                $query->select('id', 'email');
-            }
-        ])->whereRegisterDate($date->format('Y-m-d'))
-            ->orderBy('project_id', 'asc')
-            ->get()
-            ->groupBy('project_id');
-
-        $counts = Target::getTargetsCounts($targets);
-        $nextTarget = Target::getNextTarget($targets);
-
-        if ($nextTarget) {
-            $activeTargetID = $nextTarget->id;
-            $activeTargetStr = $nextTarget->profile->name . ' (' . $nextTarget->profile->domain . ')';
-        } else {
-            $activeTargetID = 0;
-        }
-
-        $projects = Project::select('id', 'name', 'domain', 'register_page', 'login_page')
-            ->whereIn('id', $targets->keys())
-            ->orderBy('id', 'asc')
-            ->get();
-
-        return view('targets.register', compact(
-            'targets',
-            'projects',
-            'counts',
-            'activeTargetID',
-            'activeTargetStr'
-        ));
-    }*/
-
     public function registerComplete($id, $date = null)
     {
         $target = Target::find($id);
@@ -314,37 +269,25 @@ class TargetsController extends Controller
         return view('targets.regcomplete', compact('target', 'request', 'date'));
     }
 
-    /*public function checkProxy(Request $request)
+    public function login($id, $date = null)
     {
-        // https://free-proxy-list.net/
-        // https://www.blackhatprotools.info/showthread.php?2-How-To-Become-VIP-Member-amp-Why
-        $target = Target::find($request->get('target_id'));
-        $activeProxyID = 0;
+        $target = Target::find($id);
+        $account = $target->account;
 
-        if ($target->project->is_use_proxy) {
-            $proxies = Proxy::all()->diff($target->project->proxies);
-            $proxyChecker = new ProxyChecker(Proxy::PING_URL);
+        $target->getDomainForUbot();
 
-            foreach ($proxies as $proxy) {
-                $proxyStr = $proxy->generateProxyString();
-                $results = collect($proxyChecker->checkProxies([$proxyStr]))->first();
+        return view('targets.login', compact('target', 'account', 'date'));
+    }
 
-                if (!key_exists('error', $results)) {
-                    $allowed = $results['allowed'];
+    public function loginComplete($id, $date = null)
+    {
+        $target = Target::find($id);
 
-                    if (in_array('get', $allowed)
-                        && in_array('post', $allowed)
-                        && in_array('cookie', $allowed)
-                        && in_array('user_agent', $allowed)) {
-                        $activeProxyID = $proxy->id;
-                        break;
-                    }
-                }
-            }
-        }
+        $target->is_login = true;
+        $target->save();
 
-        return view('targets.proxy', compact('target', 'activeProxyID'));
-    }*/
+        return view('targets.logcomplete', compact('target', 'request', 'date'));
+    }
 
     public function generate(Request $request)
     {

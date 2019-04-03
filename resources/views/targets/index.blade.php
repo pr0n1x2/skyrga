@@ -100,7 +100,7 @@
                                                 </a>
                                             </td>
                                             <td class="table-td-first">
-                                                <a href="javascript:;" class="btn btn-sm default">
+                                                <a href="{{route('targets.login', [$target->id, $dateForLink])}}" class="btn btn-sm @if(!$target->is_login) default @else btn-success @endif">
                                                     <i class="fa fa-external-link"></i> Login
                                                 </a>
                                             </td>

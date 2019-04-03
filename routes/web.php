@@ -49,11 +49,13 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('mail-accounts/get-reserve-emails', 'MailAccountsController@getReserveEmails');
     Route::get('mail-accounts/{id}', 'MailAccountsController@show');
     Route::get('targets/register/{id}/{date?}', 'TargetsController@register')->name('targets.register');
+    Route::get('targets/login/{id}/{date?}', 'TargetsController@login')->name('targets.login');
     Route::get('targets/ubot', 'TargetsController@downloadUbot')->name('targets.ubot');
     Route::get('targets/martix', 'TargetsController@martix');
     Route::get('targets/{date?}', 'TargetsController@index')->name('targets.index');
     Route::get('projects/download/{id}', 'ProjectsController@download')->name('projects.download');
     Route::get('targets/register-complete/{id}/{date?}', 'TargetsController@registerComplete');
+    Route::get('targets/login-complete/{id}/{date?}', 'TargetsController@loginComplete');
     Route::get('hrefs/successful', 'HrefsController@successful')->name('hrefs.successful');
     Route::get('hrefs/failed', 'HrefsController@failed')->name('hrefs.failed');
     Route::get('hrefs/{id?}', 'HrefsController@index')->where('id', '[0-9]+')->name('hrefs.analyze');
