@@ -194,12 +194,12 @@
                                     @endif
                                     <h3 class="form-section">Donor Info</h3>
                                     <div class="row">
-                                        @if (!empty($target->project->register_page))
+                                        @if (!empty($target->project->login_page))
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="control-label"><strong>Register page:</strong></label>
-                                                    <a href="{{$target->project->register_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open register page</a>
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="regpage">
+                                                    <label class="control-label"><strong>Login page:</strong></label>
+                                                    <a href="{{$target->project->login_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open login page</a>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="logpage">
                                                         <i class="fa fa-clipboard"></i> copy
                                                     </a>
                                                 </div>
@@ -555,7 +555,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Authorization Is Completed</label>
                                                 <div class="checkbox-list">
-                                                    <input type="checkbox" name="is_login" @if ($target->is_login)) checked @endif class="make-switch" id="is_register">
+                                                    <input type="checkbox" name="is_login" @if ($target->is_login)) checked @endif class="make-switch" id="is_login">
                                                 </div>
                                             </div>
                                         </div>
@@ -578,6 +578,7 @@
                                 <input type="hidden" name="error_ubot" value="{{$ubotError}}" />
                                 <input type="hidden" name="target_id" value="{{$target->id}}" />
                                 <input type="hidden" name="action" value="login" />
+                                <input type="hidden" name="profile_path" value="{{$target->getProfileUbotPath()}}" />
                             <!--<input type="hidden" name="domain" value="{{$target->getDomainForUbot()}}" />-->
                                 <input type="hidden" name="domain" value="own-free-website-com" />
                                 {{Form::close()}}

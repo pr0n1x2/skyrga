@@ -326,6 +326,15 @@
                                 </div>
                             </div>
                             <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use proxy in post</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_proxy_in_post" @if ($project->is_use_proxy_in_post) checked @endif class="make-switch" id="is_use_proxy_in_post">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
                         </div>
                         <!--/row-->
                         <div class="row">
@@ -372,6 +381,36 @@
                                     <label class="control-label">Use Videos In Post</label>
                                     <div class="checkbox-list">
                                         <input type="checkbox" name="is_use_videos" @if ($project->is_use_videos) checked @endif class="make-switch" id="is_use_videos">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+                        <!--/row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Place Link In The Article</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_link_from_article" @if ($project->is_use_link_from_article) checked @endif class="make-switch" id="is_use_link_from_article">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use common anchors</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_general_anchors" @if ($project->is_use_general_anchors) checked @endif class="make-switch" id="is_use_general_anchors">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Use main anchors</label>
+                                    <div class="checkbox-list">
+                                        <input type="checkbox" name="is_use_main_anchors" @if ($project->is_use_main_anchors) checked @endif class="make-switch" id="is_use_main_anchors">
                                     </div>
                                 </div>
                             </div>

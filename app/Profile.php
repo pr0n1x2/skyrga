@@ -89,6 +89,11 @@ class Profile extends Model
         return $post;
     }
 
+    public function getCurrentPost()
+    {
+        return $this->posts()->where('posts.id', $this->previous_post_id)->first();
+    }
+
     public static function getProfilesIds()
     {
         $ids = self::select('id')

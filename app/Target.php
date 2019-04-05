@@ -77,6 +77,12 @@ class Target extends Model
         return str_replace('.', '-', $this->project->domain->domain);
     }
 
+    public function getProfileUbotPath()
+    {
+        $parts = parse_url($this->profile->domain);
+        return substr($parts['host'], 0, strpos($parts['host'], '.'));
+    }
+
     /*public static function getTargetsCounts($targets)
     {
         $counts = [];

@@ -15,11 +15,13 @@ class Randomizer
     private $account;
     private $spinner;
     private $fields;
+    private $usePost;
 
-    public function __construct(Target $target, Account $account)
+    public function __construct(Target $target, Account $account, $usePost = false)
     {
         $this->target = $target;
         $this->account = $account;
+        $this->usePost = $usePost;
         $this->spinner = new Spinner();
         $this->fields = ProjectField::select('name', 'value')
             ->where([['project_id', '=', $this->target->project_id], ['profile_id', '=', $this->target->profile_id]])
@@ -281,7 +283,10 @@ class Randomizer
     // Возвращает название блога
     public function getBlogName()
     {
-        //
+        $text = trim($this->spinner->process($this->target->profile->blog_name));
+        $text = preg_replace("/\s{2,}/", " ", $text);
+
+        return $text;
     }
 
     // Возвращает описание блога или описание компании
@@ -290,9 +295,14 @@ class Randomizer
         $post = new Post();
         $post->text = $this->target->profile->about;
 
-        $articleBuilder = new ArticleBuilder($post, $this->target->profile->city);
+        $articleBuilder = new ArticleBuilder(
+            $post,
+            $this->target->profile->city,
+            $this->target->profile->state,
+            $this->target->profile->state_shortcode
+        );
 
-        return $articleBuilder->getArticle();
+        return $articleBuilder->getArticle(true);
     }
 
     // Возвращает описание блога или описание компании (первый параграф)
@@ -301,21 +311,46 @@ class Randomizer
         $post = new Post();
         $post->text = $this->target->profile->about;
 
-        $articleBuilder = new ArticleBuilder($post, $this->target->profile->city);
+        $articleBuilder = new ArticleBuilder(
+            $post,
+            $this->target->profile->city,
+            $this->target->profile->state,
+            $this->target->profile->state_shortcode
+        );
 
         return $articleBuilder->getFirstParagraph();
     }
 
-    // Возвращает ключевую фразу для ссылки
-    public function getAnchor()
+    // Возвращает ключевую фразу с общей ссылкой
+    public function getCommonAnchor()
     {
-        //
+        $post = $this->target->profile->getCurrentPost();
+
+        $articleBuilder = new ArticleBuilder(
+            $post,
+            $this->target->profile->city,
+            $this->target->profile->state,
+            $this->target->profile->state_shortcode,
+            $this->target
+        );
+
+        return $articleBuilder->getCommonLinkParagraph();
     }
 
-    // Возвращает основную ключевую фразу для ссылки
+    // Возвращает ключевую фразу с основной ссылкой
     public function getMainAnchor()
     {
-        //
+        $post = $this->target->profile->getCurrentPost();
+
+        $articleBuilder = new ArticleBuilder(
+            $post,
+            $this->target->profile->city,
+            $this->target->profile->state,
+            $this->target->profile->state_shortcode,
+            $this->target
+        );
+
+        return $articleBuilder->getMainLinkParagraph();
     }
 
     // Возвращает uri для субдомена или страницы (вариант 1)
@@ -365,5 +400,83 @@ class Randomizer
         }
 
         return $value;
+    }
+
+    // Возвращает прокси
+    public function getProxy()
+    {
+        return $this->target->profile->proxy;
+    }
+
+    // Возвращает 0 или 1, что означает нужно ли использовать прокси или нет
+    public function getUseProxy()
+    {
+        return $this->target->project->is_use_proxy ? 1: 0;
+    }
+
+    // Возвращает 0 или 1, что означает нужно ли использовать прокси в посте или нет
+    public function getUseProxyInPost()
+    {
+        return $this->target->project->is_use_proxy_in_post ? 1: 0;
+    }
+
+    // Возвращает статью
+    public function getArticle()
+    {
+        if ($this->usePost) {
+            $post = $this->target->profile->getNextPost();
+
+            $articleBuilder = new ArticleBuilder(
+                $post,
+                $this->target->profile->city,
+                $this->target->profile->state,
+                $this->target->profile->state_shortcode,
+                $this->target
+            );
+
+            return $articleBuilder->getArticle();
+        }
+
+        return '';
+    }
+
+    // Возвращает название статьи
+    public function getArticleTitle()
+    {
+        if ($this->usePost) {
+            $post = $this->target->profile->getCurrentPost();
+
+            $articleBuilder = new ArticleBuilder(
+                $post,
+                $this->target->profile->city,
+                $this->target->profile->state,
+                $this->target->profile->state_shortcode,
+                $this->target
+            );
+
+            return $articleBuilder->getTitle();
+        }
+
+        return '';
+    }
+
+    // Возвращает первый параграф статьи
+    public function getArticleFirstParagraph()
+    {
+        if ($this->usePost) {
+            $post = $this->target->profile->getCurrentPost();
+
+            $articleBuilder = new ArticleBuilder(
+                $post,
+                $this->target->profile->city,
+                $this->target->profile->state,
+                $this->target->profile->state_shortcode,
+                $this->target
+            );
+
+            return $articleBuilder->getFirstParagraph();
+        }
+
+        return '';
     }
 }

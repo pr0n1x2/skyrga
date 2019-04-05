@@ -45,7 +45,7 @@
     <input type="hidden" name="blog_name" value="{{$randomizer->getBlogName()}}">
     <input type="hidden" name="blog_description" value="{{$randomizer->getBlogDescription()}}">
     <input type="hidden" name="blog_first_paragraph" value="{{$randomizer->getBlogDescriptionFirstParagraph()}}">
-    <input type="hidden" name="anchor" value="{{$randomizer->getAnchor()}}">
+    <input type="hidden" name="anchor" value="{{$randomizer->getCommonAnchor()}}">
     <input type="hidden" name="main_anchor" value="{{$randomizer->getMainAnchor()}}">
     <input type="hidden" name="uri1" value="{{$randomizer->getURI1()}}">
     <input type="hidden" name="uri2" value="{{$randomizer->getURI2()}}">
@@ -63,6 +63,12 @@
     <input type="hidden" name="additional_profile_field8" value="{{$randomizer->getProjectField1(8)}}">
     <input type="hidden" name="additional_profile_field9" value="{{$randomizer->getProjectField1(9)}}">
     <input type="hidden" name="additional_profile_field10" value="{{$randomizer->getProjectField1(10)}}">
+    <input type="hidden" name="article" value="{{$randomizer->getArticle()}}">
+    <input type="hidden" name="article_title" value="{{$randomizer->getArticleTitle()}}">
+    <input type="hidden" name="article_first_paragraph" value="{{$randomizer->getArticleFirstParagraph()}}">
+    <input type="hidden" name="proxy" value="{{$randomizer->getProxy()}}">
+    <input type="hidden" name="is_use_proxy" value="{{$randomizer->getUseProxy()}}">
+    <input type="hidden" name="is_use_proxy_in_post" value="{{$randomizer->getUseProxyInPost()}}">
 
     <input type="hidden" name="is_change_username" value="{{$target->project->is_same_username}}">
 

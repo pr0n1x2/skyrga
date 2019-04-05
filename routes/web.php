@@ -11,7 +11,7 @@
 |
 */
 
-//Route::get('targets/register/{date?}', 'TargetsController@register')->name('targets.register');
+Route::get('targets/article', 'TargetsController@article');
 //Route::post('targets/proxy', 'TargetsController@checkProxy')->name('targets.proxy');
 Route::post('profile/set-reserve-email', 'ProfilesController@setReserveEmail');
 //Route::post('targets/remove', 'TargetsController@remove');
@@ -50,6 +50,7 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('mail-accounts/{id}', 'MailAccountsController@show');
     Route::get('targets/register/{id}/{date?}', 'TargetsController@register')->name('targets.register');
     Route::get('targets/login/{id}/{date?}', 'TargetsController@login')->name('targets.login');
+    Route::get('targets/post/{id}/{date?}', 'TargetsController@post')->name('targets.post');
     Route::get('targets/ubot', 'TargetsController@downloadUbot')->name('targets.ubot');
     Route::get('targets/martix', 'TargetsController@martix');
     Route::get('targets/{date?}', 'TargetsController@index')->name('targets.index');
@@ -81,7 +82,7 @@ Route::group(['middleware' => 'user'], function () {
     Route::post('proxies/clear', 'ProxiesController@clear')->name('proxies.clear');
     Route::post('articles/confirm/{id}', 'ArticlesController@confirm')->name('articles.confirm');
     Route::post('targets/generate', 'TargetsController@generate')->name('targets.generate');
-
+    Route::post('targets/get-target-data', 'TargetsController@getTargetData');
 
     Route::post('accounts/username', 'AccountsController@setUsername');
     Route::post('accounts/password', 'AccountsController@setPassword');

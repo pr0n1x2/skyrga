@@ -13,12 +13,19 @@ class ArticleBuilder
 
     private $post;
     private $city;
+    private $state;
+    private $state_shortcode;
+    private $url;
+    private $common_anchor;
+    private $main_anchor;
     private $spinner;
     private $paragraphs = [];
     private $images = [];
     private $videos = [];
 
-    private $isUseLinks = true;
+    private $isUseLinksInArticle = false;
+    private $isUseCommonLinks = false;
+    private $isUseMainLinks = false;
     private $isUseImages = false;
     private $isUseVideos = false;
 
@@ -30,14 +37,19 @@ class ArticleBuilder
 
     private $paragraphLink;
 
-    public function __construct(Post $post, $city = null, Target $target = null)
+    public function __construct(Post $post, $city = null, $state = null, $state_shortcode = null, Target $target = null)
     {
         $this->post = $post;
         $this->city = $city;
+        $this->state = $state;
+        $this->state_shortcode = $state_shortcode;
 
         if (!is_null($target)) {
             $this->isUseImages = (bool)$target->project->is_use_images;
             $this->isUseVideos = (bool)$target->project->is_use_videos;
+            $this->isUseLinksInArticle = (bool)$target->project->is_use_link_from_article;
+            $this->isUseCommonLinks = (bool)$target->project->is_use_general_anchors;
+            $this->isUseMainLinks = (bool)$target->project->is_use_main_anchors;
             $this->paragraphFrame = $target->project->paragraph_frame;
             $this->headingFrame = $target->project->heading_frame;
             $this->linkFrame = $target->project->link_frame;
@@ -46,6 +58,9 @@ class ArticleBuilder
             $this->paragraphLink = $target->project->paragraph_link;
             $this->images = $target->profile->images;
             $this->videos = $target->profile->videos;
+            $this->url = $target->profile->domain;
+            $this->common_anchor = $target->profile->anchor;
+            $this->main_anchor = $target->profile->main_anchor;
         }
 
         $this->spinner = new Spinner();
@@ -53,9 +68,19 @@ class ArticleBuilder
         $this->dividedIntoParagraphs();
     }
 
-    public function useLinks($isUseLinks)
+    public function useLinksInArticle($isUseLinksInArticle)
     {
-        $this->isUseLinks = $isUseLinks;
+        $this->isUseLinksInArticle = $isUseLinksInArticle;
+    }
+
+    public function useCommonLinks($isUseCommonLinks)
+    {
+        $this->isUseCommonLinks = $isUseCommonLinks;
+    }
+
+    public function useMainLinks($isUseMainLinks)
+    {
+        $this->isUseMainLinks = $isUseMainLinks;
     }
 
     public function useImages($isUseImages)
@@ -68,7 +93,7 @@ class ArticleBuilder
         $this->isUseVideos = $isUseVideos;
     }
 
-    public function getArticle()
+    public function getArticle($useParagraphIndents = false)
     {
         $paragraphs = $this->paragraphs;
         $countImages = 0;
@@ -84,11 +109,39 @@ class ArticleBuilder
             $paragraphs = $this->insertVideo($paragraphs, $countImages);
         }
 
-        for ($i = 0; $i < count($paragraphs); $i++) {
+        $this->insertLinksInArticle($paragraphs);
+
+        if ($this->isUseCommonLinks) {
+            $this->addAdditionalParagraphWithLink($paragraphs, $this->common_anchor);
+        }
+
+        if ($this->isUseMainLinks) {
+            $this->addAdditionalParagraphWithLink($paragraphs, $this->main_anchor);
+        }
+
+        $paragraphsCount = count($paragraphs);
+
+        for ($i = 0; $i < $paragraphsCount; $i++) {
             $article .= $paragraphs[$i]['html'] . "\r\n";
+
+            if ($useParagraphIndents) {
+                if ($i != $paragraphsCount - 1) {
+                    $article .= "\r\n";
+                }
+            }
         }
 
         return $article;
+    }
+
+    public function getCommonLinkParagraph()
+    {
+        return $this->generateAdditionalParagraphWithLink($this->common_anchor);
+    }
+
+    public function getMainLinkParagraph()
+    {
+        return $this->generateAdditionalParagraphWithLink($this->main_anchor);
     }
 
     public function getTitle()
@@ -126,26 +179,28 @@ class ArticleBuilder
             $separator = $separators[2];
         }
 
-        $paragraphs = explode($separator, $this->post->text);
+        if (!empty($this->post->text)) {
+            $paragraphs = explode($separator, $this->post->text);
 
-        for ($i = 0; $i < count($paragraphs); $i++) {
-            $type = self::PARAGRAPH;
+            for ($i = 0; $i < count($paragraphs); $i++) {
+                $type = self::PARAGRAPH;
 
-            if ($paragraphs[$i]{0} == '+') {
-                $type = self::HEADING;
-                $paragraphs[$i] = substr($paragraphs[$i], 1);
+                if ($paragraphs[$i]{0} == '+') {
+                    $type = self::HEADING;
+                    $paragraphs[$i] = substr($paragraphs[$i], 1);
+                }
+
+                $this->paragraphs[] = ['html' => $paragraphs[$i], 'type' => $type];
             }
 
-            $this->paragraphs[] = ['html' => $paragraphs[$i], 'type' => $type];
-        }
-
-        for ($i = 0; $i < count($this->paragraphs); $i++) {
-            $this->paragraphs[$i]['html'] = $this->getSpunText($this->paragraphs[$i]['html']);
-            $this->paragraphs[$i]['html'] = $this->correctSentences(
-                $this->paragraphs[$i]['html'],
-                $this->paragraphs[$i]['type']
-            );
-            $this->paragraphs[$i]['html'] = $this->replaceCity($this->paragraphs[$i]['html']);
+            for ($i = 0; $i < count($this->paragraphs); $i++) {
+                $this->paragraphs[$i]['html'] = $this->getSpunText($this->paragraphs[$i]['html']);
+                $this->paragraphs[$i]['html'] = $this->correctSentences(
+                    $this->paragraphs[$i]['html'],
+                    $this->paragraphs[$i]['type']
+                );
+                $this->paragraphs[$i]['html'] = $this->replaceCity($this->paragraphs[$i]['html']);
+            }
         }
     }
 
@@ -184,6 +239,16 @@ class ArticleBuilder
     private function replaceCity($text)
     {
         return str_replace('%CITY%', $this->city, $text);
+    }
+
+    private function replaceState($text)
+    {
+        return str_replace('%STATE%', $this->state, $text);
+    }
+
+    private function replaceStateShortCode($text)
+    {
+        return str_replace('%STATE SHORTCODE%', $this->state_shortcode, $text);
     }
 
     private function insertImages(&$paragraphs)
@@ -338,5 +403,96 @@ class ArticleBuilder
         }
 
         return $paragraphs;
+    }
+
+    private function insertLinksInArticle(&$paragraphs)
+    {
+        $linkPosition = (int)$this->paragraphLink;
+
+        if (empty($linkPosition)) {
+            $linkPosition = rand(1, 4);
+        }
+
+        for ($i = 1; $i < 5; $i++) {
+            if (isset($this->post->{"anchor{$i}"}) && !empty($this->post->{"anchor{$i}"})) {
+                $anchor = $this->replaceCity(
+                    $this->replaceState(
+                        $this->replaceStateShortCode(
+                            $this->getSpunText($this->post->{"anchor{$i}"})
+                        )
+                    )
+                );
+
+                if ($i == $linkPosition && $this->isUseLinksInArticle) {
+                    $anchor = $this->createLink($anchor);
+                }
+
+                $label = "%ANCHOR{$i}%";
+
+                for ($j = 0; $j < count($paragraphs); $j++) {
+                    $paragraphs[$j] = str_replace($label, $anchor, $paragraphs[$j]);
+                }
+            }
+        }
+    }
+
+    private function createLink($text)
+    {
+        if (!is_null($this->linkFrame)) {
+            $array = explode("|", $this->linkFrame);
+            $lStartFrame = str_replace('%URL%', $this->url, $array[0]);
+            $lEndFrame = $array[1];
+        } else {
+            $lStartFrame = "<a href=\"{$this->url}\">";
+            $lEndFrame = "</a>";
+        }
+
+        if (strpos($text, '%LINK%') === false) {
+            $link = $lStartFrame . $text . $lEndFrame;
+        } else {
+            $link = str_replace(['%LINK%', '%/LINK%'], [$lStartFrame, $lEndFrame], $text);
+        }
+
+        return $link;
+    }
+
+    private function addAdditionalParagraphWithLink(&$paragraphs, $text)
+    {
+        $pStartFrame = '';
+        $pEndFrame = '';
+
+        $paragraph = $this->createLink(
+            $this->replaceCity(
+                $this->replaceState(
+                    $this->replaceStateShortCode(
+                        $this->getSpunText($text)
+                    )
+                )
+            )
+        );
+
+        if (!is_null($this->paragraphFrame)) {
+            $array = explode("|", $this->paragraphFrame);
+            $pStartFrame = $array[0];
+            $pEndFrame = $array[1];
+        }
+
+        $newParagraph[] = ['html' => $pStartFrame . $paragraph . $pEndFrame, 'type' => self::PARAGRAPH];
+        array_splice($paragraphs, rand(1, count($paragraphs) - 1), 0, $newParagraph);
+    }
+
+    private function generateAdditionalParagraphWithLink($text)
+    {
+        $paragraph = $this->createLink(
+            $this->replaceCity(
+                $this->replaceState(
+                    $this->replaceStateShortCode(
+                        $this->getSpunText($text)
+                    )
+                )
+            )
+        );
+
+        return $paragraph;
     }
 }

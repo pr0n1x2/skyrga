@@ -1,26 +1,31 @@
 @php
-    $loginRequired = true;
+    $postRequired = true;
     $runUbot = true;
     $ubotError = 0;
 
-    if ($target->project->is_login_by_himself) {
+    if (!$target->is_login) {
         $runUbot = false;
-        $ubotError = 1;
+        $ubotError = 8;
     }
 
-    if ($target->project->is_no_need_login) {
-        $loginRequired = false;
+    if ($target->project->is_post_by_himself) {
         $runUbot = false;
-        $ubotError = 2;
+        $ubotError = 9;
     }
 
-    if ($target->is_register) {
-        $ubotError = 3;
+    if ($target->project->is_no_need_post) {
+        $postRequired = false;
+        $runUbot = false;
+        $ubotError = 10;
+    }
+
+    if ($target->is_post) {
+        $ubotError = 11;
     }
 @endphp
 @extends('layout')
 
-@section('title', 'Registration')
+@section('title', 'Post Link')
 
 @section('content')
     <div class="page-content-wrapper">
@@ -28,7 +33,7 @@
         <div class="page-content">
             <!-- BEGIN PAGE HEADER-->
             <!-- BEGIN PAGE TITLE-->
-            <h3 class="page-title"> Registration </h3>
+            <h3 class="page-title"> Post Link </h3>
             <!-- END PAGE TITLE-->
             <!-- BEGIN PAGE BAR -->
             <div class="page-bar">
@@ -42,7 +47,7 @@
                         <i class="fa fa-angle-right"></i>
                     </li>
                     <li>
-                        <span> Registration </span>
+                        <span> Post Link </span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -60,30 +65,35 @@
                 </div>
             </div>
             <!-- END PAGE BAR -->
-            @if($target->is_register)
-                <div class="alert alert-success">
-                    Registration already completed.
-                </div>
-            @elseif(!$target->is_register && !$loginRequired)
-                <div class="alert alert-info">
-                    <strong>Information!</strong> For this domain registration is not required.
-                </div>
-            @elseif(!$target->is_register && $loginRequired && !$runUbot)
+            @if(!$target->is_login)
                 <div class="alert alert-danger">
-                    <strong>Attention!</strong> You must register yourself without using a script.
+                    <strong>Attention!</strong> You must first go through the authorization process.
                 </div>
-            @endif
-            <!-- END PAGE HEADER-->
+            @elseif($target->is_post)
+                <div class="alert alert-success">
+                    You have already posted a link on this donor.
+                </div>
+            @elseif(!$target->is_post && !$postRequired)
+                <div class="alert alert-info">
+                    <strong>Information!</strong> For this domain post link is not required.
+                </div>
+            @elseif(!$target->is_post && $postRequired && !$runUbot)
+                <div class="alert alert-danger">
+                    <strong>Attention!</strong> You must post link yourself without using a script.
+                </div>
+        @endif
+        <!-- END PAGE HEADER-->
             <div class="row">
                 <div class="col-md-12">
                     <div class="portlet-body">
                         <div class="portlet light bg-inverse">
                             <div class="portlet-body form">
+                            @if($target->is_login)
                                 <!-- BEGIN FORM-->
-                                {{Form::open(['route' => ['targets.update', $target->id], 'method' => 'put', 'id' => 'targets_register_form', 'class' => 'horizontal-form'])}}
+                                    {{Form::open(['route' => ['targets.update', $target->id], 'method' => 'put', 'id' => 'targets_register_form', 'class' => 'horizontal-form'])}}
                                     <div class="form-body">
                                         @php
-                                            $isEditable = true;
+                                            $isEditable = false;
                                         @endphp
                                         <h3 class="form-section">Profile Info</h3>
                                         <div class="row">
@@ -113,39 +123,6 @@
                                                         <span class="not_editable">{{$target->getEmail()}}</span>
                                                     @endif
                                                     <a href="javascript:;" class="btn btn-xs default copy-data" data-field="email">
-                                                        <i class="fa fa-clipboard"></i> copy
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <!--/span-->
-                                        </div>
-                                        <!--/row-->
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="control-label">E-mail Login Page:</label>
-                                                    <a href="{{$account->email->login_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open login page</a>
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emaillogpage">
-                                                        <i class="fa fa-clipboard"></i> copy
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <!--/span-->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="control-label">E-mail Login:</label>
-                                                    <span class="not_editable">{{$account->email->account_name}}</span>
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emaillogin">
-                                                        <i class="fa fa-clipboard"></i> copy
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <!--/span-->
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="control-label">E-mail Password:</label>
-                                                    <span class="not_editable">{{$account->email->password}}</span>
-                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="emailpass">
                                                         <i class="fa fa-clipboard"></i> copy
                                                     </a>
                                                 </div>
@@ -184,12 +161,12 @@
                                         @endif
                                         <h3 class="form-section">Donor Info</h3>
                                         <div class="row">
-                                            @if (!empty($target->project->register_page))
+                                            @if (!empty($target->project->login_page))
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="control-label"><strong>Register page:</strong></label>
-                                                        <a href="{{$target->project->register_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open register page</a>
-                                                        <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="regpage">
+                                                        <label class="control-label"><strong>Login page:</strong></label>
+                                                        <a href="{{$target->project->login_page}}" class="editable-field" target="_blank"><i class="fa fa-external-link"></i> Open login page</a>
+                                                        <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="logpage">
                                                             <i class="fa fa-clipboard"></i> copy
                                                         </a>
                                                     </div>
@@ -542,6 +519,47 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
+                                                    <label class="control-label label-bold">Uri info</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Uri 1:</label>
+                                                    <span class="not_editable">{{$target->profile->url1}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="uri1">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Uri 2:</label>
+                                                    <span class="not_editable">{{$target->profile->url2}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="uri2">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Uri 3:</label>
+                                                    <span class="not_editable">{{$target->profile->url3}}</span>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-data copy-attr" data-field="uri3">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
                                                     <label class="control-label label-bold">Google Account Data</label>
                                                 </div>
                                             </div>
@@ -570,13 +588,125 @@
                                             <!--/span-->
                                         </div>
                                         <!--/row-->
-                                        <h3 class="form-section">Registration Status</h3>
+                                        <h3 class="form-section">Post Data</h3>
+                                        <!--/row-->
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="control-label">Registration Is Completed</label>
+                                                    <label class="control-label">Blog Name:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="blog-name" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">About:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="about" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">About first paragraph:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="about-first-paragraph" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Article title:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="article-title" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Article:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="article" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Article first paragraph:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="article-first-paragraph" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Alternative Firstname:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="alternative-firstname" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Alternative Lastname:</label>
+                                                    <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="alternative-lastname" data-target="{{$target->id}}" data-id="{{$target->profile_id}}">
+                                                        <i class="fa fa-clipboard"></i> copy
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!--/span-->
+                                        </div>
+                                        <!--/row-->
+                                        @foreach($fields as $field_id => $field_number)
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Project Field {{$field_number}}:</label>
+                                                        <a href="javascript:;" class="btn btn-xs default copy-ajax-data" data-field="field{{$field_number}}" data-target="{{$target->id}}" data-id="{{$field_id}}">
+                                                            <i class="fa fa-clipboard"></i> copy
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <!--/span-->
+                                            </div>
+                                            <!--/row-->
+                                        @endforeach
+                                        <h3 class="form-section">Post Status</h3>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Post link Is Completed</label>
                                                     <div class="checkbox-list">
-                                                        <input type="checkbox" name="is_register" @if ($target->is_register)) checked @endif class="make-switch" id="is_register">
+                                                        <input type="checkbox" name="is_post" @if ($target->is_post)) checked @endif class="make-switch" id="is_post">
                                                     </div>
                                                 </div>
                                             </div>
@@ -585,22 +715,23 @@
                                         <!--/row-->
                                     </div>
                                     <div class="form-actions left">
-                                        <input type="hidden" name="target-action" value="register">
+                                        <input type="hidden" name="target-action" value="post">
                                         <input type="hidden" name="date" value="{{$date}}">
                                         <a href="/targets/{{$date}}" class="btn default">Cancel</a>
                                         <button type="submit" class="btn blue">
                                             <i class="fa fa-check"></i> Save</button>
                                     </div>
-                                {{Form::close()}}
+                                    {{Form::close()}}
                                 <!-- END FORM-->
+                                @endif
                                 {{Form::open(['route' => 'targets.generate', 'id' => 'ubot_action_form', 'class' => 'horizontal-form'])}}
-                                    <input type="hidden" name="allow_ubot" value="1" />
-                                    <input type="hidden" name="error_ubot" value="{{$ubotError}}" />
-                                    <input type="hidden" name="target_id" value="{{$target->id}}" />
-                                    <input type="hidden" name="action" value="register" />
-                                    <input type="hidden" name="profile_path" value="{{$target->getProfileUbotPath()}}" />
-                                    <!--<input type="hidden" name="domain" value="{{$target->getDomainForUbot()}}" />-->
-                                    <input type="hidden" name="domain" value="localpages-com" />
+                                <input type="hidden" name="allow_ubot" value="1" />
+                                <input type="hidden" name="error_ubot" value="{{$ubotError}}" />
+                                <input type="hidden" name="target_id" value="{{$target->id}}" />
+                                <input type="hidden" name="action" value="post" />
+                                <input type="hidden" name="profile_path" value="{{$target->getProfileUbotPath()}}" />
+                            <!--<input type="hidden" name="domain" value="{{$target->getDomainForUbot()}}" />-->
+                                <input type="hidden" name="domain" value="own-free-website-com" />
                                 {{Form::close()}}
                             </div>
                         </div>
@@ -608,6 +739,6 @@
                 </div>
             </div>
         </div>
-    <!-- END CONTENT BODY -->
+        <!-- END CONTENT BODY -->
     </div>
 @endsection

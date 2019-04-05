@@ -6,6 +6,7 @@ use App\Account;
 use App\Post;
 use App\Profile;
 use App\Project;
+use App\ProjectField;
 use App\Proxy;
 use App\Proxy\ProxyChecker;
 use App\Randomizer\ArticleBuilder;
@@ -16,37 +17,46 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mikemike\Spinner\Spinner;
 
 class TargetsController extends Controller
 {
+    public function article()
+    {
+        $target = Target::find(1463);
+        $post = $target->profile->getNextPost();
+
+        $articleBuilder = new ArticleBuilder(
+            $post,
+            $target->profile->city,
+            $target->profile->state,
+            $target->profile->state_shortcode,
+            $target
+        );
+
+        $article = $articleBuilder->getArticle();
+        $title = $articleBuilder->getTitle();
+        $paragraph = $articleBuilder->getFirstParagraph();
+        $paragraph1 = $articleBuilder->getMainLinkParagraph();
+
+//        $post = new Post();
+//        $post->text = $target->profile->about;
+//
+//        $articleBuilder = new ArticleBuilder($post, $target->profile->city);
+//        $article = $articleBuilder->getArticle();
+//        $title = $articleBuilder->getTitle();
+//        $paragraph = $articleBuilder->getFirstParagraph();
+
+        dd($paragraph1);
+        echo $paragraph;
+        exit;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    /*public function index()
-    {
-        $target = Target::find(1);
-//        $post = $target->profile->getNextPost();
-//
-//        $articleBuilder = new ArticleBuilder($post, $target->profile->city, $target);
-//        $article = $articleBuilder->getArticle();
-//        $title = $articleBuilder->getTitle();
-//        $paragraph = $articleBuilder->getFirstParagraph();
-
-        $post = new Post();
-        $post->text = $target->profile->about;
-
-        $articleBuilder = new ArticleBuilder($post, $target->profile->city);
-        $article = $articleBuilder->getArticle();
-        $title = $articleBuilder->getTitle();
-        $paragraph = $articleBuilder->getFirstParagraph();
-
-        dd($paragraph);
-        echo $paragraph;
-        exit;
-    }*/
-
     public function index($date = null)
     {
         $isToday = false;
@@ -289,11 +299,149 @@ class TargetsController extends Controller
         return view('targets.logcomplete', compact('target', 'request', 'date'));
     }
 
+    public function post($id, $date = null)
+    {
+        $target = Target::find($id);
+        $account = $target->account;
+
+        $fields = ProjectField::select('id', 'name')
+            ->where([['project_id', '=', $target->project_id], ['profile_id', '=', $target->profile_id]])
+            ->get()
+            ->pluck('name', 'id')
+            ->map(function ($item) {
+                return (int)substr($item, 5);
+            })
+            ->toArray();
+
+        $target->getDomainForUbot();
+
+        return view('targets.post', compact('target', 'account', 'fields', 'date'));
+    }
+
+    public function getTargetData(Request $request)
+    {
+        $id = $request->get('id');
+        $target_id = $request->get('target_id');
+        $action = $request->get('action');
+        $result = ['status' => true];
+
+        $spinner = new Spinner();
+
+        switch ($action) {
+            case 'blog-name':
+                $target = Target::find($target_id);
+                $blog_name = $target->profile->blog_name;
+                $result['data'] = trim($spinner->process($blog_name));
+                break;
+            case 'about':
+                $target = Target::find($target_id);
+                $post = new Post();
+                $post->text = $target->profile->about;
+
+                $articleBuilder = new ArticleBuilder(
+                    $post,
+                    $target->profile->city,
+                    $target->profile->state,
+                    $target->profile->state_shortcode
+                );
+
+                $result['data'] = $articleBuilder->getArticle(true);
+                break;
+            case 'about-first-paragraph':
+                $target = Target::find($target_id);
+                $post = new Post();
+                $post->text = $target->profile->about;
+
+                $articleBuilder = new ArticleBuilder(
+                    $post,
+                    $target->profile->city,
+                    $target->profile->state,
+                    $target->profile->state_shortcode
+                );
+
+                $result['data'] = $articleBuilder->getFirstParagraph();
+                break;
+            case 'article-title':
+                $target = Target::find($target_id);
+                $post = $target->profile->getCurrentPost();
+
+                $articleBuilder = new ArticleBuilder(
+                    $post,
+                    $target->profile->city,
+                    $target->profile->state,
+                    $target->profile->state_shortcode,
+                    $target
+                );
+
+                $result['data'] = $articleBuilder->getTitle();
+                break;
+            case 'article':
+                $target = Target::find($target_id);
+                $post = $target->profile->getCurrentPost();
+
+                $articleBuilder = new ArticleBuilder(
+                    $post,
+                    $target->profile->city,
+                    $target->profile->state,
+                    $target->profile->state_shortcode,
+                    $target
+                );
+
+                $result['data'] = $articleBuilder->getArticle();
+                break;
+            case 'article-first-paragraph':
+                $target = Target::find($target_id);
+                $post = $target->profile->getCurrentPost();
+
+                $articleBuilder = new ArticleBuilder(
+                    $post,
+                    $target->profile->city,
+                    $target->profile->state,
+                    $target->profile->state_shortcode,
+                    $target
+                );
+
+                $result['data'] = $articleBuilder->getFirstParagraph();
+                break;
+            case 'alternative-firstname':
+                $target = Target::find($target_id);
+                $alternative_firstname = $target->profile->alternative_firstname;
+                $result['data'] = trim($spinner->process($alternative_firstname));
+                break;
+            case 'alternative-lastname':
+                $target = Target::find($target_id);
+                $alternative_lastname = $target->profile->alternative_lastname;
+                $result['data'] = trim($spinner->process($alternative_lastname));
+                break;
+            case 'field1':
+            case 'field2':
+            case 'field3':
+            case 'field4':
+            case 'field5':
+            case 'field6':
+            case 'field7':
+            case 'field8':
+            case 'field9':
+            case 'field10':
+                $projectField = ProjectField::find($id);
+                $result['data'] = $spinner->process($projectField->value);
+                break;
+        }
+
+        return response()->json($result);
+    }
+
     public function generate(Request $request)
     {
+        $usePost = false;
         $target = Target::find($request->get('target_id'));
         $account = $target->account;
-        $randomizer = new Randomizer($target, $account);
+
+        if ($request->action == 'post' && $target->project->is_use_post) {
+            $usePost = true;
+        }
+
+        $randomizer = new Randomizer($target, $account, $usePost);
 
         return view('targets.generate', compact('target', 'randomizer'));
     }

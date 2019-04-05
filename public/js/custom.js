@@ -2630,6 +2630,7 @@ var ModalsManaged = function () {
                 case 'emailpass': message = "E-mail password"; break;
                 case 'domain': message = "Domain"; break;
                 case 'regpage': message = "Register page"; break;
+                case 'logpage': message = "Login page"; break;
                 case 'youtube': message = "YouTube link"; break;
                 case 'email': message = "E-mail"; break;
                 case 'username': message = "Username"; break;
@@ -2650,6 +2651,11 @@ var ModalsManaged = function () {
                 case 'domain_word': message = "Domain word"; break;
                 case 'google-login': message = "Google login"; break;
                 case 'google-pass': message = "Google password"; break;
+                case 'subdomain1': message = "Primary subdomain 1"; break;
+                case 'subdomain2': message = "Primary subdomain 1"; break;
+                case 'uri1': message = "Uri 1"; break;
+                case 'uri2': message = "Uri 2"; break;
+                case 'uri3': message = "Uri 3"; break;
             }
 
             message = message + ' has been copied to your clipboard.';
@@ -2680,6 +2686,71 @@ var ModalsManaged = function () {
             }
 
             toastr.success(message);
+        });
+
+        $('.copy-ajax-data').click(function () {
+            var el = $(this);
+            var id = el.data('id');
+            var target_id = el.data('target');
+            var action = el.data('field');
+
+            var getDataFromServer = function(result) {
+                var message = null;
+
+                if (result.status) {
+                    switch (action) {
+                        case 'blog-name': message = "Blog name"; break;
+                        case 'about': message = "About"; break;
+                        case 'about-first-paragraph': message = "About first paragraph"; break;
+                        case 'article-title': message = "Article title"; break;
+                        case 'article': message = "Article"; break;
+                        case 'article-first-paragraph': message = "Article first paragraph"; break;
+                        case 'alternative-firstname': message = "Alternative firstname"; break;
+                        case 'alternative-lastname': message = "Alternative lastname"; break;
+                        case 'field1': message = "Project Field 1"; break;
+                        case 'field2': message = "Project Field 2"; break;
+                        case 'field3': message = "Project Field 3"; break;
+                        case 'field4': message = "Project Field 4"; break;
+                        case 'field5': message = "Project Field 5"; break;
+                        case 'field6': message = "Project Field 6"; break;
+                        case 'field7': message = "Project Field 7"; break;
+                        case 'field8': message = "Project Field 8"; break;
+                        case 'field9': message = "Project Field 9"; break;
+                        case 'field10': message = "Project Field 10"; break;
+                    }
+
+                    message = message + ' has been copied to your clipboard.';
+
+                    el = document.createElement('textarea');
+                    el.value = result.data;
+                    el.setAttribute('readonly', '');
+                    el.style.position = 'absolute';
+                    el.style.left = '-9999px';
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "positionClass": "toast-top-right",
+                        "onclick": null,
+                        "showDuration": "1000",
+                        "hideDuration": "1000",
+                        "timeOut": "3000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+
+                    toastr.success(message);
+                }
+            }
+
+            getDataFromServerPost('/targets/get-target-data', {id: id, target_id: target_id, action: action}, getDataFromServer, null);
         });
 
         $('#username').editable();
